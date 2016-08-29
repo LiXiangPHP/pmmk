@@ -60,3 +60,5 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 if(!isset($plugin_app)){
 	System::CreateApp();
 }
+
+
