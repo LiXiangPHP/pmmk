@@ -1,0 +1,21 @@
+[16-Aug-2016 15:17:26 Asia/Shanghai] PHP Warning:  file_get_contents(): Filename cannot be empty in E:\www\htdocs\1y\system\modules\admin\index.action.php on line 82
+[16-Aug-2016 15:18:09 Asia/Shanghai] PHP Warning:  file_get_contents(): Filename cannot be empty in E:\www\htdocs\1y\system\modules\admin\index.action.php on line 82
+[16-Aug-2016 15:24:44 Asia/Shanghai] PHP Warning:  file_get_contents(): Filename cannot be empty in E:\www\htdocs\1y\system\modules\admin\index.action.php on line 82
+[16-Aug-2016 15:27:12 Asia/Shanghai] PHP Warning:  file_get_contents(): Filename cannot be empty in E:\www\htdocs\1y\system\modules\admin\index.action.php on line 82
+[16-Aug-2016 15:31:13 Asia/Shanghai] PHP Warning:  file_get_contents(): Filename cannot be empty in E:\www\htdocs\1y\system\modules\admin\index.action.php on line 82
+[16-Aug-2016 15:31:57 Asia/Shanghai] PHP Warning:  file_get_contents(): Filename cannot be empty in E:\www\htdocs\1y\system\modules\admin\index.action.php on line 82
+[16-Aug-2016 15:32:17 Asia/Shanghai] PHP Warning:  file_get_contents(): Filename cannot be empty in E:\www\htdocs\1y\system\modules\admin\index.action.php on line 82
+[16-Aug-2016 16:11:25 Asia/Shanghai] PHP Warning:  mysql_query(): MySQL server has gone away in E:\www\htdocs\1y\system\libs\db_mysql.class.php on line 147
+[16-Aug-2016 16:11:25 Asia/Shanghai] PHP Warning:  mysql_query(): Error reading result set's header in E:\www\htdocs\1y\system\libs\db_mysql.class.php on line 147
+[16-Aug-2016 16:13:30 Asia/Shanghai] PHP Warning:  mysql_connect(): ������ӷ���һ��ʱ���û���ȷ�𸴻�ӵ����û�з�Ӧ�����ӳ���ʧ�ܡ�
+ in E:\www\htdocs\1y\system\libs\db_mysql.class.php on line 60
+[16-Aug-2016 16:16:24 Asia/Shanghai] PHP Warning:  simplexml_load_file(): file:/E:/www/htdocs/1y/system/modules/auto/auto_p.xml:1: parser error : Document is empty in E:\www\htdocs\1y\system\modules\auto\auto_p.action.php on line 60
+[16-Aug-2016 16:16:24 Asia/Shanghai] PHP Fatal error:  Call to a member function children() on boolean in E:\www\htdocs\1y\system\modules\auto\auto_p.action.php on line 61
+[16-Aug-2016 16:21:38 Asia/Shanghai] PHP Warning:  mysql_connect(): ������ӷ���һ��ʱ���û���ȷ�𸴻�ӵ����û�з�Ӧ�����ӳ���ʧ�ܡ�
+ in E:\www\htdocs\1y\system\libs\db_mysql.class.php on line 60
+[16-Aug-2016 16:22:52 Asia/Shanghai] PHP Warning:  mysql_connect(): ������ӷ���һ��ʱ���û���ȷ�𸴻�ӵ����û�з�Ӧ�����ӳ���ʧ�ܡ�
+ in E:\www\htdocs\1y\system\libs\db_mysql.class.php on line 60
+[16-Aug-2016 16:47:01 Asia/Shanghai] PHP Warning:  mysql_connect(): ������ӷ���һ��ʱ���û���ȷ�𸴻�ӵ����û�з�Ӧ�����ӳ���ʧ�ܡ�
+ in E:\www\htdocs\1y\system\libs\db_mysql.class.php on line 60
+[16-Aug-2016 16:55:21 Asia/Shanghai] PHP Warning:  mysql_connect(): ������ӷ���һ��ʱ���û���ȷ�𸴻�ӵ����û�з�Ӧ�����ӳ���ʧ�ܡ�
+ in E:\www\htdocs\1y\system\libs\db_mysql.class.php on line 60

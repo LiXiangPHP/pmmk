@@ -1,0 +1,8 @@
+[24-Aug-2016 09:48:14 Asia/Shanghai] PHP Warning:  mysql_connect(): ������ӷ���һ��ʱ���û���ȷ�𸴻�ӵ����û�з�Ӧ�����ӳ���ʧ�ܡ�
+ in E:\www\htdocs\1y\system\libs\db_mysql.class.php on line 60
+[24-Aug-2016 09:52:38 Asia/Shanghai] PHP Warning:  mysql_connect(): ������ӷ���һ��ʱ���û���ȷ�𸴻�ӵ����û�з�Ӧ�����ӳ���ʧ�ܡ�
+ in E:\www\htdocs\1y\system\libs\db_mysql.class.php on line 60
+[24-Aug-2016 10:19:27 Asia/Shanghai] PHP Warning:  mysql_connect(): ������ӷ���һ��ʱ���û���ȷ�𸴻�ӵ����û�з�Ӧ�����ӳ���ʧ�ܡ�
+ in E:\www\htdocs\1y\system\libs\db_mysql.class.php on line 60
+[24-Aug-2016 10:19:55 Asia/Shanghai] PHP Warning:  mysql_connect(): ������ӷ���һ��ʱ���û���ȷ�𸴻�ӵ����û�з�Ӧ�����ӳ���ʧ�ܡ�
+ in E:\www\htdocs\1y\system\libs\db_mysql.class.php on line 60
