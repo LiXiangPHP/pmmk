@@ -1,4 +1,5 @@
 <?php 
+echo 111;die;
 defined('G_IN_SYSTEM')or exit('No permission resources.');
 System::load_app_class('base','member','no');
 System::load_app_fun('my');
