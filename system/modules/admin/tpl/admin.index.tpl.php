@@ -157,11 +157,13 @@ function api_off_on_open(key){
     	<ul>	
 
             <li class="current"><a href="#" onClick="secBoard('nav',0,'setting','系统设置');" <?php if(!$info['xitong']){?> style='display: none'<?php } ?>>系统设置</a></li> 
+
             <li class="normal"><a href="#" onClick="secBoard('nav',1,'content','内容管理');"<?php if(!$info['neirong']){?> style='display: none'<?php } ?>>内容管理</a></li>
             <li class="normal"><a href="#" onClick="secBoard('nav',2,'shop','商品管理');"<?php if(!$info['shop']){?> style='display: none'<?php } ?>>商品管理</a></li>
             <li class="normal"><a href="#" onClick="secBoard('nav',3,'user','用户管理');"<?php if(!$info['user']){?> style='display: none'<?php } ?>>用户管理</a></li>
             <li class="normal"><a href="#" onClick="secBoard('nav',4,'template','界面管理');"<?php if(!$info['yemian']){?> style='display: none'<?php } ?>>界面管理</a></li>
             <li class="normal"><a href="#" onClick="secBoard('nav',5,'yunapp','云应用');"<?php if(!$info['yun']){?> style='display: none'<?php } ?>>云应用</a></li>
+            <li class="normal"><a href="#" onClick="secBoard('nav',6,'paoma','跑马管理');" <?php if(!$info['xitong']){?> style='display: none'<?php } ?>>跑马管理</a></li>
         </ul>
     </div>
 </div><!--header end-->
@@ -196,6 +198,7 @@ function api_off_on_open(key){
             <?php if($info['user']){?> <li class="left_date"><a href="#" onClick="secBoard('nav',3,'user','用户管理');">用户管理</a></li><?php } ?>
             <?php if($info['yemian']){?> <li class="left_date"><a href="#" onClick="secBoard('nav',4,'template','界面管理');">界面管理</a></li><?php } ?>
             <?php if($info['yun']){?> <li class="left_date"><a href="#" onClick="secBoard('nav',5,'yunapp','云应用');">云应用</a></li><?php } ?>
+            <?php if($info['yun']){?> <li class="left_date"><a href="#" onClick="secBoard('nav',6,'paoma','跑马管理');">跑马管理</a></li><?php } ?>
         </ul>
         <?php } ?>
      <ul class="left_date" id="content">
@@ -274,6 +277,23 @@ function api_off_on_open(key){
 	 <!-- <li class="head">充值卡管理</li>
         <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/czk/vote_admin/">充值卡管理</a></li>
 		 -->
+    </ul>
+    <ul class="left_date" id="paoma">
+        <li class="head">赛马管理</li>
+         <!-- <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/api/upfile">在线升级</a></li> -->
+        <!--<li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/api/plugin/get/bom">BOM检测</a></li>-->
+         <!-- <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/api/plugin/admin/egglotter/listlotter">游戏设置</a></li>  -->
+        <!-- <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/api/qqlogin/qq_set_config">QQ登陆</a></li>  -->
+        <!-- <li><a href="javascript:void(0);" src="<?php echo G_ADMIN_PATH; ?>/fund/fundset">公益基金</a></li> -->
+         <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/admin/paoma/show">设置赔率</a></li>
+    <li><a href="javascript:void(0);" src="<?php echo G_ADMIN_PATH; ?>/paoma/betlist">下注列表</a></li>
+    <li><a href="javascript:void(0);" src="<?php echo G_ADMIN_PATH; ?>/auto_register/show">下注设置</a></li>
+    <li><a href="javascript:void(0);" src="<?php echo G_ADMIN_PATH; ?>/auto_register/show">往期记录</a></li>
+
+    
+     <!-- <li class="head">充值卡管理</li>
+        <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/czk/vote_admin/">充值卡管理</a></li>
+         -->
     </ul>
 	 <div style="padding:30px 10px; color:#ccc">
      	<p>
