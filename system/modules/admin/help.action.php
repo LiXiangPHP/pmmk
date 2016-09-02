@@ -38,7 +38,7 @@ class help extends admin {
 		include $this->tpl(ROUTE_M,'help.lists');
 	}
 	
-	
+	/*帮助模块-会员问题删除（记录不存在）*/
 	public function help_del() {
 		$info=$this->AdminInfo;
 		// print_r($info);die;
@@ -55,6 +55,7 @@ class help extends admin {
 		}
 	}
 	
+	/*帮助模块-会员问题删除（记录不存在）*/
 	public function help_dels() {
 		$info=$this->AdminInfo;
 		// print_r($info);die;
@@ -71,6 +72,7 @@ class help extends admin {
 		}
 	}
 	
+	/*帮助模块-会员问题删除（记录存在）*/
 	public function help_delall() {
 		$info=$this->AdminInfo;
 		// print_r($info);die;
@@ -93,6 +95,7 @@ class help extends admin {
 		}
 	}
 	
+	/*帮助模块-会员已删除问题查看*/
 	public function help_dus() {
 		$info=$this->AdminInfo;
 		// print_r($info);die;
@@ -114,6 +117,7 @@ class help extends admin {
 		include $this->tpl(ROUTE_M,'help.dus');
 	}
 	
+	/*帮助模块-会员问题回复*/
 	public function help_reply() {
 		$info=$this->AdminInfo;
 		// print_r($info);die;
