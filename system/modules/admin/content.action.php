@@ -903,7 +903,7 @@ HTML;
 		$id=intval($this->segment(4));		
 		$this->db->Query("DELETE FROM `@#_article` WHERE (`id`='$id') LIMIT 1");
 			if($this->db->affected_rows()){			
-				echo WEB_PATH.'/'.ROUTE_M.'/content/list_article';
+				echo WEB_PATH.'/'.ROUTE_M.'/content/article_list';
 			}else{
 				echo "no";
 			}	

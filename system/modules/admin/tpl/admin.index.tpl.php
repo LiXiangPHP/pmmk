@@ -207,6 +207,11 @@ function api_off_on_open(key){
         <li><a href="javascript:void(0);" src="<?php echo G_MODULE_PATH; ?>/category/addcate/danweb">添加单页</a></li>
         <li><a href="javascript:void(0);" src="<?php echo G_MODULE_PATH; ?>/category/lists/single">单页列表</a></li>
         <!--<li><a href="javascript:void(0);" src="<?php echo G_MODULE_PATH; ?>/content/lists">管理内容</a></li>-->	
+		
+		<li class="head">帮助管理</li>
+        <li><a href="javascript:void(0);" src="<?php echo G_MODULE_PATH; ?>/help/help_show">查看</a></li>
+		<li><a href="javascript:void(0);" src="<?php echo G_MODULE_PATH; ?>/help/help_dus">已删除</a></li>
+		
         <li class="head">其他</li>
         <li><a href="javascript:void(0);" src="<?php echo G_MODULE_PATH; ?>/content/model">内容模型</a></li>
         <li><a href="javascript:void(0);" src="<?php echo G_MODULE_PATH; ?>/category/lists">栏目管理</a></li>
