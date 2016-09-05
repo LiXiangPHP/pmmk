@@ -718,6 +718,35 @@ HTML;
 		}
 		include $this->tpl(ROUTE_M,'member.pay_list');	
 	}
+
+	//签到规则设置
+	public function sign_rules() {
+
+		$signlist = $this->db->GetList("select * from `@#_signrules`");
+		if(isset($_POST['submit'])){
+			
+			unset($_POST['submit']);
+			$content = $_POST;
+			$ids = array();
+			if($content) {
+				foreach($content as $key => $v) {
+					$arr = explode('-',$key);
+					$ids[$arr[1]]= $v;
+				}	
+			}
+			$res = array();
+			foreach ($ids as $key => $value) {
+				$res = $this->db->Query("UPDATE `@#_signrules` SET `points` = $value WHERE `id` = $key");
+			}
+			foreach ($res as $value) {
+				if(!$value){
+					_message("设置失败");
+				}
+			}
+			_message("设置成功");
+		}
+		include $this->tpl(ROUTE_M,'member.sign_rules');
+	}
 }
 
 ?>

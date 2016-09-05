@@ -254,6 +254,7 @@ function api_off_on_open(key){
         <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/member/member/pay_list">消费记录</a></li>
 		<li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/member/member/member_group">会员组</a></li>
 		<li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/member/member/commissions">佣金申请提现管理</a></li>
+        <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/member/member/sign_rules">签到管理</a></li>
         
     </ul>
     <ul class="left_date" id="template">   
