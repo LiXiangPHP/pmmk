@@ -93,12 +93,8 @@ class shop extends SystemAction {
 		}
 		$page=System::load_sys_class('page');
 		$page->config($total,$num,$pagenum,"0");
-		$data = $this->db->GetPage("SELECT b.img,b.username, a.sd_id id,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments  FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
-		foreach($data as $key => $val) {
-			$title = $this->db->GetOne("select title from `@#_shoplist` where id = ".$val['sd_shopid']." limit 1");
-			$data[$key]['title'] = $title['title'];
-		}
-
+		$data = $this->db->GetPage("SELECT b.img,b.username, a.sd_id id,a.sd_title title,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments  FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+	
 		// echo "<pre>";
 		// print_r($data);die;
 		if($data) {
@@ -209,12 +205,8 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$data = $this->db->GetPage("SELECT b.img,b.username,a.sd_id id,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid and a.sd_shopid = $id ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
-			foreach($data as $key => $val) {
-				$title = $this->db->GetOne("select title from `@#_shoplist` where id = ".$val['sd_shopid']." limit 1");
-				$data[$key]['title'] = $title['title'];
-			}
-
+			$data = $this->db->GetPage("SELECT b.img,b.username,a.sd_id id,a.sd_title title,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid and a.sd_shopid = $id ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			
 			// echo "<pre>";
 			// print_r($data);die;
 			if($data) {
