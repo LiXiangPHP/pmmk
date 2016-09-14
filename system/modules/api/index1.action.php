@@ -11,7 +11,7 @@ class index1 extends SystemAction {
 		//最新获奖信息
 		$member_record=$db->GetList("select username,shopname from `@#_member_go_record` order by id DESC LIMIT 7");
 		//商品列表
-		$hotshop = $db->GetList("select id,thumb,keywords,money,qishu,canyurenshu,shenyurenshu from `@#_shoplist` leftjion  where `q_uid` is null and `renqi` = '1' order by id DESC LIMIT 6 ");
+		$hotshop = $db->GetList("select id,thumb,title,money,qishu,canyurenshu,shenyurenshu from `@#_shoplist` leftjion  where `q_uid` is null and `renqi` = '1' order by id DESC LIMIT 6 ");
 		$data = array(
 		'banner'=>$bannerurl,
 		'zxhjxx'=>$member_record,
