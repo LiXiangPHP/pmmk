@@ -209,7 +209,7 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$data = $this->db->GetPage("SELECT b.img,b.username,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid and a.sd_shopid = $id ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$data = $this->db->GetPage("SELECT b.img,b.username,a.sd_id id,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid and a.sd_shopid = $id ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			foreach($data as $key => $val) {
 				$title = $this->db->GetOne("select title from `@#_shoplist` where id = ".$val['sd_shopid']." limit 1");
 				$data[$key]['title'] = $title['title'];
@@ -269,7 +269,7 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$data = $this->db->GetPage("SELECT a.canyurenshu part,b.username,b.uphoto,b.time,b.ip FROM `@#_shoplist` a, `@#_member_go_record` b where a.id = b.shopid and b.shopid in($ids)",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$data = $this->db->GetPage("SELECT a.canyurenshu part,b.id,b.username,b.uphoto,b.time,b.ip FROM `@#_shoplist` a, `@#_member_go_record` b where a.id = b.shopid and b.shopid in($ids)",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			// echo "<pre>";
 			// print_r($data);die;
 			if($data) {
@@ -313,7 +313,7 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$data = $this->db->GetPage("select `qishu` periods,`title`,`money`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain from `@#_shoplist` where title like '%$keywords%' ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$data = $this->db->GetPage("select id,`qishu` periods,`title`,`money`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain from `@#_shoplist` where title like '%$keywords%' ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			// echo "<pre>";
 			// print_r($data);die;
 			if($data) {
