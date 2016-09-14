@@ -51,7 +51,7 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$data = $this->db->GetPage("SELECT `qishu`,`title`,`money`,`zongrenshu`,`canyurenshu`,`shenyurenshu` FROM `@#_shoplist` where `cateid` = '$cateid'",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$data = $this->db->GetPage("SELECT id,`qishu` periods,`title`,`money`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain  FROM `@#_shoplist` where `cateid` = '$cateid'",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			// echo "<pre>";
 			// print_r($data);die;
 			if($data) {
@@ -67,7 +67,7 @@ class shop extends SystemAction {
 	}
 
 	/*获得晒单数据*/
-	public function json_shaidan() {
+	public function json_shopshare() {
 		$code = '';
 		$msg = '';
 		$data = array();
@@ -88,7 +88,7 @@ class shop extends SystemAction {
 		}
 		$page=System::load_sys_class('page');
 		$page->config($total,$num,$pagenum,"0");
-		$data = $this->db->GetPage("SELECT b.img,b.username,a.sd_qishu,a.sd_shopid,a.sd_content,a.sd_photolist,a.sd_time,a.sd_ping FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		$data = $this->db->GetPage("SELECT b.img,b.username, a.sd_id id,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments  FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 		foreach($data as $key => $val) {
 			$title = $this->db->GetOne("select title from `@#_shoplist` where id = ".$val['sd_shopid']." limit 1");
 			$data[$key]['title'] = $title['title'];
@@ -114,7 +114,7 @@ class shop extends SystemAction {
 		$data = array();
 		$gid = abs(intval($_POST['gid']));
 		if($gid) {
-			$data = $this->db->GetOne("SELECT qishu,title,picarr,zongrenshu,canyurenshu,shenyurenshu FROM `@#_shoplist` where id = '$gid' limit 1");
+			$data = $this->db->GetOne("SELECT qishu periods,title,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
 			// echo "<pre>";
 			// print_r($data);die;
 			if($data) {
@@ -171,7 +171,7 @@ class shop extends SystemAction {
 	}
 
 	/*获得商品晒单数据*/
-	public function json_share() {
+	public function json_goodshare() {
 		$code = '';
 		$msg = '';
 		$data = array();
