@@ -35,7 +35,9 @@ class help extends SystemAction {
 			$code = 100;
 			$msg = "数据为空";
 		}
-		$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+		$json = array('code' => $code, 'msg' => $msg, 'data' => $data); 
+
+		
 		echo json_encode($json);
 		
 
