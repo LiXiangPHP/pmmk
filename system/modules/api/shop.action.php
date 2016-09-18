@@ -32,6 +32,7 @@ class shop extends SystemAction {
 		$code = '';
 		$msg = '';
 		$data = array();
+		$shul = 10;
 		$cateid =  abs(intval($_POST['cid']));
 		$pagenum = abs(intval($_POST['p']));
 		if(empty($pagenum)) {
@@ -51,7 +52,13 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$data = $this->db->GetPage("SELECT id,`qishu` periods,`title`,`money`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain  FROM `@#_shoplist` where `cateid` = '$cateid'",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$Gdata = $this->db->GetPage("SELECT id,`qishu` periods,`title`,`money`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain  FROM `@#_shoplist` where `cateid` = '$cateid'",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			foreach($Gdata as $v) {
+				$data['data'][] = $v;
+			}
+			if($data['data']) {
+				$data['total'] = $yeshu;
+			}
 			// echo "<pre>";
 			// print_r($data);die;
 			if($data) {
@@ -81,7 +88,7 @@ class shop extends SystemAction {
 			$pagenum=1;
 		}
 		$total = $this->db->GetCount("select * from `@#_shaidan`");
-		$num = 4;
+		$num = 10;
 		$yushu=$total%$num;
 		if($yushu > 0) {
 			$yeshu=floor($total/$num)+1;
@@ -93,8 +100,13 @@ class shop extends SystemAction {
 		}
 		$page=System::load_sys_class('page');
 		$page->config($total,$num,$pagenum,"0");
-		$data = $this->db->GetPage("SELECT b.img,b.username, a.sd_id id,a.sd_title title,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments  FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
-	
+		$Sdata = $this->db->GetPage("SELECT b.img,b.username, a.sd_id id,a.sd_title title,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments  FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		foreach($Sdata as $v) {
+			$data['data'][] = $v;
+		}
+		if($data['data']) {
+			$data['total'] = $yeshu;
+		}
 		// echo "<pre>";
 		// print_r($data);die;
 		if($data) {
@@ -148,7 +160,7 @@ class shop extends SystemAction {
 		$item = $this->db->GetOne("select * from `@#_shoplist` where `id`='$itemid' LIMIT 1");
 		if($item) {
 			$total = $this->db->GetCount("select * from `@#_shoplist` where q_showtime = 'N' and q_user_code IS NOT NULL and sid = '$item[sid]'");
-			$num = 4;
+			$num = 10;
 			$yushu = $total%$num;
 			if($yushu > 0) {
 				$yeshu=floor($total/$num)+1;
@@ -160,8 +172,13 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$data = $this->db->GetPage("SELECT title,username,img,user_ip ip,qishu periods,q_user_code gcode,canyurenshu part FROM `@#_shoplist` a, `@#_member` b where q_showtime = 'N' and q_user_code IS NOT NULL and sid = '$item[sid]' and a.q_uid = b.uid",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
-
+			$Pdata = $this->db->GetPage("SELECT title,username,img,user_ip ip,qishu periods,q_user_code gcode,canyurenshu part FROM `@#_shoplist` a, `@#_member` b where q_showtime = 'N' and q_user_code IS NOT NULL and sid = '$item[sid]' and a.q_uid = b.uid",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			foreach($Pdata as $v) {
+				$data['data'][] = $v;
+			}
+			if($data['data']) {
+				$data['total'] = $yeshu;
+			}
 			// echo "<pre>";
 			// print_r($data);die;
 			if($data) {
@@ -193,7 +210,7 @@ class shop extends SystemAction {
 		}
 		if($id) {
 			$total = $this->db->GetCount("select * from `@#_shaidan` where sd_shopid = $id ");
-			$num = 4;
+			$num = 10;
 			$yushu=$total%$num;
 			if($yushu > 0) {
 				$yeshu=floor($total/$num)+1;
@@ -205,8 +222,13 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$data = $this->db->GetPage("SELECT b.img,b.username,a.sd_id id,a.sd_title title,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid and a.sd_shopid = $id ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
-			
+			$Sdata = $this->db->GetPage("SELECT b.img,b.username,a.sd_id id,a.sd_title title,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid and a.sd_shopid = $id ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			foreach($Sdata as $v) {
+				$data['data'][] = $v;
+			}
+			if($data['data']) {
+				$data['total'] = $yeshu;
+			}
 			// echo "<pre>";
 			// print_r($data);die;
 			if($data) {
@@ -261,7 +283,14 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$data = $this->db->GetPage("SELECT a.canyurenshu part,b.id,b.username,b.uphoto,b.time,b.ip FROM `@#_shoplist` a, `@#_member_go_record` b where a.id = b.shopid and b.shopid in($ids)",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$Idata = $this->db->GetPage("SELECT a.canyurenshu part,b.id,b.username,b.uphoto,b.time,b.ip FROM `@#_shoplist` a, `@#_member_go_record` b where a.id = b.shopid and b.shopid in($ids)",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			foreach($Idata as $v) {
+				$data['data'][] = $v;
+			}
+			if($data['data']) {
+				$data['total'] = $yeshu;
+			}
+
 			// echo "<pre>";
 			// print_r($data);die;
 			if($data) {
@@ -305,7 +334,14 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$data = $this->db->GetPage("select id,`qishu` periods,`title`,`money`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain from `@#_shoplist` where title like '%$keywords%' ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$Sdata = $this->db->GetPage("select id,`qishu` periods,`title`,`money`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain from `@#_shoplist` where title like '%$keywords%' ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			foreach($Sdata as $v) {
+				$data['data'][] = $v;
+			}
+			if($data['data']) {
+				$data['total'] = $yeshu;
+			}
+
 			// echo "<pre>";
 			// print_r($data);die;
 			if($data) {
@@ -315,6 +351,7 @@ class shop extends SystemAction {
 				$code = 100;
 				$msg = "数据为空";
 			}
+
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
 		}else {
