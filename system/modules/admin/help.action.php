@@ -25,7 +25,8 @@ class help extends admin {
 			echo '没有权限！';die;
 		}
 		$this->ment=array(
-			array("lists","帮助管理",ROUTE_M.'/'.ROUTE_C."/help_list"),
+			array("lists","帮助管理",ROUTE_M.'/'.ROUTE_C."/help_show"),
+			array("add","添加热门问题",ROUTE_M.'/'.ROUTE_C."/help_add"),
 		);
 		
 		$list_where = "`is_delete` = 0";
@@ -34,8 +35,38 @@ class help extends admin {
 		$page=System::load_sys_class('page');
 		if(isset($_GET['p'])){$pagenum=$_GET['p'];}else{$pagenum=1;}	
 		$page->config($total,$num,$pagenum,"0");
-		$helplist=$this->db->GetPage("SELECT id,a.uid,issue,reply,is_check,times,username FROM `@#_help` a,`@#_member` b WHERE $list_where AND a.uid = b.uid",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		$helplist=$this->db->GetPage("SELECT id,uid,issue,reply,is_check,times,hot FROM `@#_help` WHERE $list_where ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+	
+		foreach($helplist as $k => $v) {
+			$arr = $this->db->GetOne("SELECT username FROM `@#_member` where `uid`='$v[uid]' LIMIT 1");
+			$helplist[$k]['username'] = $arr['username'];
+		}
 		include $this->tpl(ROUTE_M,'help.lists');
+	}
+
+	/*帮助模块-热门问题添加*/
+	public function help_add() {
+		$info=$this->AdminInfo;
+		// print_r($info);die;
+		if(!$info['neirong'])
+		{
+			echo '没有权限！';die;
+		}
+		if(isset($_POST['dosubmit'])){
+			$description = htmlspecialchars($_POST['description']);
+			$detail = htmlspecialchars($_POST['detail']);
+			$time = date('Y-m-d h:i:s');
+			$sql="insert into `@#_help` (`issue`,`reply`,`times`,`is_check`,`hot`)  value('$description','$detail','$time',1 ,1)";
+			$this->db->Query($sql);
+			
+			if($this->db->affected_rows()){
+				_message("操作成功!");
+			}else{
+				_message("操作失败!");
+			}
+			header("Cache-control: private");
+		}
+		include $this->tpl(ROUTE_M,'help.add');
 	}
 	
 	/*帮助模块-会员问题删除（记录不存在）*/
@@ -146,6 +177,21 @@ class help extends admin {
 		}
 		include $this->tpl(ROUTE_M,'help.reply');
 		
+	}
+
+	/*帮助模块--热门问题查看*/
+	public function help_shows() {
+		$info=$this->AdminInfo;
+		// print_r($info);die;
+		if(!$info['neirong'])
+		{
+			echo '没有权限！';die;
+		}
+		$id=intval($this->segment(4));	
+		$info=$this->db->GetOne("SELECT * FROM `@#_help` where `id`='$id' LIMIT 1");
+		if(!$info)_message("参数错误");	
+
+		include $this->tpl(ROUTE_M,'help.hlists');
 	}
 
 

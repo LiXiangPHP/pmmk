@@ -40,7 +40,8 @@ body{ background-color:#fff}
 					<th>所属会员</th>  
                     <th>提问内容</th>
                     <th>审核状态</th>
-                    <th>提问时间</th>        
+                    <th>提问时间</th>
+                    <th>热门问题</th>        
                     <th>管理</th>
 				</tr>
         </thead>
@@ -49,15 +50,22 @@ body{ background-color:#fff}
             <tr>
               <td align='center'><input name='hcheck[]' type='checkbox' value="<?php echo $v['id'];?>" class='input-text-c'></td>
                 <td><?php echo $v['id'];?></td>
-				<td><?php echo $v['username']; ?></a></td>
+				        <td><?php echo $v['username']; ?></a></td>
                 <td><?php echo $v['issue'];?></td>
                 <td><?php echo $v['is_check'] == 0?'未审核':'已回复'; ?></td>
                 <td><?php echo $v['times'];?></td>
+                <td><?php echo $v['hot']==1?"是":"否";?></td>
                 <td class="action">
+                <?php  if($v['hot'] != 1) { ?>
                 <a href="<?php echo G_ADMIN_PATH; ?>/help/help_reply/<?php echo $v['id'];?>">回复</a>
-                <span class='span_fenge lr5'>|</span>    
+                <span class='span_fenge lr5'>|</span>   
+                 <?php  }else { ?>
+                 <a href="<?php echo G_ADMIN_PATH; ?>/help/help_shows/<?php echo $v['id'];?>">查看</a>
+                <span class='span_fenge lr5'>|</span>
+                 <?php  }?>
                 <a href="javascript:window.parent.Del('<?php echo G_ADMIN_PATH.'/help/help_del/'.$v['id'];?>', '确认删除这条记录吗？');">删除</a>
-				</td>
+				       
+                </td>
             </tr>
             <?php } ?>
         </tbody>

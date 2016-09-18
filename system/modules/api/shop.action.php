@@ -101,6 +101,8 @@ class shop extends SystemAction {
 		$page->config($total,$num,$pagenum,"0");
 		$Sdata = $this->db->GetPage("SELECT b.img,b.username, a.sd_id id,a.sd_title title,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments  FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 		foreach($Sdata as $v) {
+			$v['img'] = "gangmaduobao.com/statics/uploads/".$v['img'];
+			$v['photolist'] = "gangmaduobao.com/statics/uploads/".$v['photolist'];
 			$data['data'][] = $v;
 		}
 		if($data['data']) {
@@ -127,6 +129,12 @@ class shop extends SystemAction {
 		$gid = abs(intval($_POST['gid']));
 		if($gid) {
 			$data = $this->db->GetOne("SELECT qishu periods,title,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
+			
+			$data['picarr'] = unserialize($data['picarr']);
+			foreach ($data['picarr'] as $k => $v) {
+				$data['picarr'][$k] = "gangmaduobao.com/statics/uploads/".$v;
+			}
+
 			// echo "<pre>";
 			// print_r($data);die;
 			if($data) {
@@ -173,6 +181,7 @@ class shop extends SystemAction {
 			$page->config($total,$num,$pagenum,"0");
 			$Pdata = $this->db->GetPage("SELECT title,username,img,user_ip ip,qishu periods,q_user_code gcode,canyurenshu part FROM `@#_shoplist` a, `@#_member` b where q_showtime = 'N' and q_user_code IS NOT NULL and sid = '$item[sid]' and a.q_uid = b.uid",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			foreach($Pdata as $v) {
+				$v['img'] = "gangmaduobao.com/statics/uploads/".$v['img'];
 				$data['data'][] = $v;
 			}
 			if($data['data']) {
@@ -223,6 +232,8 @@ class shop extends SystemAction {
 			$page->config($total,$num,$pagenum,"0");
 			$Sdata = $this->db->GetPage("SELECT b.img,b.username,a.sd_id id,a.sd_title title,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid and a.sd_shopid = $id ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			foreach($Sdata as $v) {
+				$v['img'] = "gangmaduobao.com/statics/uploads/".$v['img'];
+				$v['photolist'] = "gangmaduobao.com/statics/uploads/".$v['photolist'];
 				$data['data'][] = $v;
 			}
 			if($data['data']) {
@@ -284,6 +295,7 @@ class shop extends SystemAction {
 			$page->config($total,$num,$pagenum,"0");
 			$Idata = $this->db->GetPage("SELECT a.canyurenshu part,b.id,b.username,b.uphoto,b.time,b.ip FROM `@#_shoplist` a, `@#_member_go_record` b where a.id = b.shopid and b.shopid in($ids)",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			foreach($Idata as $v) {
+				$v['uphoto'] = "gangmaduobao.com/statics/uploads/".$v['uphoto'];
 				$data['data'][] = $v;
 			}
 			if($data['data']) {
@@ -360,6 +372,8 @@ class shop extends SystemAction {
 			echo json_encode($json);
 		}
 	}
+
+
 }
 
 ?>
