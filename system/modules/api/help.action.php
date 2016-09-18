@@ -35,7 +35,7 @@ class help extends SystemAction {
 			$code = 100;
 			$msg = "数据为空";
 		}
-		$json = array('code' => $code, 'msg' => $msg, 'data' => $data); 
+		$json = array('code' => $code, 'msg' => $msg); 
 
 
 		echo json_encode($json);
@@ -45,6 +45,36 @@ class help extends SystemAction {
 //帮助
 	public function hp(){
 		
+		$db = System::load_sys_class('model');
+		$type = isset($_POST['type']) ? $_POST['type'] : null;
+		if ($type==1) {
+			$uid = isset($_POST['uid']) ? $_POST['uid'] : null;
+			$data =  $db->GetList("select issue,id from `@#_help` where uid=$uid ");
+			if($data) {
+			$code = 200;
+			$msg = "查询成功";
+			}else {
+			$code = 100;
+			$msg = "数据为空";
+			}
+			$json = array('type' => $type, 'code' => $code, 'msg' => $msg, 'data' => $data);
+			echo json_encode($json);
+		}elseif($type==2){
+			$data =  $db->GetList("select issue,id from `@#_help` where hot=1 ");
+			if($data) {
+			$code = 200;
+			$msg = "查询成功";
+			}else {
+			$code = 100;
+			$msg = "数据为空";
+			}
+			$json = array('type' => $type,'code' => $code, 'msg' => $msg, 'data' => $data);
+			echo json_encode($json);
+		}else{
+			$code = 300;
+			$msg = "没有传入正确的type";
+			$json = array('code' => $code, 'msg' => $msg);
+		}
 		
 		
 
