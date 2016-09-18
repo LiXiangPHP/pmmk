@@ -32,7 +32,6 @@ class shop extends SystemAction {
 		$code = '';
 		$msg = '';
 		$data = array();
-		$shul = 10;
 		$cateid =  abs(intval($_POST['cid']));
 		$pagenum = abs(intval($_POST['p']));
 		if(empty($pagenum)) {
@@ -52,12 +51,12 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$Gdata = $this->db->GetPage("SELECT id,`qishu` periods,`title`,`money`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain  FROM `@#_shoplist` where `cateid` = '$cateid'",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
-			foreach($Gdata as $v) {
+			$Sdata = $this->db->GetPage("SELECT id,`qishu` periods,`title`,`money`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain  FROM `@#_shoplist` where `cateid` = '$cateid'",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			foreach($Sdata as $v) {
 				$data['data'][] = $v;
 			}
 			if($data['data']) {
-				$data['total'] = $yeshu;
+				$data['ptotal'] = $yeshu;
 			}
 			// echo "<pre>";
 			// print_r($data);die;
@@ -105,7 +104,7 @@ class shop extends SystemAction {
 			$data['data'][] = $v;
 		}
 		if($data['data']) {
-			$data['total'] = $yeshu;
+			$data['ptotal'] = $yeshu;
 		}
 		// echo "<pre>";
 		// print_r($data);die;
@@ -177,7 +176,7 @@ class shop extends SystemAction {
 				$data['data'][] = $v;
 			}
 			if($data['data']) {
-				$data['total'] = $yeshu;
+				$data['ptotal'] = $yeshu;
 			}
 			// echo "<pre>";
 			// print_r($data);die;
@@ -227,7 +226,7 @@ class shop extends SystemAction {
 				$data['data'][] = $v;
 			}
 			if($data['data']) {
-				$data['total'] = $yeshu;
+				$data['ptotal'] = $yeshu;
 			}
 			// echo "<pre>";
 			// print_r($data);die;
@@ -288,7 +287,7 @@ class shop extends SystemAction {
 				$data['data'][] = $v;
 			}
 			if($data['data']) {
-				$data['total'] = $yeshu;
+				$data['ptotal'] = $yeshu;
 			}
 
 			// echo "<pre>";
@@ -339,7 +338,7 @@ class shop extends SystemAction {
 				$data['data'][] = $v;
 			}
 			if($data['data']) {
-				$data['total'] = $yeshu;
+				$data['ptotal'] = $yeshu;
 			}
 
 			// echo "<pre>";
