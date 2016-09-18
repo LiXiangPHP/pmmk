@@ -7,7 +7,7 @@ class help extends SystemAction {
 		
 		$db = System::load_sys_class('model');
 		$id = isset($_POST['id']) ? $_POST['id'] : null;
-		$data =  $db->GetOne("select issue reply from `@#_help` where id=$id ");
+		$data =  $db->GetOne("select issue,reply from `@#_help` where id=$id ");
 		if($data) {
 			$code = 200;
 			$msg = "查询成功";
@@ -42,6 +42,14 @@ class help extends SystemAction {
 		
 
 	}
+//帮助
+	public function hp(){
+		
+		
+		
+
+	}
+
 
 }
 
