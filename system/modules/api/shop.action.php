@@ -127,7 +127,6 @@ class shop extends SystemAction {
 		$msg = '';
 		$data = array();
 		$gid = abs(intval($_POST['gid']));
-		// $uid = abs(intval($_POST['uid']));
 		if($gid) {
 			$data = $this->db->GetOne("SELECT qishu periods,title,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
 			if($data['remain'] == 0) {
@@ -152,7 +151,7 @@ class shop extends SystemAction {
 			// }
 			$data['ustate'] = "您还未参与本期夺宝";
 			// echo "<pre>";
-			// print_r($ids);die;
+			// print_r($data);die;
 			if($data) {
 				$code = 200;
 				$msg = "查询成功";
@@ -247,13 +246,22 @@ class shop extends SystemAction {
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
 			$Sdata = $this->db->GetPage("SELECT b.img,b.username,a.sd_id id,a.sd_title title,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid and a.sd_shopid = $id ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$comnum = 0;
 			foreach($Sdata as $v) {
 				$v['img'] = "gangmaduobao.com/statics/uploads/".$v['img'];
 				$v['photolist'] = "gangmaduobao.com/statics/uploads/".$v['photolist'];
 				$data['data'][] = $v;
+				$comnum += $v['comments'];
+				$data['cnum'] = $comnum;
 			}
 			if($data['data']) {
 				$data['ptotal'] = $yeshu;
+			}
+			$unum = $this->db->GetList("select count(sd_userid) id from `@#_shaidan` where sd_shopid = $id");
+			if($unum) {
+				foreach($unum as $v) {
+					$data['usernum'] = $v['id'];
+				}				
 			}
 			// echo "<pre>";
 			// print_r($data);die;
