@@ -194,7 +194,7 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$Pdata = $this->db->GetPage("SELECT title,username,img,user_ip ip,qishu periods,q_user_code gcode,canyurenshu part FROM `@#_shoplist` a, `@#_member` b where q_showtime = 'N' and q_user_code IS NOT NULL and sid = '$item[sid]' and a.q_uid = b.uid",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$Pdata = $this->db->GetPage("SELECT title,username,img,user_ip ip,qishu periods,q_user_code gcode,canyurenshu part, q_end_time etime FROM `@#_shoplist` a, `@#_member` b where q_showtime = 'N' and q_user_code IS NOT NULL and sid = '$item[sid]' and a.q_uid = b.uid",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			foreach($Pdata as $v) {
 				$v['img'] = "gangmaduobao.com/statics/uploads/".$v['img'];
 				$data['data'][] = $v;
