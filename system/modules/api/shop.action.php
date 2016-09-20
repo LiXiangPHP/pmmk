@@ -127,16 +127,32 @@ class shop extends SystemAction {
 		$msg = '';
 		$data = array();
 		$gid = abs(intval($_POST['gid']));
+		// $uid = abs(intval($_POST['uid']));
 		if($gid) {
 			$data = $this->db->GetOne("SELECT qishu periods,title,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
-			
+			if($data['remain'] == 0) {
+				$data['state'] = "已揭晓";
+			}else {
+				$data['state'] = "夺宝中";
+			}
 			$data['picarr'] = unserialize($data['picarr']);
 			foreach ($data['picarr'] as $k => $v) {
 				$data['picarr'][$k] = "gangmaduobao.com/statics/uploads/".$v;
 			}
 
+			// $uids = $this->db->GetList("SELECT uid FROM `@#_member_go_record` where shopid = '$gid' and shopqishu = '$data[periods]'");
+			// $ids = '';
+			// foreach($uids as $v) {
+			// 	$ids[] = $v['uid'];
+			// }
+			// if(in_array($uid, $ids)) {
+			// 	$data['ustate'] = "";
+			// }else {
+			// 	$data['ustate'] = "您还未参与本期夺宝";
+			// }
+			$data['ustate'] = "您还未参与本期夺宝";
 			// echo "<pre>";
-			// print_r($data);die;
+			// print_r($ids);die;
 			if($data) {
 				$code = 200;
 				$msg = "查询成功";
