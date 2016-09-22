@@ -1,7 +1,8 @@
 <?php
 
 class about extends SystemAction {
-	public function ab(){		
+
+	public function ab(){	
 		$db = System::load_sys_class('model');		
 		$data = $db->GetOne("select count from `@#_about` order by id DESC LIMIT 1" );
 		if($data) {
