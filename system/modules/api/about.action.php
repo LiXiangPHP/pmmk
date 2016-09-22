@@ -2,7 +2,10 @@
 
 class about extends SystemAction {
 
-	public function ab(){	
+	public function ab(){
+		$info = System::token_uid(1);
+		print_r($info);die();
+	
 		$db = System::load_sys_class('model');		
 		$data = $db->GetOne("select count from `@#_about` order by id DESC LIMIT 1" );
 		if($data) {

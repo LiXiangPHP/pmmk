@@ -43,7 +43,7 @@ class help extends SystemAction {
 
 	}
 //帮助
-	public function hp(){
+	public function hp()
 		
 		$db = System::load_sys_class('model');
 		$type = isset($_POST['type']) ? $_POST['type'] : null;
