@@ -39,6 +39,7 @@ tr{ text-align:center}
                     <th width="8%">赔率</th>             
                     <th width="10%">期数</th>
                     <th width="25%">下注时间</th>
+                    <th width="8%">投注数</th>
                     <th width="15%">管理</th>
 				</tr>
         </thead>
@@ -52,9 +53,9 @@ tr{ text-align:center}
                 <td><span style=""><?php echo $v['odds'];?></span></td>
                 <td><span style=""><?php echo $v['issue'];?></span></td>
                 <td><span style=""><?php echo $v['time'];?></span></td>
+                <td><span style=""><?php echo $v['number'];?></span></td>
 
                 <td class="action"> 
-                [<a href="<?php echo G_ADMIN_PATH; ?>/content/goods_edit/<?php echo $v['id'];?>">修改</a>] 
 				[<a href="javascript:;"  id="<?php echo $v['id'];?>" class="del_good">删除</a>]
 				</td>
             </tr>

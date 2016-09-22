@@ -82,37 +82,38 @@ class paoma extends admin {
 					
 		);		
 	    $cateid=$this->segment(4);
-
-		$list_where = '';
+	    $issue=$this->db->GetOne("SELECT issue FROM `@#_bet` order by `issue` DESC limit 1");
+		$issue = $issue['issue'];
+		$list_where = "issue = ".$issue;
 		if($cateid){
 
 			if($cateid=='qishu'){
-				$list_where = "1 order by `issue` DESC";
+				$list_where .= " order by `issue` DESC";
 			}
 			if($cateid=='qishuasc'){
-				$list_where = "1 order by `issue` ASC";
+				$list_where .= " order by `issue` ASC";
 			}
 			if($cateid=='peilv'){
-				$list_where = "1 order by `odds` DESC";
+				$list_where .= " order by `odds` DESC";
 			}
 			if($cateid=='peilvasc'){
-				$list_where = "1 order by `odds` ASC";
+				$list_where .= " order by `odds` ASC";
 			}
 			if($cateid==''){
-				$list_where = " 1 order by `time` DESC";
+				$list_where .= "  order by `time` DESC";
 			}
 					
 		}else{
-			$list_where = "1 order by `time` DESC";
+			$list_where .= " order by `time` DESC";
 		}		
+		// echo $list_where;die;
 		
-	
 		$num=20;
 		$total=$this->db->GetCount("SELECT COUNT(*) FROM `@#_bet` WHERE $list_where"); 
 		$page=System::load_sys_class('page');
 		if(isset($_GET['p'])){$pagenum=$_GET['p'];}else{$pagenum=1;}	
 		$page->config($total,$num,$pagenum,"0");
-		$betlist=$this->db->GetPage("SELECT * FROM `@#_bet` WHERE $list_where",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		$betlist=$this->db->GetPage("SELECT * FROM `@#_bet` WHERE $list_where",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0,));
 		include $this->tpl(ROUTE_M,'bet.lists');
 
 	}
@@ -126,4 +127,27 @@ class paoma extends admin {
 				_message("删除失败!");
 			}	
 	}
+	public function betset()
+	{
+		$bet_set=$this->db->GetOne("SELECT * FROM `@#_bet_set` ");
+		 // print_R($bet_set);die;
+		include $this->tpl(ROUTE_M,'bet.set');
+	}
+	public function update_set()
+	{
+		$minmoney = $_POST['minmoney'];
+		$mintime = $_POST['mintime'];
+		$id = $_POST['id'];
+		$sql="UPDATE `@#_bet_set` SET `minmoney`='$minmoney',`mintime`='$mintime' WHERE (`id`='$id')";
+		if($this->db->Query($sql))
+		{
+			echo  1;die;
+		}
+		else
+		{
+			echo  0;die;
+		}
+
+	}
+	
 }

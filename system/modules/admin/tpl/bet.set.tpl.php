@@ -15,9 +15,7 @@ tr{ text-align:center}
 </style>
 </head>
 <body>
-<div class="header lr10">
-	<?php echo $this->headerment();?>
-</div>
+
 <div class="bk10"></div>
 
 <div class="bk10"></div>
@@ -31,23 +29,23 @@ tr{ text-align:center}
         <table width="100%" cellspacing="0">
      	<thead>
         		<tr>
-                    <th width="5%">号码</th>        
-                    <th width="25%">赔率</th>    
+                    <th width="5%">最小下注金额</th>        
+                    <th width="25%">最晚下注时间</th>    
                     <th width="25%">操作</th> 
 
 				</tr>
         </thead>
         <tbody>				
-        	<?php foreach($option_list as $v) { ?>
+        	
             <tr>
             
-                <td><?php echo $v['number'];?></td>
-                <td><input type="text"  style='width: 50px' value='<?php echo floatval($v['odds']);?>' id ='odds' ></td>
-                <td><input type="button" class="button" value=" 保存 " id='<?php echo $v['id'];?>' onclick='change_odds(this)'/></td>
+                <td><input type="text"  style='width: 50px' value='<?php echo $bet_set['minmoney'];?>' id='minmoney'>(必须为整数)</td>
+                <td>结束前<input type="text"  style='width: 50px' value='<?php echo $bet_set['mintime'];?>' id='mintime'>分钟</td>
+                <td><input type="button" class="button" value=" 保存 " id='<?php echo $bet_set['id'];?>'  onclick='change_set(this)'/></td>
                
                 
             </tr>
-            <?php } ?>
+            
         </tbody>
      </table>     
 
@@ -56,30 +54,18 @@ tr{ text-align:center}
 
 
 <script>
-$(function(){
-	
-	$("a.del_good").click(function(){
-		
-		var id = $(this).attr("shopid");
-		var str = "<?php echo G_ADMIN_PATH; ?>/content/goods_dels/"+id;
-		var o = confirm("确认删除该商品的所有期数.不可恢复");
-		if(o){
-			window.parent.btn_map(str);
-		}	
-	
-	});
 
-
-});
-function change_odds(o)
+function change_set(o)
 {
-    var odds = $('#odds').val();
+    var minmoney = $('#minmoney').val();
+    var mintime = $('#mintime').val();
     var id = $(o).attr('id');
     $.ajax( {  
-         url:'?/admin/paoma/update_odds',// 跳转到 action  
+         url:'?/admin/paoma/update_set',// 跳转到 action  
           data:{  
                    
-                   odds : odds,
+                   minmoney : minmoney,
+                   mintime : mintime,
                    id   : id
         },  
          type:'post',
