@@ -17,6 +17,7 @@
 
  define('G_BANBEN_TYPE',"9aabCQkBVlQABwcEU1wDD1NWUVcCClBaAwcAC1GK3fvfn5besLlKgbis04z5gr+wSoSF3Nmz09657BTWi+KC263Wu7EV19Pv2Jii0+rt");
 
+
  /*
  *---------------------------------------------------------------
  * SYSTEM FOLDER NAME
