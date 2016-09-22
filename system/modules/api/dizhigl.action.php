@@ -5,6 +5,7 @@ class dizhigl extends SystemAction {
 
 	public function dz(){
 		
+		
 		$db = System::load_sys_class('model');
 		$id = isset($_POST['id']) ? $_POST['id'] : null;
 		$data =  $db->GetList("select id,uid,sheng,shi,xian,jiedao,youbian,shouhuoren,mobile  from `@#_member_dizhi` where uid=$id ");
