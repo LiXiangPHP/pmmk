@@ -30,7 +30,7 @@ class card extends SystemAction {
 		}
 		$page=System::load_sys_class('page');
 		$page->config($total,$num,$pagenum,"0");
-		$Tdata = $this->db->GetPage("SELECT id,title,neirong content,hueifu total,hueiyuan uid,type,time  FROM `@#_quanzi_tiezi` where  `qzid` = 1 and tiezi = 0 ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		$Tdata = $this->db->GetPage("SELECT id,title,neirong content,hueifu total,hueiyuan uid,type,time,img  FROM `@#_quanzi_tiezi` where  `qzid` = 1 and tiezi = 0 ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 		foreach($Tdata as $v) {
 			if($v['type'] == 1) {
 				$v['username'] = "管理员";
