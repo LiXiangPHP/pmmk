@@ -34,23 +34,25 @@ class card extends SystemAction {
 		foreach($Tdata as $v) {
 			if($v['type'] == 1) {
 				$v['username'] = "管理员";
+				$v['identity'] = "admin";
 				unset($v['type']);
 				unset($v['uid']);
-				$data['admin'][] = $v;
+				$data['data'][] = $v;
 			}else {
 				$user = $this->db->GetOne("select username from `@#_member` where uid = '$v[uid]'  LIMIT 1");
 				$v['username'] = $user['username'];
+				$v['identity'] = "user";
 				unset($v['type']);
 				unset($v['uid']);
-				$data['home'][] = $v;
+				$data['data'][] = $v;
 			}
 			
 		}
-		if($data['home'] || $data['admin'] ) {
+		if($data['data']) {
 			$data['ptotal'] = $yeshu;
 		}
 		// echo "<pre>";
-		// print_r($data);die;	
+		// print_r($Tdata);die;	
 		if($data) {
 			$code = 200;
 			$msg = "查询成功";
@@ -64,6 +66,10 @@ class card extends SystemAction {
 
 	//获取帖子详情
 	public function json_cdetail() {
+		$code = '';
+		$msg  = '';
+		$data = array();
+		$cid  = abs(intval($_POST['id']));
 
 	}
 
