@@ -13,7 +13,7 @@ class dizhidel extends SystemAction {
 				$code = 100;
 			 	$msg = "没有数据";  
 		     }else{
-	    		  if($db->Query("DELETE FROM `@#_member_dizhi` where uid=$uid and id=$id ")!==false){
+	    		  if($db->Query("DELETE FROM `@#_member_dizhi` where uid='$info[uid]' and id=$id ")!==false){
 	    			 $code = 200;
 	    			 $msg = "删除成功";
 				  }else{
