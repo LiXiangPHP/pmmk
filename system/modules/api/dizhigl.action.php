@@ -4,11 +4,11 @@ class dizhigl extends SystemAction {
 
 
 	public function dz(){
-		$token = isset($_POST['token']) ? $_POST['token'] : null;
-		$info = System::token_uid('token');
+		$id = isset($_POST['id']) ? $_POST['id'] : null;
+		$info = System::token_uid($id);
 		if ($info['code']==200) {
 			$db = System::load_sys_class('model');
-			$data =  $db->GetList("select id,uid,sheng,shi,xian,jiedao,youbian,shouhuoren,mobile  from `@#_member_dizhi` where uid='$info[uid]' ");
+			$data =  $db->GetList("select id,uid,sheng,shi,jiedao,youbian,shouhuoren,mobile  from `@#_member_dizhi` where uid='$info[uid]' ");
 			if($data) {
 				$code = 200;
 				$msg = "查询成功";

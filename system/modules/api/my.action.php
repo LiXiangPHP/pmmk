@@ -4,7 +4,7 @@ class my extends SystemAction {
 //我的接口需求：
 	public function mm(){
 		$token = isset($_POST['token']) ? $_POST['token'] : null;
-		$info = System::token_uid('token');
+		$info = System::token_uid($token);
 		if ($info['code']==200) {
 			$db = System::load_sys_class('model');
 			$data =  $db->GetOne("select img,money,score from `@#_member` where uid='$info[uid]' ");
@@ -28,7 +28,7 @@ class my extends SystemAction {
 //基本信息
 public function mj(){
 	$token = isset($_POST['token']) ? $_POST['token'] : null;
-		$info = System::token_uid('token');
+		$info = System::token_uid($token);
 		if ($info['code']==200) {
 			$db = System::load_sys_class('model');
 			$data =  $db->GetOne("select img,username,sex from `@#_member` where uid='$info[uid]' ");

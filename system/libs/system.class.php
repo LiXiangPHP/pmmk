@@ -187,9 +187,9 @@ final class System {
 	public static function CreateApp(){
 		return self::load_sys_class('application');
 	}
-	public function token_uid($token){		
-			$db = System::load_sys_class('model');		
-			$data = $db->GetOne("select uid from `@#_member` where token = $token" );
+	public function token_uid($token){
+			$db = System::load_sys_class('model');	
+			$data = $db->GetOne("select uid from `@#_member` where `token` = '$token'" );
 			if($data)
 			{
 				$data['code'] = 200; 
