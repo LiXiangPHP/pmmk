@@ -72,18 +72,19 @@ class card extends SystemAction {
 				}
 			}
 			$sql = "select * from `@#_quanzi_tiezi` where qzid = 1 and hueiyuan != '$info[uid]' and ifsee = 0 and and pid in ($ids)";
-			echo $sql;die;
 			$reply = $this->db->GetList("select * from `@#_quanzi_tiezi` where qzid = 1 and hueiyuan != '$info[uid]' and ifsee = 0 and  pid in($ids)");
-			print_r($reply);die;
+			// print_r($reply);die;
 			if($reply) {
 				if(count($reply)>1) {
-					$data['reply'] = count($reply);
+					$data['reply'] = count($reply);//多人回复返回回复人数
 				}else {
-					$user = $this->db->GetOne("select username from `@#_member` where uid = '$reply[hueiyuan]'");
-					$data['reply'] = $user['username'];
+					foreach($reply as $v) {
+						$user = $this->db->GetOne("select username from `@#_member` where uid = '$v[hueiyuan]'");
+						$data['reply'] = $user['username'];//单人回复返回会员昵称
+					}
 				}
 			}else {
-				$data['reply'] = "";
+				$data['reply'] = "";//未有人回复则为空
 			}
 		}else {
 			foreach($Tdata as $v) {
@@ -97,13 +98,13 @@ class card extends SystemAction {
 					$user = $this->db->GetOne("select username from `@#_member` where uid = '$v[uid]'  LIMIT 1");
 					$v['username'] = $user['username'];
 					$v['identity'] = "user";
-					$v['reward'] = 2;
+					$v['reward'] = 2;//未登录
 					unset($v['type']);
 					unset($v['uid']);
 					$data['data'][] = $v;
 				}
 			}
-			$data['reply'] = "";
+			$data['reply'] = "";//未登录为空
 		}
 
 		if($data['data']) {
