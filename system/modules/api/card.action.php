@@ -151,7 +151,7 @@ class card extends SystemAction {
 				$data['data']['author'] = $user['username'];
 
 
-				$data['data']['comments'] = ;
+				// $data['data']['comments'] = '';
 			}else {//后台发帖
 				$data['data']['id']= $Cdata['id'];
 				$data['data']['title']= $Cdata['title'];
@@ -159,7 +159,7 @@ class card extends SystemAction {
 				$data['data']['content']= $Cdata['content'];
 				$data['data']['author']= '管理员';
 			}
-			print_r($Cdata);die;
+			// print_r($Cdata);die;
 		}else {
 			$code = 300;
 			$msg = "操作失败";
