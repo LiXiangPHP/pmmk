@@ -44,6 +44,7 @@ class card extends SystemAction {
 				if($v['type'] == 1) {
 					$v['username'] = "管理员";
 					$v['identity'] = "admin";
+					$v['reward'] = 0;//未打赏
 					unset($v['type']);
 					unset($v['uid']);
 					$data['data'][] = $v;
@@ -91,6 +92,7 @@ class card extends SystemAction {
 				if($v['type'] == 1) {
 					$v['username'] = "管理员";
 					$v['identity'] = "admin";
+					$v['reward'] = 0;
 					unset($v['type']);
 					unset($v['uid']);
 					$data['data'][] = $v;
@@ -98,7 +100,7 @@ class card extends SystemAction {
 					$user = $this->db->GetOne("select username from `@#_member` where uid = '$v[uid]'  LIMIT 1");
 					$v['username'] = $user['username'];
 					$v['identity'] = "user";
-					$v['reward'] = 2;//未登录
+					$v['reward'] = 0;//未登录
 					unset($v['type']);
 					unset($v['uid']);
 					$data['data'][] = $v;
@@ -139,6 +141,24 @@ class card extends SystemAction {
 		}
 		if($cardid) {
 			$Cdata = $this->db->GetOne("select * from `@#_quanzi_tiezi` where id = '$cardid'");
+			if($Cdata['hueiyuan']) {//会员发帖
+				$user = $this->db->GetOne("select username from `@#_member` where uid = '$Cdata[hueiyuan]' limit 1");
+				$data['data']['id'] = $Cdata['id'];
+				$data['data']['title'] = $Cdata['title'];
+				$data['data']['img'] = $Cdata['img'];
+				$data['data']['time'] = $Cdata['time'];
+				$data['data']['content'] = $Cdata['content'];
+				$data['data']['author'] = $user['username'];
+
+
+				$data['data']['comments'] = ;
+			}else {//后台发帖
+				$data['data']['id']= $Cdata['id'];
+				$data['data']['title']= $Cdata['title'];
+				$data['data']['img']= $Cdata['img'];
+				$data['data']['content']= $Cdata['content'];
+				$data['data']['author']= '管理员';
+			}
 			print_r($Cdata);die;
 		}else {
 			$code = 300;
@@ -153,7 +173,7 @@ class card extends SystemAction {
 
 	}
 
-	//帖子回复
+	//帖子发起
 	public function json_cpublic() {
 
 	}
@@ -166,6 +186,7 @@ class card extends SystemAction {
 		$cardid  = abs(intval($_POST['id']));//帖子id 后台发帖不允许点赏
 		$token = trim($_POST['token']);
 		$info = System::token_uid($token);
+		// print_r($info);die;
 		if($info['code'] == 100) {
 			$code = 300;
 			$msg = "用户未登陆";
@@ -183,6 +204,14 @@ class card extends SystemAction {
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 				echo json_encode($json);die;
 			}
+
+			// $users = $this->db->GetOne("select username from `@#_member` where uid = '$Cdata[hueiyuan]' limit 1");
+			// if($users['username'] == $Udata['username']) {
+			// 	$code = 100;
+			// 	$msg = "自己发帖不许赏";
+			// 	$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			// 	echo json_encode($json);die;
+			// }
 			// echo "<pre>";
 			// print_r($Cdata);die;
 			if($Cdata['reward']) {
