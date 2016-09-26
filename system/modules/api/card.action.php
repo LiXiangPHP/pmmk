@@ -204,14 +204,14 @@ class card extends SystemAction {
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 				echo json_encode($json);die;
 			}
-
-			// $users = $this->db->GetOne("select username from `@#_member` where uid = '$Cdata[hueiyuan]' limit 1");
-			// if($users['username'] == $Udata['username']) {
-			// 	$code = 100;
-			// 	$msg = "自己发帖不许赏";
-			// 	$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-			// 	echo json_encode($json);die;
-			// }
+			$users = $this->db->GetOne("select username from `@#_member` where uid = '$Cdata[hueiyuan]' limit 1");
+			// print_r($users);die;
+			if($users['username'] == $users['username']) {
+				$code = 100;
+				$msg = "自己发帖不许赏";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
+			}
 			// echo "<pre>";
 			// print_r($Cdata);die;
 			if($Cdata['reward']) {
