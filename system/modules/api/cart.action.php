@@ -13,7 +13,7 @@ class cart extends SystemAction {
             $db = System::load_sys_class('model');
             $code = 200;
             $msg = "添加成功";
-            $dada = $db->Query("INSERT INTO `@#_shopcart` (`user_id`, `good_id`,`num`) VALUES ('$uid','$sid','$num')";
+            $dada = $db->Query("INSERT INTO `@#_shopcart` (`user_id`, `good_id`,`num`) VALUES ('$uid','$sid','$num')");
         } else {
             $code = 100;
             $msg = "添加失败";
