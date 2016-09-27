@@ -23,7 +23,8 @@ class paoma extends SystemAction {
 		}
 		$aa = date("h:i:s",$time);
 		// echo $time.'|';
-		$Endtime='2016-09-27 00:00:00';
+		$chushi = date("Y-m-d 00:00:00",$time);
+		$Endtime=$chushi;
 		$Endtime=strtotime($Endtime);
 		$sytime = $time-$Endtime;
 		// echo $Endtime;die;
