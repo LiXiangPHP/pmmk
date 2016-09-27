@@ -207,7 +207,7 @@ class card extends SystemAction {
 		if($info['code'] == 200) {
 			$title     = $_POST['title'];
 			$content   = $_POST['content'];
-			$img       = $_POST['img'];
+			$img       = '';//$_POST['img'];
 			$time      = date();
 			$user      = $info['uid'];
 			$qzid      = 1;
@@ -257,6 +257,13 @@ class card extends SystemAction {
 		$Udata = $this->db->GetOne("select * from `@#_member` where uid = '$info[uid]' limit 1");//点赏会员信息
 		if($cardid) {
 			$Cdata = $this->db->GetOne("select * from `@#_quanzi_tiezi` where id = '$cardid' limit 1");//帖子信息
+			if(!$Cdata['hueiyuan']) {
+				$code = 100;
+				$msg = "管理员发帖不许赏";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
+			}
+
 			if($Udata['score'] && $Udata['score'] >= 1) {
 				$res  = $this->db->Query("update `@#_member` set score = score-1 where uid = '$info[uid]'");
 			}else {
