@@ -180,6 +180,20 @@ class card extends SystemAction {
 
 	//帖子回复
 	public function json_creply() {
+		$code = '';
+		$msg  = '';
+		$data = array();
+		$cardid  = abs(intval($_POST['id']));
+		$cardid  = abs(intval($_POST['id']));
+		$cardid  = abs(intval($_POST['id']));
+		$token = trim($_POST['token']);
+		$info = System::token_uid($token);
+		if($info['code'] == 100) {
+			$code = 300;
+			$msg = "用户未登录";
+			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			echo json_encode($json);die;
+		}
 
 	}
 
@@ -191,9 +205,32 @@ class card extends SystemAction {
 		$token = trim($_POST['token']);
 		$info = System::token_uid($token);
 		if($info['code'] == 200) {
-			$title = $_POST['title'];
-			$img   = $_POSt['img'];
-			$time  = date();
+			$title     = $_POST['title'];
+			$content   = $_POST['content'];
+			$img       = $_POST['img'];
+			$time      = date();
+			$user      = $info['uid'];
+			$qzid      = 1;
+			if($title && $content) {
+				$sql = "insert into `@#_quanzi_tiezi`(`qzid`,`hueiyuan`,`title`,`neirong`,`time`,`img`) values('$qzid','$user','$title','$content','$time','$img')";
+				// echo $sql;die;
+				if($this->db->Query($sql)) {
+					$code = 200;
+					$msg = "发帖成功";
+					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+					echo json_encode($json);
+				}else {
+					$code = 100;
+					$msg = "发帖失败";
+					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+					echo json_encode($json);
+				}
+			}else {
+				$code = 300;
+				$msg = "操作失败";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);
+			}
 		}else {
 			$code = 300;
 			$msg = "用户未登录";
@@ -228,9 +265,10 @@ class card extends SystemAction {
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 				echo json_encode($json);die;
 			}
+
 			$users = $this->db->GetOne("select username from `@#_member` where uid = '$Cdata[hueiyuan]' limit 1");
-			// print_r($users);die;
-			if($users['username'] == $users['username']) {
+			// print_r($Udata);die;
+			if($Udata['username'] == $users['username']) {
 				$code = 100;
 				$msg = "自己发帖不许赏";
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
