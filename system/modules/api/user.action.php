@@ -30,7 +30,13 @@ class user extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
 				
-		}	
+		}
+	//注册接口
+	//
+	public 	function register()
+	{
+		
+	}	
 		
 }
 
