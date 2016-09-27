@@ -77,11 +77,11 @@ class card extends SystemAction {
 			// print_r($reply);die;
 			if($reply) {
 				if(count($reply)>1) {
-					$data['reply'] = count($reply);//多人回复返回回复人数
+					$data['reply'] = count($reply)."条新消息";//多人回复返回回复人数
 				}else {
 					foreach($reply as $v) {
 						$user = $this->db->GetOne("select username from `@#_member` where uid = '$v[hueiyuan]'");
-						$data['reply'] = $user['username'];//单人回复返回会员昵称
+						$data['reply'] = $user['username']."回复了你";//单人回复返回会员昵称
 					}
 				}
 			}else {
@@ -149,7 +149,17 @@ class card extends SystemAction {
 				$data['data']['time'] = $Cdata['time'];
 				$data['data']['content'] = $Cdata['content'];
 				$data['data']['author'] = $user['username'];
+				// $comments = $this->db->GetList("select * from `@#_quanzi_tiezi` where pid = '$cardid'");
+				// foreach($comments as $v) {
+				// 	$user = $this->db->GetOne("select username from `@#_member` where uid = '$v[hueiyuan]'  LIMIT 1");
+				// 	$v['username'] = $user['username'];
+				// 	$V['child'] = '';//相关子评论
 
+				// 	$data['data']['comments'] = $v;
+				// }
+
+
+				print_r($comments);die;
 
 				// $data['data']['comments'] = '';
 			}else {//后台发帖
@@ -175,7 +185,21 @@ class card extends SystemAction {
 
 	//帖子发起
 	public function json_cpublic() {
-
+		$code = '';
+		$msg  = '';
+		$data = array();
+		$token = trim($_POST['token']);
+		$info = System::token_uid($token);
+		if($info['code'] == 200) {
+			$title = $_POST['title'];
+			$img   = $_POSt['img'];
+			$time  = date();
+		}else {
+			$code = 300;
+			$msg = "用户未登录";
+			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			echo json_encode($json);
+		}
 	}
 
 	//打赏
