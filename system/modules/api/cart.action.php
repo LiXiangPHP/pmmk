@@ -6,16 +6,16 @@ class cart extends SystemAction {
 
     /*加入购物车接口*/
     public function json_cartadd() {
+
         $id = $_POST['id'];
         $num = $_POST['num'];
         $uid = $_POST['uid'];
         $info = System::token_uid($uid);
         if ($info['code']==200) {
-            if (!empty($id)&!empty($num)&!empty($info['uid'])) {
-                $db = System::load_sys_class('model');
+            $db = System::load_sys_class('model');
+            if (!empty($id)&!empty($num)&!empty($info['uid'])&($db->Query("INSERT INTO `@#_shopcart` (`user_id`, `good_id`,`num`) VALUES ('$info[uid]','$id','$num')")!=false)) {
                 $code = 200;
                 $msg = "添加成功";
-                $dada = $db->Query("INSERT INTO `@#_shopcart` (`user_id`, `good_id`,`num`) VALUES ('$info[uid]','$id','$num')");
             } else {
                 $code = 100;
                 $msg = "添加失败";
