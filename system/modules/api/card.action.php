@@ -125,6 +125,38 @@ class card extends SystemAction {
 		echo json_encode($json);
 	}
 
+	public function com($id,$pid,$uid) {//帖子id 父id 被评论者
+		if($id && $pid && $uid) {
+			$arr  = $this->db->GetList("select id,hueiyuan,neirong,time  from `@#_quanzi_tiezi` where tiezi = '$id' and pid = '$pid'");
+			// print_r($arr);die;
+			if($arr) {
+				foreach($arr as $k => $v) {
+					if($uid == '管理员') {
+						$name['username'] = '管理员';
+					}else {
+						$name = $this->db->GetOne("select username from `@#_member` where uid = '$uid' limit 1");
+					}
+					$user = $this->db->GetOne("select username from `@#_member` where uid = '$v[hueiyuan]' limit 1"); 
+					$arr[$k]['pname'] = $name['username'];
+					$arr[$k]['name']  = $user['username'];
+					$child = $this->com($id,$v['id'],$v['hueiyuan']);
+					if(is_array($child)) {
+						$arr = array_merge($arr,$child);
+					}
+					// if(is_array($child)) {
+					// 	foreach($child as $val) {
+					// 		$arr[] = $val;
+					// 	}
+					// }					
+				}
+				// print_r($arr);die;
+				return $arr;
+			}else {
+				return 1;
+			}
+		}
+	}
+
 	//获取帖子详情
 	public function json_cdetail() {
 		$code = '';
@@ -140,7 +172,22 @@ class card extends SystemAction {
 			echo json_encode($json);die;
 		}
 		if($cardid) {
-			$Cdata = $this->db->GetOne("select * from `@#_quanzi_tiezi` where id = '$cardid'");
+			//评论状态均更改为已查看状态
+			$rult = $this->db->Query("update `@#_quanzi_tiezi` set ifsee = 1 where tiezi = '$cardid'");
+			if(!$rult) {
+				$code = 300;
+				$msg = "操作失败";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
+			}
+			//返回参数
+			$Cdata = $this->db->GetOne("select * from `@#_quanzi_tiezi` where id = '$cardid' and tiezi = 0 and pid = 0");
+			if(!$Cdata) {
+				$code = 300;
+				$msg = "操作失败";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
+			}
 			if($Cdata['hueiyuan']) {//会员发帖
 				$user = $this->db->GetOne("select username from `@#_member` where uid = '$Cdata[hueiyuan]' limit 1");
 				$data['data']['id'] = $Cdata['id'];
@@ -149,27 +196,45 @@ class card extends SystemAction {
 				$data['data']['time'] = $Cdata['time'];
 				$data['data']['content'] = $Cdata['content'];
 				$data['data']['author'] = $user['username'];
-				// $comments = $this->db->GetList("select * from `@#_quanzi_tiezi` where pid = '$cardid'");
-				// foreach($comments as $v) {
-				// 	$user = $this->db->GetOne("select username from `@#_member` where uid = '$v[hueiyuan]'  LIMIT 1");
-				// 	$v['username'] = $user['username'];
-				// 	$V['child'] = '';//相关子评论
-
-				// 	$data['data']['comments'] = $v;
-				// }
-
-
-				print_r($comments);die;
-
-				// $data['data']['comments'] = '';
+				$comments = array();
+				$comt = $this->com($cardid,$cardid,$Cdata['hueiyuan']);//评论
+				foreach($comt as $k => $val) {
+					$comments[$k]['pname'] = $val['pname'];
+					$comments[$k]['name']  = $val['name'];
+					$comments[$k]['con']   = $val['name']." 回复 ".$val['pname'].": ".$val['neirong'];
+					$comments[$k]['time']  = $val['time'];
+				}
+				// print_r($comments);die;
+				$data['data']['comments'] = $comments;				
+				// print_r($data);die;
 			}else {//后台发帖
 				$data['data']['id']= $Cdata['id'];
 				$data['data']['title']= $Cdata['title'];
 				$data['data']['img']= $Cdata['img'];
-				$data['data']['content']= $Cdata['content'];
+				$data['data']['content']= $Cdata['neirong'];
 				$data['data']['author']= '管理员';
+				$comments = array();
+				$comt = $this->com($cardid,$cardid,'管理员');//评论
+				foreach($comt as $k => $val) {
+					$comments[$k]['pname'] = $val['pname'];
+					$comments[$k]['name']  = $val['name'];
+					$comments[$k]['con']   = $val['name']." 回复 ".$val['pname'].": ".$val['neirong'];
+					$comments[$k]['time']  = $val['time'];
+				}
+				$data['data']['comments'] = $comments;
 			}
-			// print_r($Cdata);die;
+			if($data) {
+				$code = 200;
+				$msg = "操作成功";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);
+			}else {
+				$code = 100;
+				$msg = "操作失败";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);
+			}
+			// print_r($data);die;
 		}else {
 			$code = 300;
 			$msg = "操作失败";
@@ -183,16 +248,41 @@ class card extends SystemAction {
 		$code = '';
 		$msg  = '';
 		$data = array();
-		$cardid  = abs(intval($_POST['id']));
-		$cardid  = abs(intval($_POST['id']));
-		$cardid  = abs(intval($_POST['id']));
-		$token = trim($_POST['token']);
+		$cardid   = abs(intval($_POST['id']));//帖子id
+		// $user     = $_POST['name'];//被评论者
+		$times     = abs(intval($_POST['time']));
+		$content  = $_POST['content'];//内容
+		$time     = time();
+		$token = trim($_POST['token']);//评论者
 		$info = System::token_uid($token);
 		if($info['code'] == 100) {
 			$code = 300;
 			$msg = "用户未登录";
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);die;
+		}
+		if($cardid  && $content && $times) {
+			// $uid = $this->db->GetOne("select uid from `@#_member` where username = '$user' limit 1");//被评论者
+			$pid = $this->db->GetOne("select id from `@#_quanzi_tiezi` where  tiezi = '$cardid' and time = '$times' limit 1");
+			// $pid = $this->db->GetOne("select id from `@#_quanzi_tiezi` where hueiyuan = '$uid[uid]' and tiezi = '$cardid' and time = '$times' limit 1");//pid
+			$sql = "insert into `@#_quanzi_tiezi`(`hueiyuan`,`neirong`,`time`,`tiezi`,`pid`) values('$info[uid]','$content','$time','$cardid','$pid[id]')";
+			// echo $sql;die;
+			if($this->db->Query($sql)) {
+				$code = 200;
+				$msg = "回贴成功";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);
+			}else {
+				$code = 100;
+				$msg = "回帖失败";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);
+			}
+		}else {
+			$code = 300;
+			$msg = "操作失败";
+			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			echo json_encode($json);		
 		}
 
 	}
@@ -207,10 +297,24 @@ class card extends SystemAction {
 		if($info['code'] == 200) {
 			$title     = $_POST['title'];
 			$content   = $_POST['content'];
-			$img       = '';//$_POST['img'];
+			// $img       = $_POST['img'];
+			$img       = '';
 			$time      = date();
 			$user      = $info['uid'];
 			$qzid      = 1;
+
+			// $image_info = getimagesize($_FILES['file']['tmp_name']);//$_FILES['file']['tmp_name']即文件路径
+			// $base64_image_content = "data:{$image_info['mime']};base64," . chunk_split(base64_encode(file_get_contents($_FILES['file']['tmp_name'])));
+			// if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64_image_content, $result)){
+			// 	$type = $result[2];
+			// 	$new_file = ".././statics/uploads/quanzi.{$type}";//图片存储路径
+			// 	if (file_put_contents($new_file, base64_decode(str_replace($result[1], '', $base64_image_content)))){
+			// 		echo '新文件保存成功：', $new_file;
+			// 	}
+			// }
+
+
+
 			if($title && $content) {
 				$sql = "insert into `@#_quanzi_tiezi`(`qzid`,`hueiyuan`,`title`,`neirong`,`time`,`img`) values('$qzid','$user','$title','$content','$time','$img')";
 				// echo $sql;die;
