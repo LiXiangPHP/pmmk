@@ -11,7 +11,7 @@ class cart extends SystemAction {
         $uid = $_POST['uid'];
         $info = System::token_uid($uid);
         if ($info['code']==200) {
-            if (!empty($id)&!empty($num)&!empty($uid)) {
+            if (!empty($id)&!empty($num)&!empty($info['uid'])) {
                 $db = System::load_sys_class('model');
                 $code = 200;
                 $msg = "添加成功";
