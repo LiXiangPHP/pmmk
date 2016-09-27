@@ -49,7 +49,6 @@ class cart extends SystemAction {
             echo json_encode($json);
         }
     }
-    
 }
 
 
