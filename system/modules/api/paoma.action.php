@@ -65,8 +65,15 @@ class paoma extends SystemAction {
 		}
 		$NowResult = '';
 	// print_r($detail);die;
+		$code = 200;
+		
+
+
+
 		$data = array('issue'=>$issue,'lastissue'=>$lastissue,'qihao'=>$qihao,'status'=>$status,'WaitTime'=>$WaitTime,'GameTime'=>$GameTime,'detail'=>$detail,'LastResult'=>$LastResult,'sum'=>$sum,'NowResult'=>$NowResult);
-		echo json_encode($data);
+		$json = array('code' => $code,'data'=>$data);
+		echo json_encode($json);
+
 
 		
 	}
