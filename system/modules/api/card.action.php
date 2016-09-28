@@ -125,7 +125,7 @@ class card extends SystemAction {
 		echo json_encode($json);
 	}
 
-	public function com($id,$pid,$uid) {//帖子id 父id 被评论者
+	public function com($id,$pid,$uid) {//帖子id 父id 被评论者====递归函数，获得相关评论
 		if($id && $pid && $uid) {
 			$arr  = $this->db->GetList("select id,hueiyuan,neirong,time  from `@#_quanzi_tiezi` where tiezi = '$id' and pid = '$pid'");
 			// print_r($arr);die;
@@ -139,6 +139,9 @@ class card extends SystemAction {
 					$user = $this->db->GetOne("select username from `@#_member` where uid = '$v[hueiyuan]' limit 1"); 
 					$arr[$k]['pname'] = $name['username'];
 					$arr[$k]['name']  = $user['username'];
+					if($uid == $v['hueiyuan']) {
+						$arr[$k]['pname'] = '';	
+					}
 					$child = $this->com($id,$v['id'],$v['hueiyuan']);
 					if(is_array($child)) {
 						$arr = array_merge($arr,$child);
@@ -173,7 +176,7 @@ class card extends SystemAction {
 		}
 		if($cardid) {
 			//评论状态均更改为已查看状态
-			$rult = $this->db->Query("update `@#_quanzi_tiezi` set ifsee = 1 where tiezi = '$cardid'");
+			$rult = $this->db->Query("update `@#_quanzi_tiezi` set ifsee = 1,dianji = dianji + 1  where tiezi = '$cardid'");
 			if(!$rult) {
 				$code = 300;
 				$msg = "操作失败";
@@ -195,25 +198,31 @@ class card extends SystemAction {
 				$data['data']['img'] = $Cdata['img'];
 				$data['data']['time'] = $Cdata['time'];
 				$data['data']['content'] = $Cdata['content'];
+				$data['data']['total'] = $Cdata['hueifu'];
 				$data['data']['author'] = $user['username'];
 				$comments = array();
 				$comt = $this->com($cardid,$cardid,$Cdata['hueiyuan']);//评论
 				foreach($comt as $k => $val) {
 					$comments[$k]['pname'] = $val['pname'];
 					$comments[$k]['name']  = $val['name'];
-					if($val['pname'] == $val['name']) {
-						$comments[$k]['pname'] = '';
-					}
 					$comments[$k]['con']   = $val['neirong'];
 					$comments[$k]['time']  = $val['time'];
 				}
 				// print_r($comments);die;
-				$data['data']['comments'] = $comments;				
+				$data['data']['comments'] = $comments;
+				$rew = explode(',',$Cdata['reward']);//判断赏
+				if(in_array($info['uid'],$rew)) {
+					$data['data']['reward'] = 1;//已打赏
+				}else {
+					$data['data']['reward'] = 0;//未打赏
+				}		
 				// print_r($data);die;
 			}else {//后台发帖
 				$data['data']['id']= $Cdata['id'];
 				$data['data']['title']= $Cdata['title'];
 				$data['data']['img']= $Cdata['img'];
+				$data['data']['time'] = $Cdata['time'];
+				$data['data']['total'] = $Cdata['hueifu'];
 				$data['data']['content']= $Cdata['neirong'];
 				$data['data']['author']= '管理员';
 				$comments = array();
@@ -225,6 +234,7 @@ class card extends SystemAction {
 					$comments[$k]['time']  = $val['time'];
 				}
 				$data['data']['comments'] = $comments;
+				$data['data']['reward'] = 0;//未打赏
 			}
 			if($data) {
 				$code = 200;
@@ -265,12 +275,23 @@ class card extends SystemAction {
 			echo json_encode($json);die;
 		}
 		if($cardid  && $content && $times) {
-			// $uid = $this->db->GetOne("select uid from `@#_member` where username = '$user' limit 1");//被评论者
-			$pid = $this->db->GetOne("select id from `@#_quanzi_tiezi` where  tiezi = '$cardid' and time = '$times' limit 1");
-			// $pid = $this->db->GetOne("select id from `@#_quanzi_tiezi` where hueiyuan = '$uid[uid]' and tiezi = '$cardid' and time = '$times' limit 1");//pid
+			$ptime = $this->db->GetOne("select time from `@#_quanzi_tiezi` where id = '$cardid' limit 1");//被评论者时间
+			if($ptime == $times) {
+				$pid['id'] = $cardid;
+			}else {
+				$pid = $this->db->GetOne("select id,hueiyuan from `@#_quanzi_tiezi` where  tiezi = '$cardid' and time = '$times' limit 1");
+				if($pid['hueiyuan'] == $info['uid']) {
+					$code = 300;
+					$msg = "自己评论不可回复";
+					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+					echo json_encode($json);die;
+				}
+			}
 			$sql = "insert into `@#_quanzi_tiezi`(`hueiyuan`,`neirong`,`time`,`tiezi`,`pid`) values('$info[uid]','$content','$time','$cardid','$pid[id]')";
+			$res = $this->db->Query($sql);
+			$rult = $this->db->Query("update `@#_quanzi_tiezi` set hueifu = hueifu +1 where id = '$cardid'");
 			// echo $sql;die;
-			if($this->db->Query($sql)) {
+			if($res && $rult) {
 				$code = 200;
 				$msg = "回贴成功";
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
