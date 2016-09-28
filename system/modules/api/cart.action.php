@@ -28,7 +28,7 @@ class cart extends SystemAction {
         }
     }
 
-     /*查看购物车接口*/
+    /*查看购物车接口*/
     public function json_cartshow() {
         $uid = $_POST['uid'];
         $info = System::token_uid($uid);
@@ -48,6 +48,22 @@ class cart extends SystemAction {
             $json = array('code' => 300, 'msg' => '请登录', 'data' => $data);
             echo json_encode($json);
         }
+    }
+
+
+    /*购物车删除接口*/
+    public function json_cartdel(){
+        $db = System::load_sys_class('model');
+        $id = $_POST['id'];
+        if ($db->Query("DELETE FROM `@#_shopcart` where `good_id` = $id")!==false){
+            $code = 200;
+            $msg = "删除成功";
+        }else{
+            $code = 100;
+            $msg = "删除失败";
+        }
+        $json = array('code' => $code, 'msg' => $msg);
+        echo json_encode($json);
     }
 }
 
