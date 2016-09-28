@@ -329,10 +329,20 @@ class card extends SystemAction {
 			$qzid      = 1;
 			$imgname   = date('Ymdhis',time());
 			$new_file  = '';
+			$pic_path = 'images/upload/' . date("Ymd") . '/';
+			if(!file_exists($pic_path)) {
+				if(!mkdir($pic_path, 0777)) {
+					$code = 100;
+					$msg = "目录创建失败";
+					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+					echo json_encode($json);die;
+				}
+				
+			}
 			if($img) {
 				if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $img, $result)){
 					$type = $result[2];
-					$new_file = "images/upload/{$imgname}.{$type}";//图片存储路径
+					$new_file = "{}/{$imgname}.{$type}";//图片存储路径
 					if (!file_put_contents($new_file, base64_decode(str_replace($result[1], '', $img)))){
 						$code = 100;
 						$msg = "发帖失败";
@@ -341,7 +351,7 @@ class card extends SystemAction {
 					}
 				}else {
 					$tmp = base64_decode($img);
-					$new_file = "images/upload/{$imgname}.jpg";//图片存储路径
+					$new_file = "{}/{$imgname}.jpg";//图片存储路径
 					if (!file_put_contents($new_file, $tmp)){
 						$code = 100;
 						$msg = "发帖失败";
