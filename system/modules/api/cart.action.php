@@ -34,7 +34,7 @@ class cart extends SystemAction {
         $info = System::token_uid($uid);
         if ($info['code']==200) {
                 $db = System::load_sys_class('model');
-                $data = $db->GetList("SELECT l.id,l.title,l.money,l.yunjiage,l.canyurenshu,l.shenyurenshu,l.thumb FROM `@#_shoplist` l,`@#_shopcart` c,`@#_member` m WHERE l.id = c.good_id AND m.uid = '$info[uid]'");
+                $data = $db->GetList("SELECT l.id,l.title,l.money,l.yunjiage,l.canyurenshu,l.shenyurenshu,l.thumb,c.num FROM `@#_shoplist` l,`@#_shopcart` c,`@#_member` m WHERE l.id = c.good_id AND m.uid = '$info[uid]'");
             if (!empty($data)) {
                 $code = 200;
                 $msg = "查询成功";
@@ -58,7 +58,7 @@ class cart extends SystemAction {
         $info = System::token_uid($uid);
         if ($info['code']==200) {
             $db = System::load_sys_class('model');
-            if ($db->Query("DELETE FROM `@#_shopcart` WHERE user_id='$info[uid]' and good_id = $id") !== false) {
+            if ($db->Query("DELETE FROM `@#_shopcart` WHERE user_id='$info[uid]' and good_id in ($id)") !== false) {
                 $code = 200;
                 $msg = "删除成功";
             } else {
