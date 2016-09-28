@@ -32,7 +32,7 @@ class card extends SystemAction {
 		}
 		$page=System::load_sys_class('page');
 		$page->config($total,$num,$pagenum,"0");
-		$Tdata = $this->db->GetPage("SELECT id,title,neirong content,hueifu total,hueiyuan uid,type,time,img,reward  FROM `@#_quanzi_tiezi` where  `qzid` = 1 and tiezi = 0 ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));	
+		$Tdata = $this->db->GetPage("SELECT id,title,neirong content,hueifu total,hueiyuan uid,type,time,img,reward  FROM `@#_quanzi_tiezi` where  `qzid` = 1 and tiezi = 0  order by time desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));	
 		if(!$Tdata) {
 			$code = 100;
 			$msg = "数据为空";
@@ -45,6 +45,7 @@ class card extends SystemAction {
 					$v['username'] = "管理员";
 					$v['identity'] = "admin";
 					$v['reward'] = 0;//未打赏
+					$v['img']    = 'gangmaduobao.com/'.$v['img'];
 					unset($v['type']);
 					unset($v['uid']);
 					$data['data'][] = $v;
@@ -52,6 +53,7 @@ class card extends SystemAction {
 					$user = $this->db->GetOne("select username from `@#_member` where uid = '$v[uid]'  LIMIT 1");
 					$v['username'] = $user['username'];
 					$v['identity'] = "user";
+					$v['img']    = 'gangmaduobao.com/'.$v['img'];
 					$rew = explode(',',$v['reward']);
 					if(in_array($info['uid'],$rew)) {
 						$v['reward'] = 1;//已打赏
@@ -195,7 +197,7 @@ class card extends SystemAction {
 				$user = $this->db->GetOne("select username from `@#_member` where uid = '$Cdata[hueiyuan]' limit 1");
 				$data['data']['id'] = $Cdata['id'];
 				$data['data']['title'] = $Cdata['title'];
-				$data['data']['img'] = $Cdata['img'];
+				$data['data']['img'] = 'gangmaduobao.com/'.$Cdata['img'];
 				$data['data']['time'] = $Cdata['time'];
 				$data['data']['content'] = $Cdata['content'];
 				$data['data']['total'] = $Cdata['hueifu'];
@@ -220,7 +222,7 @@ class card extends SystemAction {
 			}else {//后台发帖
 				$data['data']['id']= $Cdata['id'];
 				$data['data']['title']= $Cdata['title'];
-				$data['data']['img']= $Cdata['img'];
+				$data['data']['img']= 'gangmaduobao.com/'.$Cdata['img'];
 				$data['data']['time'] = $Cdata['time'];
 				$data['data']['total'] = $Cdata['hueifu'];
 				$data['data']['content']= $Cdata['neirong'];
@@ -322,15 +324,14 @@ class card extends SystemAction {
 			$title     = $_POST['title'];
 			$content   = $_POST['content'];
 			$img       = $_POST['img'];
-			// $img       = '';
 			$time      = time();
 			$user      = $info['uid'];
 			$qzid      = 1;
-			$imgname   = date('Y-m-d h:i:s',time());
+			$imgname   = date('Ymdhis',time());
 			if($img) {
 				if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $img, $result)){
 					$type = $result[2];
-					$new_file = "./images/upload/{$imgname }.{$type}";//图片存储路径
+					$new_file = "images/upload/{$imgname}.{$type}";//图片存储路径
 					if (!file_put_contents($new_file, base64_decode(str_replace($result[1], '', $img)))){
 						$code = 100;
 						$msg = "发帖失败";
@@ -339,9 +340,8 @@ class card extends SystemAction {
 					}
 				}
 			}
-			
 			if($title && $content) {
-				$sql = "insert into `@#_quanzi_tiezi`(`qzid`,`hueiyuan`,`title`,`neirong`,`time`,`img`) values('$qzid','$user','$title','$content','$time','$img')";
+				$sql = "insert into `@#_quanzi_tiezi`(`qzid`,`hueiyuan`,`title`,`neirong`,`time`,`img`) values('$qzid','$user','$title','$content','$time','$new_file')";
 				// echo $sql;die;
 				if($this->db->Query($sql)) {
 					$code = 200;
