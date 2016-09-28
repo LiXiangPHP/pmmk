@@ -335,7 +335,7 @@ class card extends SystemAction {
 					$new_file = "images/upload/{$imgname}.{$type}";//图片存储路径
 					if (!file_put_contents($new_file, base64_decode(str_replace($result[1], '', $img)))){
 						$code = 100;
-						$msg = "发帖失败1";
+						$msg = "发帖失败";
 						$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 						echo json_encode($json);die;
 					}
@@ -344,7 +344,7 @@ class card extends SystemAction {
 					$new_file = "images/upload/{$imgname}.jpg";//图片存储路径
 					if (!file_put_contents($new_file, $tmp)){
 						$code = 100;
-						$msg = "发帖失败2";
+						$msg = "发帖失败";
 						$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 						echo json_encode($json);die;
 					}	
@@ -355,12 +355,12 @@ class card extends SystemAction {
 				$sql = "insert into `@#_quanzi_tiezi`(`qzid`,`hueiyuan`,`title`,`neirong`,`time`,`img`) values('$qzid','$user','$title','$content','$time','$new_file')";
 				if($this->db->Query($sql)) {
 					$code = 200;
-					$msg = "发帖成功0";
+					$msg = "发帖成功";
 					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 					echo json_encode($json);
 				}else {
 					$code = 100;
-					$msg = "发帖失败3";
+					$msg = "发帖失败";
 					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 					echo json_encode($json);
 				}
