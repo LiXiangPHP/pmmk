@@ -86,9 +86,21 @@ class paoma extends SystemAction {
 	}
 	public function bet()
 	{
+		if(!$_POST)
+		{
+			$code = 100;
+			$msg = '错误';
+			echo json_encode(array("code"=>$code,"msg"=>$msg));die;
+		}
 		$db = System::load_sys_class('model');
 		$token = isset($_POST['uid']) ? $_POST['uid'] : null;
 		$info = System::token_uid($token);
+		if($info['uid'])
+		{
+			$code = 100;
+			$msg = '请登录';
+			echo json_encode(array("code"=>$code,"msg"=>$msg));die;
+		}
 		$bet = stripslashes($_POST['bet']);
 		// $arr = array('冠军'=>array("2"=>"2"),'亚军'=>array("2"=>"2"));
 		// echo json_encode($arr);die;
@@ -109,24 +121,43 @@ class paoma extends SystemAction {
 				$odds = $t['odds'];
 				$issue = $_POST['issue'];
 				$uid = $info['uid'];
-				$uid = 694;
 				$number = $v;
-				$sql[]="INSERT INTO `@#_bet`(name,did,odds,issue,uid,number)VALUES('$name','$did','$odds','$issue','$uid','$number')";
+				$time = $qihao = date("Y-m-d H:i:s",time());
+				$sql[]="INSERT INTO `@#_bet`(name,did,odds,issue,uid,number,time)VALUES('$name','$did','$odds','$issue','$uid','$number','$time')";
 
 
 			}
 		}
-		$pay=System::load_app_class('pay','pay');
+		$members = $db->GetOne("SELECT * FROM `@#_member` where `uid` = '$uid' for update");
+		if($members['money'] >= $n)
+		{
+			$db->Autocommit_start();
+			$Money = $members['money'] - $n;
+			$query = $db->Query("UPDATE `@#_member` SET `money`='$Money' WHERE (`uid`='$uid')");
+			foreach ($sql as $k => $v) {
+				$sqlreg = $db->Query($v);
+				if(!$sqlreg)
+				{
+					$db->Autocommit_rollback();
+					$code = 100;
+					$msg = '购买失败';
+					echo json_encode(array("code"=>$code,"msg"=>$msg));die;
+					
+				}
+			}
+			$db->Autocommit_commit();
+			$code = 200;
+			$msg = '购买成功';
+			echo json_encode(array("code"=>$code,"msg"=>$msg));die;
 
-
-		$pay_type_bank=isset($_POST['pay_bank']) ? $_POST['pay_bank'] : false;
-		$pay_type_id=isset($_POST['account']) ? $_POST['account'] : false;
-
-		$ok = $pay->init($uid,$pay_type_id,'go_record');
-		$check = $pay->go_pay(1);
-		
+		}
+		else{
+			$code = 100;
+			$msg = '账户余额不足，请充值';
+			echo json_encode(array("code"=>$code,"msg"=>$msg));die;
+		}
 				
-		print_r($sql);die;
+		
 
 	}
 }

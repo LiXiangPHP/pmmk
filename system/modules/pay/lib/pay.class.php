@@ -41,7 +41,8 @@ class pay {
 		$this->fukuan_type=$fukuan_type;
 		if($fukuan_type=='go_record'){		
 			return $this->go_record();
-		}		
+		}
+			
 		if($fukuan_type=='addmoney_record'){		
 			return $this->addmoney_record($addmoney);
 		}		
