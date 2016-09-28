@@ -16,14 +16,19 @@ class snatch extends SystemAction {
 				$zhsz[] = $db->GetList("select title,zongrenshu,canyurenshu,thumb from `@#_shoplist` where qishu='$v[shopqishu]' and id='$v[shopid]' and  q_user_code is null ");				
 			}
 			$data=array_filter($zhsz,create_function('$v','return !empty($v);'));
-			if($data) {
+			foreach($data as $k=>$v){
+	        	foreach($v as $i=>$j){
+	            $newdata [] = $j;  
+	        	}
+			}
+			if($newdata) {
 				$code = 200;
 				$msg = "查询成功";
 			}else {
 				$code = 400;
 				$msg = "数据为空";
 			}
-			$json = array('type' => $type,'code' => $code, 'msg' => $msg, 'data' => $data);
+			$json = array('type' => $type,'code' => $code, 'msg' => $msg, 'data' => $newdata);
 			echo json_encode($json);			
 			}
 
@@ -54,19 +59,24 @@ class snatch extends SystemAction {
 				$zhsz[] = $db->GetList("select a.q_end_time,a.title,a.thumb,a.money,b.username from `@#_shoplist` as a,`@#_member` as b where a.q_uid=b.uid and a.qishu='$v[shopqishu]' and a.id='$v[shopid]' and  a.q_end_time is not null and a.q_user is not null ");				
 			}
 			$data=array_filter($zhsz,create_function('$v','return !empty($v);'));
-			if($data) {
+			foreach($data as $k=>$v){
+	        	foreach($v as $i=>$j){
+	            $newdata [] = $j;  
+	        	}
+			}
+			if($newdata) {
 				$code = 200;
 				$msg = "查询成功";
 			}else {
 				$code = 400;
 				$msg = "数据为空";
 			}
-			$json = array('type' => $type,'code' => $code, 'msg' => $msg, 'data' => $data);
+			$json = array('type' => $type,'code' => $code, 'msg' => $msg, 'data' => $newdata);
 			echo json_encode($json);			
 			}
 
 		}else{
-			$json = array('code' => 300, 'msg' => '请登录', 'data' => $data);
+			$json = array('code' => 300, 'msg' => '请登录', 'data' => $newdata);
 			echo json_encode($json);
 		}	
 		
