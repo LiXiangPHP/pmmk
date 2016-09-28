@@ -23,36 +23,41 @@ class paoma extends SystemAction {
 		}
 		$aa = date("h:i:s",$time);
 		// echo $time.'|';
+		//初始时间
 		$chushi = date("Y-m-d 00:00:00",$time);
 		$Endtime=$chushi;
 		$Endtime=strtotime($Endtime);
+		//现在时间过去多少秒
 		$sytime = $time-$Endtime;
 		// echo $Endtime;die;
+		// 有多少个5分钟
 		$ge = intval(floor($sytime/300));
+		//剩余多少秒
 		$s = 300-($sytime - $ge*300);
-
-		if($s < 5 )
-		{
-			$status = 'prize';
-		}
-		if($s > 40 )
+		$WaitTime = 0;
+		
+		if($s > 140 )
 		{
 			$status = 'wait';
-			$WaitTime = $s-25;
+			$WaitTime = $s-125;
 		}
-		if( $s >25 && $s<40)
+		if( $s >125 && $s<=140)
 		{
 			$status = 'no';
-			$WaitTime = $s-25;
+			$WaitTime = $s-125;
 		}
-		if($s >5 && $s<25)
+		if($s >5 && $s<=125)
 		{
 			$status = 'game';
 			$GameTime = $s;
 		}
 		if(!$GameTime)
 		{
-			$GameTime = 20;
+			$GameTime = 120;
+		}
+		if($s < 5 )
+		{
+			$status = 'prize';
 		}
 		$LastResult=$db->GetOne("select result from `@#_bet_result` WHERE `issue` = '$lastissue'");
 		$LastResult = explode(',',$LastResult['result']);
