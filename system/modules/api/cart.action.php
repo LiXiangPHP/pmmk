@@ -55,7 +55,7 @@ class cart extends SystemAction {
     public function json_cartdel(){
         $db = System::load_sys_class('model');
         $id = $_POST['id'];
-        if ($db->Query("DELETE FROM `@#_shopcart`  WHERE good_id = $id")!==false){
+        if ($db->Query("DELETE FROM `@#_shopcart` WHERE good_id = $id")!==false){
             $code = 200;
             $msg = "删除成功";
         }else{
