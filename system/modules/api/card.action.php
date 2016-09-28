@@ -323,7 +323,7 @@ class card extends SystemAction {
 		if($info['code'] == 200) {
 			$title     = $_POST['title'];
 			$content   = $_POST['content'];
-			$img       = $_POST['img'];
+			$img       = stripslashes($_POST['img']);//去掉船餐过程中的反斜杠
 			$time      = time();
 			$user      = $info['uid'];
 			$qzid      = 1;
