@@ -328,6 +328,7 @@ class card extends SystemAction {
 			$user      = $info['uid'];
 			$qzid      = 1;
 			$imgname   = date('Ymdhis',time());
+			$new_file  = '';
 			if($img) {
 				if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $img, $result)){
 					$type = $result[2];
