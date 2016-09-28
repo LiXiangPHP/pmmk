@@ -354,7 +354,7 @@ class card extends SystemAction {
 				$sql = "insert into `@#_quanzi_tiezi`(`qzid`,`hueiyuan`,`title`,`neirong`,`time`,`img`) values('$qzid','$user','$title','$content','$time','$new_file')";
 				if($this->db->Query($sql)) {
 					$code = 200;
-					$msg = "发帖成功";
+					$msg = "发帖成功0";
 					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 					echo json_encode($json);
 				}else {
