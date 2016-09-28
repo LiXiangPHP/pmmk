@@ -53,17 +53,24 @@ class cart extends SystemAction {
 
     /*购物车删除接口*/
     public function json_cartdel(){
-        $db = System::load_sys_class('model');
         $id = $_POST['id'];
-        if ($db->Query("DELETE FROM `@#_shopcart` WHERE good_id = $id")!==false){
-            $code = 200;
-            $msg = "删除成功";
-        }else{
-            $code = 100;
-            $msg = "删除失败";
+        $uid = $_POST['uid'];
+        $info = System::token_uid($uid);
+        if ($info['code']==200) {
+            $db = System::load_sys_class('model');
+            if ($db->Query("DELETE FROM `@#_shopcart` WHERE user_id='$info[uid]' and good_id = $id") !== false) {
+                $code = 200;
+                $msg = "删除成功";
+            } else {
+                $code = 100;
+                $msg = "删除失败";
+            }
+            $json = array('code' => $code, 'msg' => $msg);
+            echo json_encode($json);
+        }else {
+            $json = array('code' => 300, 'msg' => '请登录', 'data' => $data);
+            echo json_encode($json);
         }
-        $json = array('code' => $code, 'msg' => $msg);
-        echo json_encode($json);
     }
 }
 
