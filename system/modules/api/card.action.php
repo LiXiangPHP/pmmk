@@ -338,11 +338,20 @@ class card extends SystemAction {
 						$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 						echo json_encode($json);die;
 					}
+				}else {
+					$tmp = base64_decode($img);
+					$new_file = "images/upload/{$imgname}.jpg";//图片存储路径
+					if (!file_put_contents($new_file, $tmp)){
+						$code = 100;
+						$msg = "发帖失败";
+						$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+						echo json_encode($json);die;
+					}	
 				}
 			}
+			
 			if($title && $content) {
 				$sql = "insert into `@#_quanzi_tiezi`(`qzid`,`hueiyuan`,`title`,`neirong`,`time`,`img`) values('$qzid','$user','$title','$content','$time','$new_file')";
-				// echo $sql;die;
 				if($this->db->Query($sql)) {
 					$code = 200;
 					$msg = "发帖成功";
