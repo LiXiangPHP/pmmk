@@ -342,7 +342,7 @@ class card extends SystemAction {
 			if($img) {
 				if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $img, $result)){
 					$type = $result[2];
-					$new_file = "{}/{$imgname}.{$type}";//图片存储路径
+					$new_file = "{$pic_path}/{$imgname}.{$type}";//图片存储路径
 					if (!file_put_contents($new_file, base64_decode(str_replace($result[1], '', $img)))){
 						$code = 100;
 						$msg = "发帖失败";
@@ -351,7 +351,7 @@ class card extends SystemAction {
 					}
 				}else {
 					$tmp = base64_decode($img);
-					$new_file = "{}/{$imgname}.jpg";//图片存储路径
+					$new_file = "{$pic_path}/{$imgname}.jpg";//图片存储路径
 					if (!file_put_contents($new_file, $tmp)){
 						$code = 100;
 						$msg = "发帖失败";
