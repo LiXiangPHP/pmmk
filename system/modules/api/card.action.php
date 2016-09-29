@@ -329,7 +329,7 @@ class card extends SystemAction {
 			$qzid      = 1;
 			$imgname   = date('Ymdhis',time());
 			$new_file  = '';
-			$pic_path = 'images/upload/' . date("Ymd") . '/';
+			$pic_path = 'images/upload/' . date("Ymd");
 			if(!file_exists($pic_path)) {
 				if(!mkdir($pic_path, 0777)) {
 					$code = 100;
