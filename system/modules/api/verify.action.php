@@ -33,7 +33,13 @@ class verify extends SystemAction {
 		    if($res->code == 0)
 		    {
 		    	$res->verify = $code;
-		    	_setcookie("code",$code,3*60);
+		    	$lifetime=180;//保存1分钟
+		        session_set_cookie_params($lifetime);
+		        session_start();
+		        session_regenerate_id(true);
+				// store session data
+				$_SESSION['code']=$code;
+		    	// _setcookie("code",$code,3*60);
 		    }
 		    
 		   echo json_encode($res);

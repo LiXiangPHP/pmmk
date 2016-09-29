@@ -36,13 +36,11 @@ class user extends SystemAction {
 	public function register()
 	{
 
-		$aa = isset($_COOKIE['code']) ? $_COOKIE['code'] : "cookie为空";
-		echo  $aa;die;
 		$db = System::load_sys_class('model');	
 		$name=$_POST['username'];
 		$password=$_POST['password'];
 		$verify=$_POST['verify'];
-		$code = $_COOKIE['code'];
+		$code = $_SESSION['code'];
 		if($verify != $code)
 		{
 			$code = 100;
