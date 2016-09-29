@@ -175,5 +175,66 @@ class paoma extends SystemAction {
 		
 
 	}
+	public function betlog()
+	{
+		$db = System::load_sys_class('model');
+		$pagenum = $_POST['p'];
+		$total = $db->GetCount("SELECT * FROM `@#_bet_result` ");
+		$num = 10;
+		$yushu=$total%$num;
+		if($yushu > 0) {
+			$yeshu=floor($total/$num)+1;
+		}else {
+			$yeshu=floor($total/$num);
+		}
+		if($pagenum >= $yeshu) {
+			$pagenum = $yeshu;
+		}
+		$page=System::load_sys_class('page');
+		$page->config($total,$num,$pagenum,"0");
+		$Sdata = $db->GetPage("SELECT result,issue,time  FROM `@#_bet_result` ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		foreach($Sdata as $v) {
+			
+			$result=  $v['result'];
+			$result = explode(',',$result);
+			$sum = $result[0]+$result[1];
+			if((int)$sum%2 == 0){
+				$NumberDs = "双";
+			}
+			else
+			{
+				$NumberDs = "单";
+			}
+			if((int)$sum>=11)
+			{
+				$NumberSize = '大';
+			}
+			if((int)$sum<=10)
+			{
+				$NumberSize = '小';
+
+			}
+			$v['sum'] = $sum;
+			$v['NumberDs'] = $NumberDs;
+			$v['NumberSize'] = $NumberSize;
+			$data['data'][] = $v;
+		}
+		if($data['data']) {
+			$data['ptotal'] = $yeshu;
+		}
+		if($data)
+		{
+			$code = 200;
+			$json = array('code' => $code, 'data' => $data);
+			echo json_encode($json);
+		}
+		else
+		{
+			$code = 100;
+			$msg = "数据为空";
+			$json = array('code' => $code, 'msg'=>$msg, 'data' => $data);
+			echo json_encode($json);
+		}
+	}
 }
 ?>

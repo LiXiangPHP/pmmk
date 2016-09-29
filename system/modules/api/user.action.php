@@ -20,7 +20,7 @@ class user extends SystemAction {
 				$time = time();
 				$user_ip = _get_ip_dizhi();
 				$token  = md5($username.$password.$time);
-				$db->GetOne("UPDATE `@#_member` SET `user_ip` = '$user_ip',`login_time` = '$time', `token` = '$token' where `uid` = '$member[uid]'");
+				$db->Query("UPDATE `@#_member` SET `user_ip` = '$user_ip',`login_time` = '$time', `token` = '$token' where `uid` = '$member[uid]'");
 				$code = 200;
 				$msg = "";
 				$data = $token;
@@ -72,9 +72,13 @@ class user extends SystemAction {
 		$sqlreg = $db->Query($sql);
 		if($sqlreg)
 		{
+			$data  = md5($name.$password.$time);
+			$user_ip = _get_ip_dizhi();
+			$db->Query("UPDATE `@#_member` SET `user_ip` = '$user_ip',`login_time` = '$time', `token` = '$data' where `username` = '$name'");
+
 			$code = 200;
 			$msg = '注册成功';
-			$data  = md5($name.$password.$time);
+			
 			$json = array('code' => $code, 'msg' => $msg ,'data'=>$data);
 			echo json_encode($json);die;
 		}
