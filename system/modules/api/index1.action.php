@@ -62,7 +62,7 @@ class index1 extends SystemAction {
 				$code = 100;
 				$msg = "数据为空";
 			}
-			$json = array('code' => $code, 'msg' => $msg, 'ptotal'=> $yeshu, 'data' => $data);
+			$json = array('code' => $code, 'msg' => $msg, 'ptotal'=> $yeshu,'data' => $data);
 			echo json_encode($json);
 
 		}
