@@ -9,7 +9,7 @@ class order extends SystemAction {
 			if ($type==1) {
 				$db = System::load_sys_class('model');
 				$data = $db->GetList("select a.status,b.q_end_time,a.shopname,a.shopqishu,b.thumb from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and  a.uid='$info[uid]' and a.huode>10000000 and status like '%未发货%' ");
-				if($data&&$money) {
+				if($data) {
 					$code = 200;
 					$msg = "查询成功";
 				}else {
@@ -23,7 +23,7 @@ class order extends SystemAction {
 			if ($type==2) {
 				$db = System::load_sys_class('model');
 				$data = $db->GetList("select a.status,b.q_end_time,a.shopname,a.shopqishu,b.thumb from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and  a.uid='$info[uid]' and a.huode>10000000 and status like '%已发货,待收货%' ");
-				if($data&&$money) {
+				if($data) {
 					$code = 200;
 					$msg = "查询成功";
 				}else {
@@ -37,7 +37,7 @@ class order extends SystemAction {
 			if ($type==3) {
 				$db = System::load_sys_class('model');
 				$data = $db->GetList("select a.status,b.q_end_time,a.shopname,a.shopqishu,b.thumb from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and  a.uid='$info[uid]' and a.huode>10000000 and status like '%已发货,已完成%' ");
-				if($data&&$money) {
+				if($data) {
 					$code = 200;
 					$msg = "查询成功";
 				}else {
