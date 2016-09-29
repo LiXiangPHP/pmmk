@@ -58,7 +58,7 @@ class my extends SystemAction {
 		$code = '';
 		$msg  = '';
 		$data = array();
-		$pagenum = abs(intval($_POST['p']));
+		// $pagenum = abs(intval($_POST['p']));
 		$token = trim($_POST['token']);
 		$info = System::token_uid($token);
 		if($info['code'] == 100) {
@@ -67,20 +67,22 @@ class my extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);die;
 		}
-		$total = $this->db->GetCount("select * from `@#_quanzi_tiezi` where hueiyuan = '$info[uid]' and tiezi = 0 and pid = 0");
-		$num = 10;
-		$yushu=$total%$num;
-		if($yushu > 0) {
-			$yeshu=floor($total/$num)+1;
-		}else {
-			$yeshu=floor($total/$num);
-		}
-		if($pagenum >= $yeshu) {
-			$pagenum = $yeshu;
-		}
-		$page=System::load_sys_class('page');
-		$page->config($total,$num,$pagenum,"0");
-		$MCdata = $this->db->GetPage("select id,title,neirong content,img,reward,hueifu comment,time from `@#_quanzi_tiezi` where hueiyuan = '$info[uid]' and tiezi = 0 and pid = 0",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));	
+
+		// $total = $this->db->GetCount("select * from `@#_quanzi_tiezi` where hueiyuan = '$info[uid]' and tiezi = 0 and pid = 0 and shenhe = 'Y'");
+		// $num = 10;
+		// $yushu=$total%$num;
+		
+		// if($yushu > 0) {
+		// 	$yeshu=floor($total/$num)+1;
+		// }else {
+		// 	$yeshu=floor($total/$num);
+		// }
+		// if($pagenum >= $yeshu) {
+		// 	$pagenum = $yeshu;
+		// }
+
+
+		$MCdata = $this->db->GetList("select id,title,neirong content,img,reward,hueifu comment,time,shenhe from `@#_quanzi_tiezi` where hueiyuan = '$info[uid]' and tiezi = 0 and pid = 0 order by time desc");	
 		// print_r($MCdata);die;
 		foreach($MCdata as $v) {
 			$user = $this->db->GetList("select username from `@#_member` where uid in($v[reward])");
@@ -97,11 +99,25 @@ class my extends SystemAction {
 			}
 			$v['reward'] = $rewards;
 			$v['img']   .= 'gangmaduobao.com/'.$v['img'];
-			$data['data'][] = $v;
+			if($v['shenhe'] == 'Y') {
+				unset($v['shenhe']);
+				$data['pass'][] = $v;
+			}else {
+				unset($v['shenhe']);
+				$data['ping'][] = $v;
+			}
+			
 		}
-		if($data['data']) {
-			$data['ptotal'] = $yeshu;
+
+		if(!$data['pass']) {
+			$data['pass'] = '';
 		}
+		if(!$data['ping']) {
+			$data['ping'] = '';
+		}
+		// if($data['pass'] or $data['ping'] ) {
+		// 	$data['ptotal'] = $yeshu;
+		// }
 		if($data) {
 			$code = 200;
 			$msg = "查询成功";
@@ -114,6 +130,37 @@ class my extends SystemAction {
 		
 	}
 
+	//签到接口
+	public function json_sign() {
+		$code = '';
+		$msg  = '';
+		$data = array();
+		// $pagenum = abs(intval($_POST['p']));
+		$token = trim($_POST['token']);
+		$info = System::token_uid($token);
+		if($info['code'] == 100) {
+			$code = 300;
+			$msg = "用户未登录";
+			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			echo json_encode($json);die;
+		}
+	}
+
+	//每日签到
+	public function json_signday() {
+		$code = '';
+		$msg  = '';
+		$data = array();
+		// $pagenum = abs(intval($_POST['p']));
+		$token = trim($_POST['token']);
+		$info = System::token_uid($token);
+		if($info['code'] == 100) {
+			$code = 300;
+			$msg = "用户未登录";
+			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			echo json_encode($json);die;
+		}
+	}
 
 }
 

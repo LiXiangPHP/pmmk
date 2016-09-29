@@ -19,7 +19,7 @@ class card extends SystemAction {
 		if(empty($pagenum)) {
 			$pagenum=1;
 		}
-		$total = $this->db->GetCount("select * from `@#_quanzi_tiezi` where `qzid` = 1 and tiezi = 0");
+		$total = $this->db->GetCount("select * from `@#_quanzi_tiezi` where `qzid` = 1 and tiezi = 0 and shenhe = 'Y'");
 		$num = 10;
 		$yushu=$total%$num;
 		if($yushu > 0) {
@@ -32,7 +32,7 @@ class card extends SystemAction {
 		}
 		$page=System::load_sys_class('page');
 		$page->config($total,$num,$pagenum,"0");
-		$Tdata = $this->db->GetPage("SELECT id,title,neirong content,hueifu total,hueiyuan uid,type,time,img,reward  FROM `@#_quanzi_tiezi` where  `qzid` = 1 and tiezi = 0  order by time desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));	
+		$Tdata = $this->db->GetPage("SELECT id,title,neirong content,hueifu total,hueiyuan uid,type,time,img,reward  FROM `@#_quanzi_tiezi` where  `qzid` = 1 and tiezi = 0 and shenhe = 'Y'  order by time desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));	
 		if(!$Tdata) {
 			$code = 100;
 			$msg = "数据为空";
@@ -74,7 +74,7 @@ class card extends SystemAction {
 					$ids = $v['id'];
 				}
 			}
-			$sql = "select * from `@#_quanzi_tiezi` where qzid = 1 and hueiyuan != '$info[uid]' and ifsee = 0 and pid in ($ids)";
+			// $sql = "select * from `@#_quanzi_tiezi` where qzid = 1 and hueiyuan != '$info[uid]' and ifsee = 0 and pid in ($ids)";
 			$reply = $this->db->GetList("select * from `@#_quanzi_tiezi` where qzid = 1 and hueiyuan != '$info[uid]' and ifsee = 0 and  pid in($ids)");
 			// print_r($reply);die;
 			if($reply) {
@@ -94,7 +94,7 @@ class card extends SystemAction {
 				if($v['type'] == 1) {
 					$v['username'] = "管理员";
 					$v['identity'] = "admin";
-					$v['reward'] = 0;
+					$v['reward'] = 0;//未登录
 					unset($v['type']);
 					unset($v['uid']);
 					$data['data'][] = $v;
@@ -186,7 +186,7 @@ class card extends SystemAction {
 				echo json_encode($json);die;
 			}
 			//返回参数
-			$Cdata = $this->db->GetOne("select * from `@#_quanzi_tiezi` where id = '$cardid' and tiezi = 0 and pid = 0");
+			$Cdata = $this->db->GetOne("select * from `@#_quanzi_tiezi` where id = '$cardid' and tiezi = 0 and pid = 0 and shenhe = 'Y'");
 			if(!$Cdata) {
 				$code = 300;
 				$msg = "操作失败";
@@ -277,7 +277,14 @@ class card extends SystemAction {
 			echo json_encode($json);die;
 		}
 		if($cardid  && $content && $times) {
-			$ptime = $this->db->GetOne("select time from `@#_quanzi_tiezi` where id = '$cardid' limit 1");//被评论者时间
+			$ptime = $this->db->GetOne("select time,shenhe from `@#_quanzi_tiezi` where id = '$cardid' limit 1");//被评论者时间
+			if($ptime['shenhe'] == 'N') {
+				$code = 300;
+				$msg = "操作失败";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
+			}
+
 			if($ptime['time'] == $times) {
 				$pid['id'] = $cardid;
 			}else {
@@ -406,6 +413,13 @@ class card extends SystemAction {
 		$Udata = $this->db->GetOne("select * from `@#_member` where uid = '$info[uid]' limit 1");//点赏会员信息
 		if($cardid) {
 			$Cdata = $this->db->GetOne("select * from `@#_quanzi_tiezi` where id = '$cardid' limit 1");//帖子信息
+			if($Cdata['shenhe'] == 'N') {
+				$code = 300;
+				$msg = "操作失败";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
+			}
+
 			if(!$Cdata['hueiyuan']) {
 				$code = 100;
 				$msg = "管理员发帖不许赏";
