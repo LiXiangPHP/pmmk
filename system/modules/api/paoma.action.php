@@ -108,9 +108,9 @@ class paoma extends SystemAction {
 			echo json_encode(array("code"=>$code,"msg"=>$msg));die;
 		}
 		$db = System::load_sys_class('model');
-		$token = isset($_POST['uid']) ? $_POST['uid'] : null;
+		$token = isset($_POST['uid']) ? $_POST['uid'] : "kong";
 		$info = System::token_uid($token);
-		if($info['uid'])
+		if(!$info['uid'])
 		{
 			$code = 100;
 			$msg = '请登录';
@@ -119,19 +119,19 @@ class paoma extends SystemAction {
 		$bet = stripslashes($_POST['bet']);
 		// $arr = array('冠军'=>array("2"=>"2","3"=>"11"),'亚军'=>array("2"=>"2"));
 		// echo json_encode($arr);die;
-		// $bet = '{"\u51a0\u519b":{"2":"2"},"\u4e9a\u519b":{"2":"2"}}';
+		// $bet = '{"\u51a0\u519b":{"1":"2","2":"11","3":"11","4":"11","5":"11","6":"11","7":"11","8":"11","9":"11","10":"11"},"\u4e9a\u519b":{"1":"2","2":"11","3":"11","4":"11","5":"11","6":"11","7":"11","8":"11","9":"11","10":"11"},"\u7b2c\u4e09\u540d":{"1":"2","2":"11","3":"11","4":"11","5":"11","6":"11","7":"11","8":"11","9":"11","10":"11"},"\u7b2c\u56db\u540d":{"1":"2","2":"11","3":"11","4":"11","5":"11","6":"11","7":"11","8":"11","9":"11","10":"11"},"\u7b2c\u4e94\u540d":{"1":"2","2":"11","3":"11","4":"11","5":"11","6":"11","7":"11","8":"11","9":"11","10":"11"},"\u7b2c\u516d\u540d":{"1":"2","2":"11","3":"11","4":"11","5":"11","6":"11","7":"11","8":"11","9":"11","10":"11"},"\u7b2c\u4e03\u540d":{"1":"2","2":"11","3":"11","4":"11","5":"11","6":"11","7":"11","8":"11","9":"11","10":"11"},"\u7b2c\u516b\u540d":{"1":"2","2":"11","3":"11","4":"11","5":"11","6":"11","7":"11","8":"11","9":"11","10":"11"},"\u7b2c\u4e5d\u540d":{"1":"2","2":"11","3":"11","4":"11","5":"11","6":"11","7":"11","8":"11","9":"11","10":"11"},"\u7b2c\u5341\u540d":{"1":"2","2":"11","3":"11","4":"11","5":"11","6":"11","7":"11","8":"11","9":"11","10":"11"},"\u51a0\u4e9a\u519b\u548c":{"3":"11","4":"11","5":"11","6":"11","7":"11","8":"11","9":"11","10":"11","11":"11","12":"11","13":"11","14":"11","15":"11","16":"11","17":"11","18":"11","19":"11"}}';
 		
 		$bet = json_decode($bet);
 		$number = 0;
+		// print_r($bet);die;
 		foreach ($bet as $key => $value) {
 			$oid = $db->GetOne("select id from `@#_option` where `name` = '$key'");
 			$oid = $oid['id'];
 			foreach ($value as $k => $v) {
-				
 				$number = $value->$k;
 				$n+=$number;
-				$t = $db->GetOne("select id,odds from `@#_option_detail` where `oid` = '$oid' and `number` = '$number'");
-				$name = $key.$number;
+				$t = $db->GetOne("select id,odds from `@#_option_detail` where `oid` = '$oid' and `number` = '$k'");
+				$name = $key.$k;
 				$did = $t['id'];
 				$odds = $t['odds'];
 				$issue = $_POST['issue'];
@@ -235,6 +235,20 @@ class paoma extends SystemAction {
 			$json = array('code' => $code, 'msg'=>$msg, 'data' => $data);
 			echo json_encode($json);
 		}
+	}
+	public function betopen()
+	{
+		$db = System::load_sys_class('model');
+		$issue = $_POST['issue'];
+		$bet = $db->GetList("SELECT * FROM `@#_bet` where `issue` = '$issue'");
+		foreach ($bet as $k => $v) {
+			$n+=$v['number'];
+			$pei = $db->GetOne("SELECT * FROM `@#_option_detail` where `id` = '$v[did]'");
+			$p[$v['id']]= array("did"=>$v['did'],"p"=>$pei['odds']*$v['number']);
+			
+		}
+		print_r($p);die;
+		echo $n;die;
 	}
 }
 ?>
