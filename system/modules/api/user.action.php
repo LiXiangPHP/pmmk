@@ -36,18 +36,19 @@ class user extends SystemAction {
 	public function register()
 	{
 
+
 		$db = System::load_sys_class('model');	
 		$name=$_POST['username'];
 		$password=$_POST['password'];
 		$verify=$_POST['verify'];
-		$code = $_SESSION['code'];
-		if($verify != $code)
-		{
-			$code = 100;
-			$msg = '验证码错误';
-			$json = array('code' => $code, 'msg' => $msg);
-			echo json_encode($json);die;
-		}
+		$code = $_COOKIE['code'];
+		// if($verify != $code)
+		// {
+		// 	$code = 100;
+		// 	$msg = '验证码错误';
+		// 	$json = array('code' => $code, 'msg' => $msg);
+		// 	echo json_encode($json);die;
+		// }
 		if(!$verify)
 		{
 			$code = 100;

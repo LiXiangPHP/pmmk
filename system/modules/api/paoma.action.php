@@ -63,19 +63,19 @@ class paoma extends SystemAction {
 		$LastResult = explode(',',$LastResult1['result']);
 		$sum = $LastResult[0]+$LastResult[1];
 		if((int)$sum%2 == 0){
-			$NumberDs = "shuang";
+			$NumberDs = "双";
 		}
 		else
 		{
-			$NumberDs = "dan";
+			$NumberDs = "单";
 		}
 		if((int)$sum>=11)
 		{
-			$NumberSize = 'da';
+			$NumberSize = '大';
 		}
 		if((int)$sum<=10)
 		{
-			$NumberSize = 'xiao';
+			$NumberSize = '小';
 
 		}
 		// echo $LastResult;die;
@@ -83,11 +83,10 @@ class paoma extends SystemAction {
 		$option=$db->GetList("select * from `@#_option`");
 		foreach ($option as $k => $v) {
 			// print_r($v);die;
-			$detail[$v['name']]=$db->GetList("select number,odds from `@#_option_detail` where `oid` = '$v[id]'");
+			$detail[$v['name']]=$db->GetList("select number,odds from `@#_option_detail` where `oid` = '$v[id]' order by number ASC"  );
 			
 		}
 		$NowResult = '';
-	// print_r($detail);die;
 		$code = 200;
 		
 
