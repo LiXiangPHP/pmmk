@@ -199,7 +199,7 @@ class card extends SystemAction {
 				$data['data']['title'] = $Cdata['title'];
 				$data['data']['img'] = 'gangmaduobao.com/'.$Cdata['img'];
 				$data['data']['time'] = $Cdata['time'];
-				$data['data']['content'] = $Cdata['content'];
+				$data['data']['content'] = $Cdata['neirong'];
 				$data['data']['total'] = $Cdata['hueifu'];
 				$data['data']['author'] = $user['username'];
 				$comments = array();
