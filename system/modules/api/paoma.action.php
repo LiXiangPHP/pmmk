@@ -118,7 +118,7 @@ class paoma extends SystemAction {
 			echo json_encode(array("code"=>$code,"msg"=>$msg));die;
 		}
 		$bet = stripslashes($_POST['bet']);
-		// $arr = array('冠军'=>array("2"=>"2"),'亚军'=>array("2"=>"2"));
+		// $arr = array('冠军'=>array("2"=>"2","3"=>"11"),'亚军'=>array("2"=>"2"));
 		// echo json_encode($arr);die;
 		// $bet = '{"\u51a0\u519b":{"2":"2"},"\u4e9a\u519b":{"2":"2"}}';
 		
