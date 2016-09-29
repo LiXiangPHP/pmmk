@@ -35,7 +35,7 @@ class index1 extends SystemAction {
 		$db = System::load_sys_class('model');
 		//待开奖
 		if ($type==1) {	
-		$pagenum = abs(intval($_POST['p']));
+		// $pagenum = abs(intval($_POST['p']));
 		$pagenum = isset($_POST['pagenum']) ? $_POST['pagenum'] : null;
 		if(empty($pagenum)) {
 		$pagenum=1;
@@ -55,14 +55,14 @@ class index1 extends SystemAction {
 		$page->config($total,$num,$pagenum,"0");
 		$data = $db->GetPage("select canyurenshu,shenyurenshu,title,money,thumb from `@#_shoplist` where `q_uid` is null order by shenyurenshu asc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 		if($data) {
-				$data['ptotal'] = $yeshu;
+				
 				$code = 200;
 				$msg = "查询成功";
 			}else {
 				$code = 100;
 				$msg = "数据为空";
 			}
-			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			$json = array('code' => $code, 'msg' => $msg, 'ptotal'=> $yeshu, 'data' => $data);
 			echo json_encode($json);
 
 		}
