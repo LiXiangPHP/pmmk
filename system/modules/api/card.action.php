@@ -74,7 +74,7 @@ class card extends SystemAction {
 					$ids = $v['id'];
 				}
 			}
-			$sql = "select * from `@#_quanzi_tiezi` where qzid = 1 and hueiyuan != '$info[uid]' and ifsee = 0 and and pid in ($ids)";
+			$sql = "select * from `@#_quanzi_tiezi` where qzid = 1 and hueiyuan != '$info[uid]' and ifsee = 0 and pid in ($ids)";
 			$reply = $this->db->GetList("select * from `@#_quanzi_tiezi` where qzid = 1 and hueiyuan != '$info[uid]' and ifsee = 0 and  pid in($ids)");
 			// print_r($reply);die;
 			if($reply) {
