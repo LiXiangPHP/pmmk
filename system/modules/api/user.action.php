@@ -41,10 +41,17 @@ class user extends SystemAction {
 		$password=$_POST['password'];
 		$verify=$_POST['verify'];
 		$code = $_COOKIE['code'];
-		if($verify != $code || !$verify)
+		if($verify != $code)
 		{
 			$code = 100;
 			$msg = '验证码错误';
+			$json = array('code' => $code, 'msg' => $msg);
+			echo json_encode($json);die;
+		}
+		if(!$verify)
+		{
+			$code = 100;
+			$msg = '验证码不能为空';
 			$json = array('code' => $code, 'msg' => $msg);
 			echo json_encode($json);die;
 		}

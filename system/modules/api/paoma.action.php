@@ -62,6 +62,22 @@ class paoma extends SystemAction {
 		$LastResult1=$db->GetOne("select result from `@#_bet_result` WHERE `issue` = '$lastissue'");
 		$LastResult = explode(',',$LastResult1['result']);
 		$sum = $LastResult[0]+$LastResult[1];
+		if((int)$sum%2 == 0){
+			$NumberDs = "shuang";
+		}
+		else
+		{
+			$NumberDs = "dan";
+		}
+		if((int)$sum>=11)
+		{
+			$NumberSize = 'da';
+		}
+		if((int)$sum<=10)
+		{
+			$NumberSize = 'xiao';
+
+		}
 		// echo $LastResult;die;
 		$LastResult = $LastResult1['result'];
 		$option=$db->GetList("select * from `@#_option`");
@@ -77,7 +93,7 @@ class paoma extends SystemAction {
 
 
 
-		$data = array('issue'=>$issue,'lastissue'=>$lastissue,'qihao'=>$qihao,'status'=>$status,'WaitTime'=>$WaitTime,'GameTime'=>$GameTime,'detail'=>$detail,'LastResult'=>$LastResult,'sum'=>$sum,'NowResult'=>$NowResult);
+		$data = array('issue'=>$issue,'lastissue'=>$lastissue,'qihao'=>$qihao,'status'=>$status,'WaitTime'=>$WaitTime,'GameTime'=>$GameTime,'detail'=>$detail,'LastResult'=>$LastResult,'sum'=>$sum,'NowResult'=>$NowResult,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize);
 		$json = array('code' => $code,'data'=>$data);
 		echo json_encode($json);
 
