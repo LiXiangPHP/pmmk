@@ -60,7 +60,22 @@ class my extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);die;
 		}
-		$MCdata = $this->db->GetList("select * from `@#_quanzi_tiezi` where hueiyuan = '$info[uid]' and tiezi = 0 and pid = 0");
+		$MCdata = $this->db->GetList("select id,title,neirong,img,time,reward,hueifu from `@#_quanzi_tiezi` where hueiyuan = '$info[uid]' and tiezi = 0 and pid = 0");
+		foreach($MCdata as $k => $v) {
+			$user = $this->db->GetList("select username from `@#_member` where uid in($v['reward'])");
+			if($user) {
+				$rewards = implode(',',$user);//点赏人昵称
+			}else {
+				$rewards = '';//未有人点赏
+			}
+			$total = $this->db->GetList("select count(*) from `@#_quanzi_tiezi` where tiezi = '$v[id]' and ");
+			$data['data']['id'] = $v['id'];
+			$data['data']['title'] = $v['title'];
+			$data['data']['content'] = $v['neirong'];
+			$data['data']['img'] = $v['img'];
+			$data['data']['time'] = $v['time'];
+			$data['data']['reward'] = $rewards;
+		}
 	}
 
 

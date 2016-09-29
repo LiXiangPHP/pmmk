@@ -278,7 +278,7 @@ class card extends SystemAction {
 		}
 		if($cardid  && $content && $times) {
 			$ptime = $this->db->GetOne("select time from `@#_quanzi_tiezi` where id = '$cardid' limit 1");//被评论者时间
-			if($ptime == $times) {
+			if($ptime['time'] == $times) {
 				$pid['id'] = $cardid;
 			}else {
 				$pid = $this->db->GetOne("select id,hueiyuan from `@#_quanzi_tiezi` where  tiezi = '$cardid' and time = '$times' limit 1");
