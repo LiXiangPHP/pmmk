@@ -36,6 +36,7 @@ class index1 extends SystemAction {
 		//待开奖
 		if ($type==1) {	
 		$pagenum = abs(intval($_POST['p']));
+		$pagenum = isset($_POST['pagenum']) ? $_POST['pagenum'] : null;
 		if(empty($pagenum)) {
 		$pagenum=1;
 		}
