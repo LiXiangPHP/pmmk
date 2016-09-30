@@ -288,10 +288,10 @@ class my extends SystemAction {
 					$nb = $b+$zb;
 					$data = $db->Query("update `@#_member` set score=$nj,money=$nb where uid='$info[uid]'") ;
 					$code = 200;
-					$msg = "查询成功";
+					$msg = "添加成功";
 				}else {
 					$code = 400;
-					$msg = "数据为空";
+					$msg = "添加失败";
 				}
 				$json = array('code' => $code, 'msg' => $msg);
 				echo json_encode($json);
@@ -311,10 +311,10 @@ class my extends SystemAction {
 					$nb = $b-$zb;
 					$data = $db->Query("update `@#_member` set score=$nj,money=$nb where uid='$info[uid]'") ;
 					$code = 200;
-					$msg = "查询成功";
+					$msg = "添加成功";
 				}else {
 					$code = 400;
-					$msg = "数据为空";
+					$msg = "添加失败";
 				}
 				$json = array('code' => $code, 'msg' => $msg);
 				echo json_encode($json);
