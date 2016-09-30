@@ -97,6 +97,7 @@ class cart extends SystemAction {
                 $MoenyCount = $MoenyCount + $v['personcount'];
             }
 //            print_r($MoenyCount);
+            $cartdata['moenycount'] = $MoenyCount;
 //            print_r($cartdata);
             foreach ($newdata as $v) {
                 $shopids = $shopids . ',' . $v['id'];
