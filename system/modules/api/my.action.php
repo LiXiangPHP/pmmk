@@ -175,6 +175,65 @@ class my extends SystemAction {
 				$json = array('code' => $code, 'msg' => $msg,  'data' => $data);
 				echo json_encode($json);		
 	}
+	//积分确认
+	public function jfqr() {
+		$db = System::load_sys_class('model');
+		$token = isset($_POST['token']) ? $_POST['token'] : null;
+		$info = System::token_uid($token);
+		$type = isset($_POST['type']) ? $_POST['type'] : null;
+		if ($info['code']==200) {
+			if ($type==1) {
+				$zj = isset($_POST['zj']) ? $_POST['zj'] : null;
+				$blarr = $db->GetOne("select scoredhb,duobaodhb  from `@#_proportionality` ");
+				$bj = $blarr['scoredhb'];
+				$bd = $blarr['duobaodhb'];
+				$jbarr = $db->GetOne("select score,money  from `@#_member` where uid='$info[uid]' ");
+				$j = $jbarr['score'];
+				$b = $jbarr['money'];
+				$zh = $bj/$bd;
+				$zb = $zj/$zh;
+				if ($zb) {
+					$nj = $j-$zj;
+					$nb = $b+$zb;
+					$data = $db->Query("update `@#_member` set score=$nj,money=$nb where uid='$info[uid]'") ;
+					$code = 200;
+					$msg = "查询成功";
+				}else {
+					$code = 400;
+					$msg = "数据为空";
+				}
+				$json = array('code' => $code, 'msg' => $msg);
+				echo json_encode($json);
+			}
+			if ($type==2) {
+				$zb = isset($_POST['zj']) ? $_POST['zj'] : null;
+				$blarr = $db->GetOne("select scoredhb,duobaodhb  from `@#_proportionality` ");
+				$bj = $blarr['scoredhb'];
+				$bd = $blarr['duobaodhb'];
+				$jbarr = $db->GetOne("select score,money  from `@#_member` where uid='$info[uid]' ");
+				$j = $jbarr['score'];
+				$b = $jbarr['money'];
+				$zh = $bj/$bd;
+				$zb = $zj*$zh;
+				if ($zb) {
+					$nj = $j+$zj;
+					$nb = $b-$zb;
+					$data = $db->Query("update `@#_member` set score=$nj,money=$nb where uid='$info[uid]'") ;
+					$code = 200;
+					$msg = "查询成功";
+				}else {
+					$code = 400;
+					$msg = "数据为空";
+				}
+				$json = array('code' => $code, 'msg' => $msg);
+				echo json_encode($json);
+			}
+		}else{
+			$json = array('code' => 300, 'msg' => '请登录');
+			echo json_encode($json);
+		}
+			
+	}
 }
 
 ?>
