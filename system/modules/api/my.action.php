@@ -134,6 +134,36 @@ class my extends SystemAction {
 
 
 
+	//每日签到
+	public function json_signday() {
+		$code = '';
+		$msg  = '';
+		$data = array();
+		// $pagenum = abs(intval($_POST['p']));
+		$token = trim($_POST['token']);
+		$info = System::token_uid($token);
+		if($info['code'] == 100) {
+			$code = 300;
+			$msg = "用户未登录";
+			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			echo json_encode($json);die;
+		}
+	}
+	//积分兑换展示
+	public function dhzs() {
+		$db = System::load_sys_class('model');
+			$data = $db->GetOne("select scoredhb,duobaodhb  from `@#_proportionality` ");
+			if($data) {
+					$code = 200;
+					$msg = "查询成功";
+				}else {
+					$code = 400;
+					$msg = "数据为空";
+				}
+				$json = array('code' => $code, 'msg' => $msg,  'data' => $data);
+				echo json_encode($json);		
+	}
+
 }
 
 ?>

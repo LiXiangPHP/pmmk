@@ -108,7 +108,7 @@ class paoma extends SystemAction {
 			echo json_encode(array("code"=>$code,"msg"=>$msg));die;
 		}
 		$db = System::load_sys_class('model');
-		$token = isset($_POST['uid']) ? $_POST['uid'] : "kong";
+		$token = isset($_POST['token']) ? $_POST['token'] : "kong";
 		$info = System::token_uid($token);
 		if(!$info['uid'])
 		{
@@ -238,16 +238,84 @@ class paoma extends SystemAction {
 	}
 	public function betopen()
 	{
+		$option = array(array("id"=>2,"name"=>'冠军'),array("id"=>3,"name"=>'亚军'),array("id"=>4,"name"=>'第三名'),array("id"=>5,"name"=>'第四名'),array("id"=>6,"name"=>'第五名'),array("id"=>7,"name"=>'第六名'),array("id"=>8,"name"=>'第七名'),array("id"=>9,"name"=>'第八名'),array("id"=>10,"name"=>'第九名'),array("id"=>11,"name"=>'第十名'));
+		$number = array('1','2','3','4','5','6','7','8','9','10');
+		$hao = rand(0,9);
+		$guan = $option[0]['name'].$number[$hao];
+		if($hao <=5)
+		{
+			$hao1 = rand($hao+1,9);
+		}
+		else
+		{
+			$hao1 = rand(0,$hao-1);
+		}
+		
+
+		$ya = $option[1]['name'].$number[$hao1];
+		unset($option[0]);
+		unset($option[1]);
+		unset($number[$hao1]);unset($number[$hao]);
+		// print_r($number);die;
+		foreach ($option as $key => $value) {
+			
+				foreach ($number as $k => $v) {
+					$o[] = $value['name'].$v;
+				}
+		}
+		// print_r($o);die;
 		$db = System::load_sys_class('model');
+
 		$issue = $_POST['issue'];
 		$bet = $db->GetList("SELECT * FROM `@#_bet` where `issue` = '$issue'");
+		$guan = $db->GetOne("SELECT * FROM `@#_bet` where `issue` = '$issue' and name = '$guan'");
+		$ya = $db->GetOne("SELECT * FROM `@#_bet` where `issue` = '$issue' and name = '$ya'");
+		$guan = $guan['odds']*$guan['number'];
+		$ya = $ya['odds']*$ya['number'];
+		$detail = $db->GetList("SELECT * FROM `@#_option_detail` ");
 		foreach ($bet as $k => $v) {
 			$n+=$v['number'];
 			$pei = $db->GetOne("SELECT * FROM `@#_option_detail` where `id` = '$v[did]'");
-			$p[$v['id']]= array("did"=>$v['did'],"p"=>$pei['odds']*$v['number']);
+			$p[$v['id']]= array("did"=>$v['did'],"p"=>$pei['odds']*$v['number'],"name"=>$v['name']);
 			
 		}
-		print_r($p);die;
+		
+		$s = 0.9;
+		$sheng = intval($n*$s);
+		$sheng = $sheng-$guan-$ya;
+		// echo $sheng;die;
+		$m = intval($sheng/80);
+		// print_r($detail);die;
+		// echo $m;die;
+		// print_r($o);die;
+		foreach ($o as $key => $value) {
+			$ming = mb_substr($value , 0 , 3);
+			$ci = mb_substr($value , 3);
+
+			foreach ($p as $k => $v) {
+				if($v['name'] == $value )
+				{
+					// print_r($flag['ming']);
+					print_r( $flag['ci']);
+					if($v['p'] < $m && !array_search($ming, $flag['ming']) && !array_search($ci, $flag['ci']))
+					{
+						// print_r($o[$key]);die;
+						$flag['ming'][] = $ming;
+						$flag['ci'][] = $ci;
+
+						$aaa[] = $v['name'];
+
+					}
+					else
+					{
+						break;
+					}
+				}
+				
+
+			}
+		}
+		print_r($aaa);die;
 		echo $n;die;
 	}
 }
