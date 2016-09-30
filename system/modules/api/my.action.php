@@ -325,6 +325,83 @@ class my extends SystemAction {
 		}
 			
 	}
+	//消费记录
+	public function xfjl() {
+		$db = System::load_sys_class('model');
+		$token = isset($_POST['token']) ? $_POST['token'] : null;
+		$info = System::token_uid($token);
+		$type = isset($_POST['type']) ? $_POST['type'] : null;
+		if ($info['code']==200) {
+			//积分纪录
+			if ($type==1) {	
+				$pagenum = isset($_POST['pagenum']) ? $_POST['pagenum'] : null;
+				if(empty($pagenum)) {
+				$pagenum=1;
+				}
+				$total = $db->GetCount("select * from `@#_member_account` where uid='$info[uid]' and pay like '%福分%'  ");	
+				$num = 10;
+				$yushu = $total%$num;
+					if($yushu > 0) {
+						$yeshu=floor($total/$num)+1;
+					}else {
+						$yeshu=floor($total/$num);
+					}
+					if($pagenum >= $yeshu) {
+						$pagenum = $yeshu;
+					}
+				$page=System::load_sys_class('page');
+				$page->config($total,$num,$pagenum,"0");		
+				$data = $db->GetPage("select type,content,money,time from `@#_member_account` where uid='$info[uid]' and pay like '%福分%' ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+				if($data) {
+					$code = 200;
+					$msg = "查询成功";
+				}else {
+					$code = 400;
+					$msg = "数据为空";
+				}
+				$json = array('code' => $code, 'msg' => $msg,'ptotal'=> $yeshu, 'data' => $data);
+				echo json_encode($json);			
+			}
+			//夺宝币记录
+			if ($type==2) {	
+				$pagenum = isset($_POST['pagenum']) ? $_POST['pagenum'] : null;
+				if(empty($pagenum)) {
+				$pagenum=1;
+				}
+				$total = $db->GetCount("select * from `@#_member_account` where uid='$info[uid]' and pay like '%福分%'  ");	
+				$num = 10;
+				$yushu = $total%$num;
+					if($yushu > 0) {
+						$yeshu=floor($total/$num)+1;
+					}else {
+						$yeshu=floor($total/$num);
+					}
+					if($pagenum >= $yeshu) {
+						$pagenum = $yeshu;
+					}
+				$page=System::load_sys_class('page');
+				$page->config($total,$num,$pagenum,"0");		
+				$data = $db->GetPage("select type,content,money,time from `@#_member_account` where uid='$info[uid]' and pay like '%账户%' ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+				if($data) {
+					$code = 200;
+					$msg = "查询成功";
+				}else {
+					$code = 400;
+					$msg = "数据为空";
+				}
+				$json = array('code' => $code, 'msg' => $msg,'ptotal'=> $yeshu, 'data' => $data);
+				echo json_encode($json);			
+			}
+
+
+		}else{
+				$json = array('code' => 300, 'msg' => '请登录');
+				echo json_encode($json);
+		}
+		
+			
+				
+	}
 
 }
 
