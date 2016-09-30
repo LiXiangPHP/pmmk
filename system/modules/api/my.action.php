@@ -311,6 +311,143 @@ class my extends SystemAction {
 				echo json_encode($json);		
 	}
 
+	//积分确认
+	public function jfqr() {
+		$db = System::load_sys_class('model');
+		$token = isset($_POST['token']) ? $_POST['token'] : null;
+		$info = System::token_uid($token);
+		$type = isset($_POST['type']) ? $_POST['type'] : null;
+		if ($info['code']==200) {
+			if ($type==1) {
+				$zj = isset($_POST['zj']) ? $_POST['zj'] : null;
+				$blarr = $db->GetOne("select scoredhb,duobaodhb  from `@#_proportionality` ");
+				$bj = $blarr['scoredhb'];
+				$bd = $blarr['duobaodhb'];
+				$jbarr = $db->GetOne("select score,money  from `@#_member` where uid='$info[uid]' ");
+				$j = $jbarr['score'];
+				$b = $jbarr['money'];
+				$zh = $bj/$bd;
+				$zb = $zj/$zh;
+				if ($zb) {
+					$nj = $j-$zj;
+					$nb = $b+$zb;
+					$data = $db->Query("update `@#_member` set score=$nj,money=$nb where uid='$info[uid]'") ;
+					$code = 200;
+					$msg = "添加成功";
+				}else {
+					$code = 400;
+					$msg = "添加失败";
+				}
+				$json = array('code' => $code, 'msg' => $msg);
+				echo json_encode($json);
+			}
+			if ($type==2) {
+				$zb = isset($_POST['zb']) ? $_POST['zb'] : null;
+				$blarr = $db->GetOne("select scoredhb,duobaodhb  from `@#_proportionality` ");
+				$bj = $blarr['scoredhb'];
+				$bd = $blarr['duobaodhb'];
+				$jbarr = $db->GetOne("select score,money  from `@#_member` where uid='$info[uid]' ");
+				$j = $jbarr['score'];
+				$b = $jbarr['money'];
+				$zh = $bj/$bd;
+				$zj = $zb*$zh;
+				if ($zb) {
+					$nj = $j+$zj;
+					$nb = $b-$zb;
+					$data = $db->Query("update `@#_member` set score=$nj,money=$nb where uid='$info[uid]'") ;
+					$code = 200;
+					$msg = "添加成功";
+				}else {
+					$code = 400;
+					$msg = "添加失败";
+				}
+				$json = array('code' => $code, 'msg' => $msg);
+				echo json_encode($json);
+			}
+		}else{
+			$json = array('code' => 300, 'msg' => '请登录');
+			echo json_encode($json);
+		}
+			
+	}
+	//消费记录
+	public function xfjl() {
+		$db = System::load_sys_class('model');
+		$token = isset($_POST['token']) ? $_POST['token'] : null;
+		$info = System::token_uid($token);
+		$type = isset($_POST['type']) ? $_POST['type'] : null;
+		if ($info['code']==200) {
+			//积分纪录
+			if ($type==1) {	
+				$pagenum = isset($_POST['pagenum']) ? $_POST['pagenum'] : null;
+				if(empty($pagenum)) {
+				$pagenum=1;
+				}
+				$total = $db->GetCount("select * from `@#_member_account` where uid='$info[uid]' and pay like '%福分%'  ");	
+				$num = 10;
+				$yushu = $total%$num;
+					if($yushu > 0) {
+						$yeshu=floor($total/$num)+1;
+					}else {
+						$yeshu=floor($total/$num);
+					}
+					if($pagenum >= $yeshu) {
+						$pagenum = $yeshu;
+					}
+				$page=System::load_sys_class('page');
+				$page->config($total,$num,$pagenum,"0");		
+				$data = $db->GetPage("select type,content,money,time from `@#_member_account` where uid='$info[uid]' and pay like '%福分%' ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+				if($data) {
+					$code = 200;
+					$msg = "查询成功";
+				}else {
+					$code = 400;
+					$msg = "数据为空";
+				}
+				$json = array('code' => $code, 'msg' => $msg,'ptotal'=> $yeshu, 'data' => $data);
+				echo json_encode($json);			
+			}
+			//夺宝币记录
+			if ($type==2) {	
+				$pagenum = isset($_POST['pagenum']) ? $_POST['pagenum'] : null;
+				if(empty($pagenum)) {
+				$pagenum=1;
+				}
+				$total = $db->GetCount("select * from `@#_member_account` where uid='$info[uid]' and pay like '%福分%'  ");	
+				$num = 10;
+				$yushu = $total%$num;
+					if($yushu > 0) {
+						$yeshu=floor($total/$num)+1;
+					}else {
+						$yeshu=floor($total/$num);
+					}
+					if($pagenum >= $yeshu) {
+						$pagenum = $yeshu;
+					}
+				$page=System::load_sys_class('page');
+				$page->config($total,$num,$pagenum,"0");		
+				$data = $db->GetPage("select type,content,money,time from `@#_member_account` where uid='$info[uid]' and pay like '%账户%' ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+				if($data) {
+					$code = 200;
+					$msg = "查询成功";
+				}else {
+					$code = 400;
+					$msg = "数据为空";
+				}
+				$json = array('code' => $code, 'msg' => $msg,'ptotal'=> $yeshu, 'data' => $data);
+				echo json_encode($json);			
+			}
+
+
+		}else{
+				$json = array('code' => 300, 'msg' => '请登录');
+				echo json_encode($json);
+		}
+		
+			
+				
+	}
+
 }
 
 ?>
