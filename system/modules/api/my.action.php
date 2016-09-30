@@ -117,18 +117,63 @@ class my extends SystemAction {
 	
 	//每日签到
 	public function json_signday() {
-		// $code = '';
-		// $msg  = '';
-		// $data = array();
-		// $token = trim($_POST['token']);
-		// $info = System::token_uid($token);
-		// if($info['code'] == 100) {
-		// 	$code = 300;
-		// 	$msg = "用户未登录";
-		// 	$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-		// 	echo json_encode($json);die;
-		// }
+		$code = '';
+		$msg  = '';
+		$data = array();
+		$token = trim($_POST['token']);
+		$info = System::token_uid($token);
+		if($info['code'] == 100) {
+			$code = 300;
+			$msg = "用户未登录";
+			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			echo json_encode($json);die;
+		}
+		$member = $this->db->GetOne("select * from `@#_member` where uid = '$info[uid]' limit 1");
+		$rules  = $this->db->GetList("select * from `@#_signrules` ");
+		if($rules && $member) {
+			$data['time'] = $member['sign_in_time'];
+			foreach($rules as $k => $v) {
+				$arr['num'] = $v['number'];
+				$arr['score'] = $v['points'];
+				$data['rules'][] = $arr; 
+			}
 
+			$arr = array();
+			for($k = 0;$k <=9;$k++) {
+				$arr[]['time'] = date('Y-m-d',strtotime('-'.$k.' days'));
+			}
+		
+			$arrs = array();
+			for($k=0;$k <= $member['sign_in_time'];$k++) {
+				$arrs[] = date('Y-m-d',strtotime('-'.$k.' days',$member['sign_in_date']));
+			}
+
+			foreach($arr as $k => $val) {
+				if(in_array($val['time'], $arrs)) {
+					$val['status'] = '已签到';
+				}else {
+					$val['status'] = '未签到';
+				}
+				$data['days'][] = $val; 
+			}
+			
+			if($data) {
+				$code = 200;
+				$msg = "查询成功";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
+			}else {
+				$code = 100;
+				$msg = "操作失败";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
+			}
+		}else {
+			$code = 300;
+			$msg = "操作失败";
+			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			echo json_encode($json);die;
+		}
 	}
 
 	//签到
@@ -154,7 +199,6 @@ class my extends SystemAction {
 		}else {
 			$time_score = 0;
 		}
-
 		$member = $this->db->GetOne("select * from `@#_member` where uid = '$info[uid]' limit 1");
 		$days = $this->db->GetList("select * from `@#_signrules` order by number asc");
 		
@@ -185,7 +229,7 @@ class my extends SystemAction {
 			echo json_encode($json);die;
 		}
 
-		if ( $member['sign_in_date'] == date('Y-m-d',strtotime('-1 day')) ){
+		if ( date('Y-m-d',$member['sign_in_date']) == date('Y-m-d',strtotime('-1 day')) ){
 			# 连续签到
 			if ( $member['sign_in_time'] >= $max_day ) {//签到天数
 				$member['sign_in_time'] = 0;
@@ -193,7 +237,7 @@ class my extends SystemAction {
 
 			$sign_in_time = $member['sign_in_time'] + 1;
 			$sign_in_time_all = $member['sign_in_time_all'] + 1;
-			$sign_in_date = date('Y-m-d');
+			$sign_in_date = time();
 			$score = $member['score'] + $time_score;
 			// print_r($days);die;
 			$big = false;
@@ -203,6 +247,7 @@ class my extends SystemAction {
 					$big = true;
 				} else if ( $k+1 == $num-1 && $sign_in_time == $max_day) {
 					$score += $days[$k]['points'];
+					$member['sign_in_time'] = 0;
 					$big = true;
 				}
 			}
@@ -232,13 +277,13 @@ class my extends SystemAction {
 			//签到不连续
 			$sign_in_time = 1;
 			$sign_in_time_all = $member['sign_in_time_all'] + 1;
-			$sign_in_date = date('Y-m-d');
+			$sign_in_date = time();
 			$score = $member['score'] + $time_score;
 			// $ress = $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$member['uid']."', '1', '福分', '每日签到', '$time_score', '".time()."')");
 			$res = $this->db->Query("UPDATE `@#_member` SET score='".$score."',sign_in_time='".$sign_in_time."', sign_in_time_all='".$sign_in_time_all."', sign_in_date='".$sign_in_date."' where uid='".$member['uid']."'");
 			if($res) {
 				$code = 200;
-				$msg = "签到成功2";
+				$msg = "签到成功";
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 				echo json_encode($json);die;
 			}else {
