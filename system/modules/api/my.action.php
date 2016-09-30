@@ -297,7 +297,7 @@ class my extends SystemAction {
 				echo json_encode($json);
 			}
 			if ($type==2) {
-				$zb = isset($_POST['zj']) ? $_POST['zj'] : null;
+				$zb = isset($_POST['zb']) ? $_POST['zb'] : null;
 				$blarr = $db->GetOne("select scoredhb,duobaodhb  from `@#_proportionality` ");
 				$bj = $blarr['scoredhb'];
 				$bd = $blarr['duobaodhb'];
@@ -305,7 +305,7 @@ class my extends SystemAction {
 				$j = $jbarr['score'];
 				$b = $jbarr['money'];
 				$zh = $bj/$bd;
-				$zb = $zj*$zh;
+				$zj = $zb*$zh;
 				if ($zb) {
 					$nj = $j+$zj;
 					$nb = $b-$zb;
