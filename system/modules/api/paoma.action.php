@@ -238,10 +238,40 @@ class paoma extends SystemAction {
 	}
 	public function betopen()
 	{
+		$db = System::load_sys_class('model');
+
+		$issue = $_POST['issue'];
+
+		$bet = $db->GetOne("SELECT * FROM `@#_bet_result` where `issue` = '$issue'");
+		if($bet)
+		{
+			$betresult = explode(',',$bet['result']);
+			$code = "200";
+			$sum = $betresult[0]+$betresult[1];
+			if((int)$sum%2 == 0){
+				$NumberDs = "双";
+			}
+			else
+			{
+				$NumberDs = "单";
+			}
+			if((int)$sum>=11)
+			{
+				$NumberSize = '大';
+			}
+			if((int)$sum<=10)
+			{
+				$NumberSize = '小';
+
+			}
+			echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']));die;
+
+		}
 		$option = array(array("id"=>2,"name"=>'冠军'),array("id"=>3,"name"=>'亚军'),array("id"=>4,"name"=>'第三名'),array("id"=>5,"name"=>'第四名'),array("id"=>6,"name"=>'第五名'),array("id"=>7,"name"=>'第六名'),array("id"=>8,"name"=>'第七名'),array("id"=>9,"name"=>'第八名'),array("id"=>10,"name"=>'第九名'),array("id"=>11,"name"=>'第十名'));
 		$number = array('1','2','3','4','5','6','7','8','9','10');
+		$time = date("Y/m/d",time());
 		$hao = rand(0,9);
-		$guan = $option[0]['name'].$number[$hao];
+		$guan1= $option[0]['name'].$number[$hao];
 		if($hao <=5)
 		{
 			$hao1 = rand($hao+1,9);
@@ -252,7 +282,9 @@ class paoma extends SystemAction {
 		}
 		
 
-		$ya = $option[1]['name'].$number[$hao1];
+		$ya1 = $option[1]['name'].$number[$hao1];
+		$guanci = $number[$hao];
+		$yaci = $number[$hao1];
 		unset($option[0]);
 		unset($option[1]);
 		unset($number[$hao1]);unset($number[$hao]);
@@ -264,12 +296,10 @@ class paoma extends SystemAction {
 				}
 		}
 		// print_r($o);die;
-		$db = System::load_sys_class('model');
-
-		$issue = $_POST['issue'];
+		
 		$bet = $db->GetList("SELECT * FROM `@#_bet` where `issue` = '$issue'");
-		$guan = $db->GetOne("SELECT * FROM `@#_bet` where `issue` = '$issue' and name = '$guan'");
-		$ya = $db->GetOne("SELECT * FROM `@#_bet` where `issue` = '$issue' and name = '$ya'");
+		$guan = $db->GetOne("SELECT * FROM `@#_bet` where `issue` = '$issue' and name = '$guan1'");
+		$ya = $db->GetOne("SELECT * FROM `@#_bet` where `issue` = '$issue' and name = '$ya1'");
 		$guan = $guan['odds']*$guan['number'];
 		$ya = $ya['odds']*$ya['number'];
 		$detail = $db->GetList("SELECT * FROM `@#_option_detail` ");
@@ -288,35 +318,97 @@ class paoma extends SystemAction {
 		// print_r($detail);die;
 		// echo $m;die;
 		// print_r($o);die;
+		// print_r($p);die;
+		$aaa = array(mb_substr($guan1,2),mb_substr($ya1,2));
+		$flag['ci'] = array($guanci,$yaci);
+		
 		foreach ($o as $key => $value) {
 			$ming = mb_substr($value , 0 , 3);
 			$ci = mb_substr($value , 3);
-
+			$ci1 = rand(1,10);
+			if(!in_array($ci1, $flag['ci']))
+			{
+				$ci2 = $ci1;
+			}
+			else{
+				$ci2 = $ci;
+			}
 			foreach ($p as $k => $v) {
-				if($v['name'] == $value )
+				$vming = mb_substr($v['name'] , 0 , 3);
+				if($v['name'] == $value)
 				{
+					// print_r($flag);die;
 					// print_r($flag['ming']);
-					print_r( $flag['ci']);
-					if($v['p'] < $m && !array_search($ming, $flag['ming']) && !array_search($ci, $flag['ci']))
+					// print_r( $flag['ci']);
+					// echo $value;
+					// print_r($flag['ci']);die;
+					if($v['p'] < $m && !in_array($ming, $flag['ming']) && !in_array($ci, $flag['ci']))
 					{
 						// print_r($o[$key]);die;
+						
+						// echo mb_substr($v['name'] , 0 , 3);die;
+						$aaa[] = $ci;
 						$flag['ming'][] = $ming;
 						$flag['ci'][] = $ci;
-
-						$aaa[] = $v['name'];
 
 					}
 					else
 					{
+						// print_r($value);die;
+						 // echo $v['name']; 
+						 // echo $ci."|";
 						break;
 					}
+					
+				}
+				elseif(!in_array($ming, $flag['ming']) && $ming!=$vming &&!in_array($ci2, $flag['ci']))
+				{
+					// print_r($ming);die;
+					$aaa[] = $ci2;
+					$flag['ming'][] = $ming;
+					$flag['ci'][] = $ci2;
 				}
 				
 
 			}
 		}
-		print_r($aaa);die;
-		echo $n;die;
+		foreach ($aaa as $k => $v) {
+			$result .= $v.",";
+			# code...
+		}
+		$result = rtrim($result, ',');
+		$sql="INSERT INTO `@#_bet_result`(result,issue,time)VALUES('$result','$issue','$time')";
+		$query = $db->Query($sql);
+		if($query){
+
+			$code = "200";
+			$sum = $aaa[0]+$aaa[1];
+			if((int)$sum%2 == 0){
+				$NumberDs = "双";
+			}
+			else
+			{
+				$NumberDs = "单";
+			}
+			if((int)$sum>=11)
+			{
+				$NumberSize = '大';
+			}
+			if((int)$sum<=10)
+			{
+				$NumberSize = '小';
+
+			}
+			echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$result));die;
+
+		}
+		else
+		{
+			$code = "100";
+			$msg = '请求错误，请重试';
+			echo json_encode(array('code'=>$code,'msg'=>$msg));die;
+		}
+
 	}
 }
 ?>
