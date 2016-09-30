@@ -98,7 +98,7 @@ class my extends SystemAction {
 				$rewards = '';//未有人点赏
 			}
 			$v['reward'] = $rewards;
-			$v['img']   .= 'gangmaduobao.com/'.$v['img'];
+			$v['img']   = 'gangmaduobao.com/'.$v['img'];
 			if($v['shenhe'] == 'Y') {
 				unset($v['shenhe']);
 				$data['pass'][] = $v;
@@ -130,37 +130,9 @@ class my extends SystemAction {
 		
 	}
 
-	//签到接口
-	public function json_sign() {
-		$code = '';
-		$msg  = '';
-		$data = array();
-		// $pagenum = abs(intval($_POST['p']));
-		$token = trim($_POST['token']);
-		$info = System::token_uid($token);
-		if($info['code'] == 100) {
-			$code = 300;
-			$msg = "用户未登录";
-			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-			echo json_encode($json);die;
-		}
-	}
+	
 
-	//每日签到
-	public function json_signday() {
-		$code = '';
-		$msg  = '';
-		$data = array();
-		// $pagenum = abs(intval($_POST['p']));
-		$token = trim($_POST['token']);
-		$info = System::token_uid($token);
-		if($info['code'] == 100) {
-			$code = 300;
-			$msg = "用户未登录";
-			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-			echo json_encode($json);die;
-		}
-	}
+
 
 }
 
