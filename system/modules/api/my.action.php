@@ -215,7 +215,7 @@ class my extends SystemAction {
 			echo json_encode($json);die;
 		}
 
-		if ( $member['sign_in_date'] == date('Y-m-d') ) {
+		if ( date('Y-m-d',$member['sign_in_date']) == date('Y-m-d') ) {
 			$code = 100;
 			$msg = "已签到";
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
