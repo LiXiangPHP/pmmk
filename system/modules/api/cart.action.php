@@ -148,11 +148,11 @@ class cart extends SystemAction {
             $status='未付款,未发货,未完成';
             $cartdata['pay_type'] = $pay_type;
             $db = System::load_sys_class('model');
-            $data = $db->GetOne("SELECT `moneycount`,`pay_type`,`code` FROM `@#_member_go_record` WHERE `uid` = '$info[uid]' AND `time`= '$time'");
-//            print_r($data);
             if(!empty($shopids)&!empty($info['uid'])&($db->Query("INSERT INTO `@#_member_go_record` (`code`,`code_tmp`,`username`,`uphoto`,`uid`,`shopid`,`shopname`,`shopqishu`,`gonumber`,`goucode`,`moneycount`,`pay_type`,`ip`,`status`,`time`) VALUES ('$dingdancode','$dingdancode_tmp','$username','$uphoto','$info[uid]','$shopids','$shoptitle','$shopqishu','$MoenyCount','$dingdancode','$MoenyCount','$pay_type','$ip','$status','$time')")!=false)){
                 $code = 200;
                 $msg = "订单提交成功";
+                $data = $db->GetOne("SELECT `moneycount`,`pay_type`,`code` FROM `@#_member_go_record` WHERE `uid` = '$info[uid]' AND `time`= '$time' limit 1");
+//                print_r($data);
             } else {
                 $code = 100;
                 $msg = "订单提交失败";
