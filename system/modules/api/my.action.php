@@ -161,7 +161,20 @@ class my extends SystemAction {
 			echo json_encode($json);die;
 		}
 	}
-
+	//积分兑换展示
+	public function dhzs() {
+		$db = System::load_sys_class('model');
+			$data = $db->GetOne("select scoredhb,duobaodhb  from `@#_proportionality` ");
+			if($data) {
+					$code = 200;
+					$msg = "查询成功";
+				}else {
+					$code = 400;
+					$msg = "数据为空";
+				}
+				$json = array('code' => $code, 'msg' => $msg,  'data' => $data);
+				echo json_encode($json);		
+	}
 }
 
 ?>
