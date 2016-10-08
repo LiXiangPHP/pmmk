@@ -427,6 +427,15 @@ class card extends SystemAction {
 				echo json_encode($json);die;
 			}
 
+			$users = $this->db->GetOne("select username from `@#_member` where uid = '$Cdata[hueiyuan]' limit 1");
+			// print_r($Udata);die;
+			if($Udata['username'] == $users['username']) {
+				$code = 100;
+				$msg = "自己发帖不许赏";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
+			}
+			
 			if($Udata['score'] && $Udata['score'] >= 1) {
 				$res  = $this->db->Query("update `@#_member` set score = score-1 where uid = '$info[uid]'");
 			}else {
@@ -436,14 +445,7 @@ class card extends SystemAction {
 				echo json_encode($json);die;
 			}
 
-			$users = $this->db->GetOne("select username from `@#_member` where uid = '$Cdata[hueiyuan]' limit 1");
-			// print_r($Udata);die;
-			if($Udata['username'] == $users['username']) {
-				$code = 100;
-				$msg = "自己发帖不许赏";
-				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-				echo json_encode($json);die;
-			}
+			
 			// echo "<pre>";
 			// print_r($Cdata);die;
 			if($Cdata['reward']) {
