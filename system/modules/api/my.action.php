@@ -318,6 +318,7 @@ class my extends SystemAction {
 		$info = System::token_uid($token);
 		$type = isset($_POST['type']) ? $_POST['type'] : null;
 		if ($info['code']==200) {
+			//积分转换夺宝币
 			if ($type==1) {
 				$zj = isset($_POST['zj']) ? $_POST['zj'] : null;
 				$blarr = $db->GetOne("select scoredhb,duobaodhb  from `@#_proportionality` ");
@@ -328,19 +329,29 @@ class my extends SystemAction {
 				$b = $jbarr['money'];
 				$zh = $bj/$bd;
 				$zb = $zj/$zh;
-				if ($zb) {
+				if ($zb&&$zj) {
 					$nj = $j-$zj;
 					$nb = $b+$zb;
+					$time = time();
+					$uid = $info[uid];
+					$type1 = 1;
+					$type2 = '-1';
+					$pay1 = "福分";
+					$pay2 = "账户";
+					$content = "积分兑换夺宝币";
 					$data = $db->Query("update `@#_member` set score=$nj,money=$nb where uid='$info[uid]'") ;
+					$jfgb = $db->Query("INSERT INTO `@#_member_account` (`uid`,`type`,`pay`,`content`,`money`,`time`) VALUES ('$uid','$type2','$pay1','$content','$zj','$time')");
+					$dbgb = $db->Query("INSERT INTO `@#_member_account` (`uid`,`type`,`pay`,`content`,`money`,`time`) VALUES ('$uid','$type1','$pay2','$content','$zb','$time')");
 					$code = 200;
-					$msg = "添加成功";
+					$msg = "兑换成功";
 				}else {
 					$code = 400;
-					$msg = "添加失败";
+					$msg = "兑换失败";
 				}
 				$json = array('code' => $code, 'msg' => $msg);
 				echo json_encode($json);
 			}
+			//夺宝币转换积分
 			if ($type==2) {
 				$zb = isset($_POST['zb']) ? $_POST['zb'] : null;
 				$blarr = $db->GetOne("select scoredhb,duobaodhb  from `@#_proportionality` ");
@@ -351,10 +362,19 @@ class my extends SystemAction {
 				$b = $jbarr['money'];
 				$zh = $bj/$bd;
 				$zj = $zb*$zh;
-				if ($zb) {
+				if ($zb&&$zj) {
 					$nj = $j+$zj;
 					$nb = $b-$zb;
+					$time = time();
+					$uid = $info[uid];
+					$type1 = 1;
+					$type2 = '-1';
+					$pay1 = "福分";
+					$pay2 = "账户";
+					$content = "夺宝币兑换积分";
 					$data = $db->Query("update `@#_member` set score=$nj,money=$nb where uid='$info[uid]'") ;
+					$jfgb = $db->Query("INSERT INTO `@#_member_account` (`uid`,`type`,`pay`,`content`,`money`,`time`) VALUES ('$uid','$type1','$pay1','$content','$zj','$time')");
+					$dbgb = $db->Query("INSERT INTO `@#_member_account` (`uid`,`type`,`pay`,`content`,`money`,`time`) VALUES ('$uid','$type2','pay2','$content','$zb','$time')");
 					$code = 200;
 					$msg = "添加成功";
 				}else {
@@ -413,7 +433,7 @@ class my extends SystemAction {
 				if(empty($pagenum)) {
 				$pagenum=1;
 				}
-				$total = $db->GetCount("select * from `@#_member_account` where uid='$info[uid]' and pay like '%福分%'  ");	
+				$total = $db->GetCount("select * from `@#_member_account` where uid='$info[uid]' and pay like '%账户%'  ");	
 				$num = 10;
 				$yushu = $total%$num;
 					if($yushu > 0) {
