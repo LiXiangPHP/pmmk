@@ -238,6 +238,8 @@ class paoma extends SystemAction {
 	}
 	public function betopen()
 	{
+
+
 		$db = System::load_sys_class('model');
 
 		$issue = $_POST['issue'];
@@ -267,6 +269,16 @@ class paoma extends SystemAction {
 			echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']));die;
 
 		}
+		elseif(file_exists("log/".$issue.".log"))
+		{
+			sleep(10);
+		}
+		else
+		{
+			file_put_contents("log/".$issue.".log", $issue);
+		}
+
+
 		$option = array(array("id"=>2,"name"=>'冠军'),array("id"=>3,"name"=>'亚军'),array("id"=>4,"name"=>'第三名'),array("id"=>5,"name"=>'第四名'),array("id"=>6,"name"=>'第五名'),array("id"=>7,"name"=>'第六名'),array("id"=>8,"name"=>'第七名'),array("id"=>9,"name"=>'第八名'),array("id"=>10,"name"=>'第九名'),array("id"=>11,"name"=>'第十名'));
 		$number = array('1','2','3','4','5','6','7','8','9','10');
 		$time = date("Y/m/d",time());
