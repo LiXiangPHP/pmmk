@@ -17,10 +17,11 @@ class cart extends SystemAction {
             if(!empty($uidm)){
                 $numm =$num + $uidm['num'];
                 $numadd = $db->Query("UPDATE `@#_shopcart` SET num='$numm' WHERE good_id = '$id' AND user_id = '$info[uid]'");
+                if(!empty($numadd)){
                 $code = 200;
                 $msg = "添加成功";
-            }
-            elseif (!empty($id)&!empty($num)&!empty($info['uid'])&($db->Query("INSERT INTO `@#_shopcart` (`user_id`, `good_id`,`num`) VALUES ('$info[uid]','$id','$num')")!=false)) {
+                }
+            }elseif (!empty($id)&!empty($num)&!empty($info['uid'])&($db->Query("INSERT INTO `@#_shopcart` (`user_id`, `good_id`,`num`) VALUES ('$info[uid]','$id','$num')")!=false)) {
                 $code = 200;
                 $msg = "添加成功";
             } else {
