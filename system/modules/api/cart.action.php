@@ -6,7 +6,6 @@ class cart extends SystemAction {
 
     /*加入购物车接口*/
     public function json_cartadd() {
-
         $id = $_POST['id'];
         $num = $_POST['num'];
         $uid = $_POST['uid'];
