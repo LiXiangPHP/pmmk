@@ -214,6 +214,7 @@ class paoma extends SystemAction {
 				$NumberSize = '小';
 
 			}
+			$v['result'] = strtr($v['result'],array('10'=>'0'));
 			$v['sum'] = $sum;
 			$v['NumberDs'] = $NumberDs;
 			$v['NumberSize'] = $NumberSize;
@@ -236,14 +237,16 @@ class paoma extends SystemAction {
 			echo json_encode($json);
 		}
 	}
-	public function betopen()
+	public function betopen($issue = "")
 	{
 
 
 		$db = System::load_sys_class('model');
-
-		$issue = $_POST['issue'];
-
+		if(!$issue)
+		{
+			$issue = $_POST['issue'];
+			$f = true;
+		}
 		$bet = $db->GetOne("SELECT * FROM `@#_bet_result` where `issue` = '$issue'");
 		if($bet)
 		{
@@ -266,7 +269,14 @@ class paoma extends SystemAction {
 				$NumberSize = '小';
 
 			}
-			echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']));die;
+			if($f)
+			{
+				echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']));die;
+			}
+			else
+			{
+				return array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']);
+			}
 
 		}
 		elseif(file_exists("log/".$issue.".log"))
@@ -411,15 +421,104 @@ class paoma extends SystemAction {
 				$NumberSize = '小';
 
 			}
-			echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$result));die;
+			if($f)
+			{
+				echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']));die;
+			}
+			else
+			{
+				return array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']);
+			}
 
 		}
 		else
 		{
 			$code = "100";
 			$msg = '请求错误，请重试';
-			echo json_encode(array('code'=>$code,'msg'=>$msg));die;
+			if($f)
+			{
+				echo json_encode(array('code'=>$code,'msg'=>$msg));die;
+			}
+			else
+			{
+				return array('code'=>$code,'msg'=>$msg);
+			}
+			
 		}
+
+	}
+	function returns()
+	{
+		$db = System::load_sys_class('model');
+		$bet = $db->GetOne("SELECT * FROM `@#_bet` where `returns` = 0 order by time desc");
+		$issue = $bet['issue'];
+		$bet_result = $db->GetOne("SELECT * FROM `@#_bet_result` where `issue` = $issue");
+		if($bet_result)
+		{
+			$res = $bet_result;
+		}
+		else
+		{
+			$res = $this->betopen($issue);
+		}
+		$bet = $db->GetList("SELECT * FROM `@#_bet` where `issue` = $issue and `returns` = 0");
+		$result = explode(',',$res['result']);
+		$sum = $result[0]+$result[1];
+		$option = array('冠军','亚军','第三名','第四名','第五名','第六名','第七名','第八名','第九名','第十名');
+		$result1 = array();
+		foreach ($result as $key => $value) {
+			$result1[] = $option[$key].$value;
+		}
+		$result1[] = "冠亚军和".$sum;
+		foreach ($bet as $k => $v) {
+			if(in_array($v['name'],$result1))
+			{
+				$profit = $v['number']*$v['odds'];
+				$members = $db->GetOne("SELECT * FROM `@#_member` where `uid` = '$v[uid]'");
+				$db->Autocommit_start();
+				$Money = $members['money'] + $profit;
+				$query = $db->Query("UPDATE `@#_member` SET `money`='$Money' WHERE (`uid`='$v[uid]')");
+				$query1 = $db->Query("UPDATE `@#_bet` SET `returns`='1',`profit`='$profit' WHERE (`id`='$v[id]')");
+				if(!$query1)
+				{
+					$db->Autocommit_rollback();
+				}
+				$db->Autocommit_commit();
+			}
+			else
+			{
+				$query1 = $db->Query("UPDATE `@#_bet` SET `returns`='1',`profit`='0' WHERE (`id`='$v[id]')");
+			}
+		}
+
+	}
+	function profit()
+	{
+		if(!$_POST)
+		{
+			$code = 100;
+			$msg = '错误';
+			echo json_encode(array("code"=>$code,"msg"=>$msg));die;
+		}
+		$db = System::load_sys_class('model');
+		$token = isset($_POST['token']) ? $_POST['token'] : "kong";
+		$info = System::token_uid($token);
+		if(!$info['uid'])
+		{
+			$code = 100;
+			$msg = '请登录';
+			echo json_encode(array("code"=>$code,"msg"=>$msg));die;
+		}
+		$uid = $info['uid'];
+		$user_bet = $db->GetList("SELECT * FROM `@#_bet` where `uid` = $uid ");
+		// print_r($user_bet);die;
+		foreach ($user_bet as $k => $v) {
+			$bet[$v['issue']][] = $v;
+		}
+		foreach ($bet as $key => $value) {
+			
+		}
+
 
 	}
 }
