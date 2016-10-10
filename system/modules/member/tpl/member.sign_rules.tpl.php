@@ -16,21 +16,27 @@ input.button{ display:inline-block}
 </head>
 <body>
 <div class="header lr10">
-	<h3>连续签到-奖励规则设置</h3>
+	<h3><a href = "<?php echo WEB_PATH; ?>/member/member/sign_lists">签到管理</a>&nbsp;&nbsp;&nbsp;&nbsp;</h3>
+	<h3><a href = "<?php echo WEB_PATH; ?>/member/member/sign_rules">连续签到-奖励规则设置</a></h3>
 </div>
 <div class="bk10"></div>
 <div class="table_form lr10">
 <!--start-->
 <form name="myform" action="" method="post" enctype="multipart/form-data">
   <table width="100%" cellspacing="0">
+  
   	<?php foreach($signlist as $sign) { ?>
   	 <tr>
-			<td width="120" align="right">连续签到<?php echo $sign['number'] ?>天：</td>
+  	 <?php if($sign['number'] == 1) { ?>
+  	 		<td width="300" align="right">连续签到&nbsp;&nbsp;<input type="text" name="day-<?php echo $sign['id'] ?>" value="<?php echo $sign['number'] ?>" disabled = 'disabled' class="input-text">&nbsp;&nbsp;天：</td>
+  	 <?php }else{ ?>
+  	 		<td width="300" align="right">连续签到&nbsp;&nbsp;<input type="text" name="day-<?php echo $sign['id'] ?>" value="<?php echo $sign['number'] ?>" class="input-text">&nbsp;&nbsp;天：</td>
+  	 <?php } ?>	
 			<td><input type="text" name="num-<?php echo $sign['id'] ?>" value="<?php echo $sign['points'];?>" class="input-text">&nbsp;&nbsp;积&nbsp;分</td>
 		</tr>
 	<?php } ?>	
 		<tr>
-        	<td width="120" align="right"></td>
+        	<td width="300" align="right"></td>
             <td>		
             <input type="submit" class="button" name="submit" value="提交" >
             </td>

@@ -23,9 +23,8 @@ editurl['imageManager']='<?php echo G_ADMIN_PATH; ?>/ueditor/imagemanager';
 </style>
 </head>
 <body>
-<div class="header-title lr10">
-	<?php //echo $this->headerment();?>
-    <b>添加热门问题</b>
+<div class="header lr10">
+	<?php echo $this->headerment();?>
 </div>
 <div class="bk10"></div>
 <div class="table_form lr10">

@@ -24,7 +24,7 @@ $(function(){
 		var title=$("#title").val();
 		var img=$("#img").val();
 		if(title.length<1){
-			alert("圈子名不能为空");
+			alert("贴子标题不能为空");
 			return false;
 		}
 		return true;
@@ -40,11 +40,11 @@ $(function(){
 <form action="" method="post" enctype="multipart/form-data" id="myform">
 <table width="100%" >
     <tr>
-    	<td width="120" align="right">圈子名：</td> 
+    	<td width="120" align="right">贴子标题：</td> 
    		<td><input type="text" name="title"  class="input-text" id="title"></input></td>
     </tr>
-    <tr>
-    	<td width="120" align="right">圈子管理员：</td>
+    <!--<tr>
+    	<td width="120" align="right">贴子管理员：</td>
     	<td>
 			<input type="text" name="guanli" value="" class="input-text">(请填写邮箱/手机)
 		</td>
@@ -77,7 +77,7 @@ $(function(){
 		<input type="radio" name="shenhe" class="input-text" checked="checked" value="N">否
 		<span style=" padding-left:30px">帖子和回复是否需要审核才能显示</span></td>
 	</tr>
-	
+	-->
     <tr>
     	<td width="120" align="right">圈子头像：</td>
     	<td>
@@ -88,13 +88,13 @@ $(function(){
         </td>
     </tr>
     <tr>
-    	<td width="120" align="right">圈子介绍：</td>
-    	<td><textarea  name="jianjie" class="textarea">暂无介绍</textarea></td>
+    	<td width="120" align="right">贴子内容：</td>
+    	<td><textarea  name="jianjie" class="textarea"></textarea></td>
 	</tr>
-	<tr>
+	<!--<tr>
     	<td width="120" align="right">圈子公告：</td>
     	<td><textarea  name="gongao" class="textarea">暂无公告</textarea></td>
-	</tr>
+	</tr>-->
 </table>
    	<div class="bk15"></div>
 	<input class="button" type="submit" name="submit" value="提交" />

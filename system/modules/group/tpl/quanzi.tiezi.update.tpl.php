@@ -35,13 +35,29 @@ $(function(){
 <table width="100%" >
     <tr>
     	<td width="100">标题：</td> 
-   		<td><input type="text" name="title" style="width:300px;" class="input-text" id="title" value="<?php echo $tiezi['title']; ?>"></input></td>
+   		<td><input type="text" name="title" disabled="disabled" style="width:400px;" class="input-text" id="title" value="<?php echo $tiezi['title']; ?>"></input></td>
     </tr>	
     <tr>
-    	<td>内容：</td>
-    	<td><textarea  name="neirong" class="textarea"><?php echo $tiezi['neirong']; ?></textarea></td>
+    	<td>发帖人：</td>
+    	<td><input type="text" class="input-text" disabled="disabled" style="width:400px;"  value="<?php echo $tiezi['user']; ?>"></input></td>
 	</tr>
 	<tr>
+    	<td>时间：</td>
+    	<td><input type="text" class="input-text" disabled="disabled" style="width:400px;"  value="<?php echo date('Y-m-d :h:i:s',$tiezi['time']); ?>"></input></td>
+	</tr>
+	<tr>
+    	<td>图片：</td>
+    	<td><img  src = '$tiezi[img]' ></td>
+	</tr>
+	<tr>
+    	<td>赏：</td>
+    	<td><textarea  name="cont" class="textarea" disabled="disabled" ><?php echo $tiezi['ruser']; ?></textarea></td>
+	</tr>
+	<tr>
+    	<td>内容：</td>
+    	<td><textarea  name="cont" class="textarea" disabled="disabled" ><?php echo $tiezi['neirong']; ?></textarea></td>
+	</tr>
+	<!--<tr>
     	<td>置顶：</td>
 		<?php if($tiezi['zhiding']=='Y'){ ?>
     	<td>
@@ -54,10 +70,10 @@ $(function(){
 		<input type="radio" name="zhiding" checked="checked" class="input-text" value="N">否
 		(帖子是否置顶)</td>
 		<?php } ?>
-	</tr>
+	</tr>-->
 </table>
-   	<div class="bk15"></div>
-	<input class="button" type="submit" name="submit" value="提交" />
+  <!-- 	<div class="bk15"></div>
+	<input class="button" type="submit" name="submit" value="提交" />-->
 </form>
 </div>
 </body>

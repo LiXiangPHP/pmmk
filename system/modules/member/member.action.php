@@ -721,7 +721,12 @@ HTML;
 
 	//签到规则设置
 	public function sign_rules() {
-
+		$info=$this->AdminInfo;
+		// print_r($info);die;
+		if(!$info['neirong'])
+		{
+			echo '没有权限！';die;
+		}
 		$signlist = $this->db->GetList("select * from `@#_signrules`");
 		if(isset($_POST['submit'])){
 			
@@ -731,12 +736,20 @@ HTML;
 			if($content) {
 				foreach($content as $key => $v) {
 					$arr = explode('-',$key);
-					$ids[$arr[1]]= $v;
+					if($arr[0] == 'num') {
+						$ids[$arr[1]]['point'] = $v;
+					}else if($arr[0] == 'day') {
+						$ids[$arr[1]]['num'] = $v;
+					}
 				}	
 			}
 			$res = array();
 			foreach ($ids as $key => $value) {
-				$res = $this->db->Query("UPDATE `@#_signrules` SET `points` = $value WHERE `id` = $key");
+				if($value['num']) {
+					$res[] = $this->db->Query("UPDATE `@#_signrules` SET `points` = '$value[point]', `number` = '$value[num]' WHERE `id` = $key");
+				}else {
+					$res[] = $this->db->Query("UPDATE `@#_signrules` SET `points` = '$value[point]', `number` = '1' WHERE `id` = $key");
+				}				
 			}
 			foreach ($res as $value) {
 				if(!$value){
@@ -746,6 +759,31 @@ HTML;
 			_message("设置成功");
 		}
 		include $this->tpl(ROUTE_M,'member.sign_rules');
+	}
+
+	public function sign_lists() {
+		$info=$this->AdminInfo;
+		// print_r($info);die;
+		if(!$info['neirong'])
+		{
+			echo '没有权限！';die;
+		}
+		$list_where = "";
+		$num=20;
+		$total=$this->db->GetCount("SELECT COUNT(*) FROM `@#_member` where sign_in_date is not null");
+		$page=System::load_sys_class('page');
+		if(isset($_GET['p'])){$pagenum=$_GET['p'];}else{$pagenum=1;}	
+		$page->config($total,$num,$pagenum,"0");
+		$signlist=$this->db->GetPage("SELECT * FROM `@#_member` where sign_in_date is not null order by sign_in_date desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		foreach($signlist as $k => $v) {//签到获得积分
+			$summ = $this->db->GetList("select * from `@#_member_account` where uid = '$v[uid]' and content like '%每日签到%'");
+			$stotal = 0;
+			foreach ($summ as $val) {
+				$stotal = $stotal + $val['money'];
+			}
+			$signlist[$k]['oscore'] = $stotal;			
+		}
+		include $this->tpl(ROUTE_M,'member.sign_lists');
 	}
 }
 

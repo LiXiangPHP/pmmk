@@ -189,24 +189,16 @@ class my extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);die;
 		}
+
 		# 签到时间限制（不能夸天哦。。）
 		$time_start = '00:01';
 		$time_stop= '23:59';
-		# 每日签到增加福分
-		$score = $this->db->GetOne("select points from `@#_signrules` where number = 1 limit 1");
-		if($score) {
-			$time_score = $score['points'];
-		}else {
-			$time_score = 0;
-		}
+		
 		$member = $this->db->GetOne("select * from `@#_member` where uid = '$info[uid]' limit 1");
-		$days = $this->db->GetList("select * from `@#_signrules` order by number asc");
-		
-		# 连续签到最大的天数
+		$days = $this->db->GetList("select * from `@#_signrules` order by number asc");		
 		$num = count($days);
-		$max_day = $days[$num-1]['number']; 
-		
-		# 连续签到增加的福分（在后面查询替换）
+		$max_day = $days[$num-1]['number'];# 连续签到最大的天数
+		$max_point = $days[$num-1]['points'];
 
 		if ( !$member['mobile'] || $member['mobilecode']!='1' ) {
 			$code = 100;
@@ -229,44 +221,34 @@ class my extends SystemAction {
 			echo json_encode($json);die;
 		}
 
+		# 连续签到
 		if ( date('Y-m-d',$member['sign_in_date']) == date('Y-m-d',strtotime('-1 day')) ){
-			# 连续签到
-			if ( $member['sign_in_time'] >= $max_day ) {//签到天数
-				$member['sign_in_time'] = 0;
-			}
-
+			
 			$sign_in_time = $member['sign_in_time'] + 1;
 			$sign_in_time_all = $member['sign_in_time_all'] + 1;
 			$sign_in_date = time();
-			$score = $member['score'] + $time_score;
-			// print_r($days);die;
-			$big = false;
-			for($k = 1;$k <= $num-2;$k++) {
-				if ( $sign_in_time >= $days[$k]['number'] && $sign_in_time < $days[$k+1]['number']) {# 领取大礼包了
-					$score += $days[$k]['points'];
-					$big = true;
-				} else if ( $k+1 == $num-1 && $sign_in_time == $max_day) {
-					$score += $days[$k]['points'];
-					$member['sign_in_time'] = 0;
-					$big = true;
+			
+			if ( $sign_in_time >= $max_day ) {# 领取签到积分
+				$score = $member['score'] + $max_point;
+				$money = $max_point;
+			}else {
+				for($k = 1;$k <= $num-1;$k++) {
+					if ( $sign_in_time >= $days[$k]['number'] && $sign_in_time < $days[$k+1]['number']) {
+						$score = $member['score'] + $days[$k]['points'];
+						$money = $days[$k]['points'];
+					}
 				}
 			}
+
 			// 积分明细记录
-			// $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$member['uid']."', '1', '福分', '每日签到', '$time_score', '".time()."')");
+			$this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$member['uid']."', '1', '福分', '每日签到', '$money', '".time()."')");
+			
 			$res = $this->db->Query("UPDATE `@#_member` SET score='".$score."',sign_in_time='".$sign_in_time."', sign_in_time_all='".$sign_in_time_all."', sign_in_date='".$sign_in_date."' where uid='".$member['uid']."'");
 			if($res) {
-				if ($big) {
-					// $rult = $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$member['uid']."', '1', '福分', '签到大礼包', '$time_day_score', '".time()."')");
-					$code = 200;
-					$msg = "签到成功领取礼包";
-					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-					echo json_encode($json);die;
-				} else {
-					$code = 200;
-					$msg = "签到成功";
-					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-					echo json_encode($json);die;
-				}
+				$code = 200;
+				$msg = "签到成功";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
 			}else {
 				$code = 100;
 				$msg = "签到失败";
@@ -278,8 +260,10 @@ class my extends SystemAction {
 			$sign_in_time = 1;
 			$sign_in_time_all = $member['sign_in_time_all'] + 1;
 			$sign_in_date = time();
-			$score = $member['score'] + $time_score;
-			// $ress = $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$member['uid']."', '1', '福分', '每日签到', '$time_score', '".time()."')");
+			$score = $member['score'] + $days[0]['points'];
+			$money = $days[0]['points'];
+			//积分消费明细
+			$ress = $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$member['uid']."', '1', '福分', '每日签到', '$money', '".time()."')");
 			$res = $this->db->Query("UPDATE `@#_member` SET score='".$score."',sign_in_time='".$sign_in_time."', sign_in_time_all='".$sign_in_time_all."', sign_in_date='".$sign_in_date."' where uid='".$member['uid']."'");
 			if($res) {
 				$code = 200;
@@ -318,7 +302,6 @@ class my extends SystemAction {
 		$info = System::token_uid($token);
 		$type = isset($_POST['type']) ? $_POST['type'] : null;
 		if ($info['code']==200) {
-			//积分转换夺宝币
 			if ($type==1) {
 				$zj = isset($_POST['zj']) ? $_POST['zj'] : null;
 				$blarr = $db->GetOne("select scoredhb,duobaodhb  from `@#_proportionality` ");
@@ -329,29 +312,19 @@ class my extends SystemAction {
 				$b = $jbarr['money'];
 				$zh = $bj/$bd;
 				$zb = $zj/$zh;
-				if ($zb&&$zj) {
+				if ($zb) {
 					$nj = $j-$zj;
 					$nb = $b+$zb;
-					$time = time();
-					$uid = $info[uid];
-					$type1 = 1;
-					$type2 = '-1';
-					$pay1 = "福分";
-					$pay2 = "账户";
-					$content = "积分兑换夺宝币";
 					$data = $db->Query("update `@#_member` set score=$nj,money=$nb where uid='$info[uid]'") ;
-					$jfgb = $db->Query("INSERT INTO `@#_member_account` (`uid`,`type`,`pay`,`content`,`money`,`time`) VALUES ('$uid','$type2','$pay1','$content','$zj','$time')");
-					$dbgb = $db->Query("INSERT INTO `@#_member_account` (`uid`,`type`,`pay`,`content`,`money`,`time`) VALUES ('$uid','$type1','$pay2','$content','$zb','$time')");
 					$code = 200;
-					$msg = "兑换成功";
+					$msg = "添加成功";
 				}else {
 					$code = 400;
-					$msg = "兑换失败";
+					$msg = "添加失败";
 				}
 				$json = array('code' => $code, 'msg' => $msg);
 				echo json_encode($json);
 			}
-			//夺宝币转换积分
 			if ($type==2) {
 				$zb = isset($_POST['zb']) ? $_POST['zb'] : null;
 				$blarr = $db->GetOne("select scoredhb,duobaodhb  from `@#_proportionality` ");
@@ -362,19 +335,10 @@ class my extends SystemAction {
 				$b = $jbarr['money'];
 				$zh = $bj/$bd;
 				$zj = $zb*$zh;
-				if ($zb&&$zj) {
+				if ($zb) {
 					$nj = $j+$zj;
 					$nb = $b-$zb;
-					$time = time();
-					$uid = $info[uid];
-					$type1 = 1;
-					$type2 = '-1';
-					$pay1 = "福分";
-					$pay2 = "账户";
-					$content = "夺宝币兑换积分";
 					$data = $db->Query("update `@#_member` set score=$nj,money=$nb where uid='$info[uid]'") ;
-					$jfgb = $db->Query("INSERT INTO `@#_member_account` (`uid`,`type`,`pay`,`content`,`money`,`time`) VALUES ('$uid','$type1','$pay1','$content','$zj','$time')");
-					$dbgb = $db->Query("INSERT INTO `@#_member_account` (`uid`,`type`,`pay`,`content`,`money`,`time`) VALUES ('$uid','$type2','pay2','$content','$zb','$time')");
 					$code = 200;
 					$msg = "添加成功";
 				}else {
@@ -433,7 +397,7 @@ class my extends SystemAction {
 				if(empty($pagenum)) {
 				$pagenum=1;
 				}
-				$total = $db->GetCount("select * from `@#_member_account` where uid='$info[uid]' and pay like '%账户%'  ");	
+				$total = $db->GetCount("select * from `@#_member_account` where uid='$info[uid]' and pay like '%福分%'  ");	
 				$num = 10;
 				$yushu = $total%$num;
 					if($yushu > 0) {

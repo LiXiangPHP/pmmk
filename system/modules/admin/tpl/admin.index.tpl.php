@@ -213,13 +213,13 @@ function api_off_on_open(key){
 		
 		<li class="head">帮助管理</li>
         <li><a href="javascript:void(0);" src="<?php echo G_MODULE_PATH; ?>/help/help_show">查看</a></li>
-		<li><a href="javascript:void(0);" src="<?php echo G_MODULE_PATH; ?>/help/help_dus">已删除</a></li>
+		<li><a href="javascript:void(0);" src="<?php echo G_MODULE_PATH; ?>/help/help_dus">回收站</a></li>
 		
         <li class="head">其他</li>
         <li><a href="javascript:void(0);" src="<?php echo G_MODULE_PATH; ?>/content/model">内容模型</a></li>
         <li><a href="javascript:void(0);" src="<?php echo G_MODULE_PATH; ?>/category/lists">栏目管理</a></li>
         <li class="head">模块管理</li>
-        <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/group/quanzi">圈子模块</a></li>  
+        <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/group/quanzi">贴子模块</a></li>  
         <li><a href="javascript:void(0);" src="<?php echo G_MODULE_PATH; ?>/link/lists">友情链接</a></li>
         <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/admanage/admanage_admin">广告模块</a></li>
          <!--
@@ -254,7 +254,7 @@ function api_off_on_open(key){
         <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/member/member/pay_list">消费记录</a></li>
 		<li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/member/member/member_group">会员组</a></li>
 		<li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/member/member/commissions">佣金申请提现管理</a></li>
-        <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/member/member/sign_rules">签到管理</a></li>
+        <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/member/member/sign_lists">签到管理</a></li>
         
     </ul>
     <ul class="left_date" id="template">   

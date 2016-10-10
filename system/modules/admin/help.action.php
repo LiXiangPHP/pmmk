@@ -6,9 +6,13 @@ System::load_sys_fun('user');
 class help extends admin {
 	private $db;
 	public function __construct(){		
-		parent::__construct();		
+		parent::__construct();
+		$this->ment=array(
+			array("lists","帮助管理",ROUTE_M.'/'.ROUTE_C."/help_show"),
+			array("listsd","待回复",ROUTE_M.'/'.ROUTE_C."/help_showsd"),
+			array("add","添加热门问题",ROUTE_M.'/'.ROUTE_C."/help_add"),
+		);		
 		$this->db=System::load_sys_class('model');
-		$this->ment=array();
 		$this->categorys=$this->db->GetList("SELECT * FROM `@#_category` WHERE 1 order by `parentid` ASC,`cateid` ASC",array('key'=>'cateid'));
 		$this->models=$this->db->GetList("SELECT * FROM `@#_model` WHERE 1",array('key'=>'modelid'));
 
@@ -24,24 +28,69 @@ class help extends admin {
 		{
 			echo '没有权限！';die;
 		}
-		$this->ment=array(
-			array("lists","帮助管理",ROUTE_M.'/'.ROUTE_C."/help_show"),
-			array("add","添加热门问题",ROUTE_M.'/'.ROUTE_C."/help_add"),
-		);
 		
-		$list_where = "`is_delete` = 0";
+		$list_where = "`is_delete` = 0 and `is_check` = 1";
 		$num=20;
 		$total=$this->db->GetCount("SELECT COUNT(*) FROM `@#_help` WHERE $list_where");
 		$page=System::load_sys_class('page');
 		if(isset($_GET['p'])){$pagenum=$_GET['p'];}else{$pagenum=1;}	
 		$page->config($total,$num,$pagenum,"0");
-		$helplist=$this->db->GetPage("SELECT id,uid,issue,reply,is_check,times,hot FROM `@#_help` WHERE $list_where ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		$helplist=$this->db->GetPage("SELECT id,uid,issue,reply,times,hot FROM `@#_help` WHERE $list_where order by id desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 	
 		foreach($helplist as $k => $v) {
-			$arr = $this->db->GetOne("SELECT username FROM `@#_member` where `uid`='$v[uid]' LIMIT 1");
-			$helplist[$k]['username'] = $arr['username'];
+			if(strlen($v['issue']) > 15) {
+				for ($i = 0; $i < 15;$i++) {
+					if(ord($v['issue'][$i]) > 128) $i++;
+					 $helplist[$k]['issue'] = substr($v['issue'],0,$i)."...";
+				}
+			}
+			if(strlen($v['reply']) > 15) {
+				for ($i = 0; $i < 15;$i++) {
+					if(ord($v['reply'][$i]) > 128) $i++;
+					 $helplist[$k]['reply'] = substr($v['reply'],0,$i)."...";
+				}
+			}
+			$arr = $this->db->GetOne("SELECT mobile FROM `@#_member` where `uid`='$v[uid]' LIMIT 1");
+			if($arr) {
+				$helplist[$k]['username'] = $arr['mobile'];
+			}else {
+				$helplist[$k]['username'] = '管理员';
+			}
 		}
 		include $this->tpl(ROUTE_M,'help.lists');
+	}
+
+	public function help_showsd() {
+		$info=$this->AdminInfo;
+		// print_r($info);die;
+		if(!$info['neirong'])
+		{
+			echo '没有权限！';die;
+		}
+		
+		$list_where = "`is_delete` = 0 and `is_check` = 0";
+		$num=20;
+		$total=$this->db->GetCount("SELECT COUNT(*) FROM `@#_help` WHERE $list_where");
+		$page=System::load_sys_class('page');
+		if(isset($_GET['p'])){$pagenum=$_GET['p'];}else{$pagenum=1;}	
+		$page->config($total,$num,$pagenum,"0");
+		$helplist=$this->db->GetPage("SELECT id,uid,issue,times,hot FROM `@#_help` WHERE $list_where order by id desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+	
+		foreach($helplist as $k => $v) {
+			if(strlen($v['issue']) > 15) {
+				for ($i = 0; $i < 15;$i++) {
+					if(ord($v['issue'][$i]) > 128) $i++;
+					 $helplist[$k]['issue'] = substr($v['issue'],0,$i)."...";
+				}
+			}
+			$arr = $this->db->GetOne("SELECT mobile FROM `@#_member` where `uid`='$v[uid]' LIMIT 1");
+			if($arr) {
+				$helplist[$k]['username'] = $arr['mobile'];
+			}else {
+				$helplist[$k]['username'] = '管理员';
+			}
+		}
+		include $this->tpl(ROUTE_M,'help.listsd');
 	}
 
 	/*帮助模块-热门问题添加*/

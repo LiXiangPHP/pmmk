@@ -8,15 +8,36 @@ class quanzi extends admin {
 	public function __construct(){
 		parent::__construct();
 		$this->ment=array(
-			array("lists","圈子管理",ROUTE_M.'/'.ROUTE_C.""),
-			array("addcate","添加圈子",ROUTE_M.'/'.ROUTE_C."/insert"),	
+			array("lists","贴子管理",ROUTE_M.'/'.ROUTE_C.""),
+			// array("addcate","添加圈子",ROUTE_M.'/'.ROUTE_C."/insert"),	
+			array("addcard","添加帖子",ROUTE_M.'/'.ROUTE_C."/insert"),	
 			array("addcate","待审核",ROUTE_M.'/'.ROUTE_C."/shenhe_list/tiezi"),	
 			//array("addcate","帖子回复查看",ROUTE_M.'/'.ROUTE_C."/liuyan"),
+			array("design","裳积分",ROUTE_M.'/'.ROUTE_C."/design"),	
 		);
 		$this->db=System::load_sys_class("model");
 	} 
 	
-	
+	/*设置裳积分*/
+	public function design() {
+
+		$reward = $this->db->GetOne("select score from `@#_reward`");
+
+		if(isset($_POST["submit"]))
+		{
+			if($_POST['score']==null)_message("赏消耗积分不能为空",null,3);
+			$score= abs(intval($_POST['score']));
+			$rul = $this->db->Query("update `@#_reward` set `score` = '$score'");
+			
+			if($rul) {
+				_message("设置成功");
+			}else {
+				_message("设置失败");
+			}
+			
+		}
+		include $this->tpl(ROUTE_M,'quanzi.reward');
+	}
 	
 	/*审核帖子*/	
 	public function shenhe_list(){
@@ -44,41 +65,72 @@ class quanzi extends admin {
 	
 	/*显示全部圈子*/
 	public function init(){	
-		$quanzi=$this->db->GetList("select * from `@#_quanzi` where 1");
-		include $this->tpl(ROUTE_M,'quanzi.list');
+		// $quanzi=$this->db->GetList("select * from `@#_quanzi` where 1");
+		// include $this->tpl(ROUTE_M,'quanzi.list');
+		$num = 20;
+		$total=$this->db->GetCount("select * from `@#_quanzi_tiezi` where `tiezi` = '0' and `pid` = '0' and `shenhe` = 'Y'"); 
+		$page=System::load_sys_class('page');
+		if(isset($_GET['p'])){
+			$pagenum=$_GET['p'];
+		}else{$pagenum=1;}		
+		$page->config($total,$num,$pagenum,"0"); 
+		if($pagenum>$page->page){
+			$pagenum=$page->page;
+		}
+		$rews = $this->db->GetOne("select score from `@#_reward` ");	
+		$tiezi=$this->db->GetPage("select * from `@#_quanzi_tiezi` where `tiezi` = '0' and `pid` = '0' and `shenhe` = 'Y'",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));		
+		foreach ($tiezi as $k => $val) {
+			$user = $this->db->GetOne("select mobile from `@#_member` where uid = '$val[hueiyuan]'");
+			$tiezi[$k]['mobile'] = $user['mobile'];
+			if(strlen($val['neirong']) > 15) {
+				for ($i = 0; $i < 15;$i++) {
+					if(ord($val['neirong'][$i]) > 128) $i++;
+					 $tiezi[$k]['neirong'] = substr($val['neirong'],0,$i)."...";
+				}
+			}
+			$rew = explode(',',$val['reward']);
+			$num = count($rew);
+			$tiezi[$k]['score'] = $num * $rews['score'];
+		}
+		include $this->tpl(ROUTE_M,'quanzi.tiezi');
 	}
 	
 	/*显示添加圈子*/
 	public function insert(){
 		if(isset($_POST["submit"]))
 		{
-			if($_POST['title']==null)_message("圈子名不能为空",null,3);
+			if($_POST['title']==null)_message("帖子标题不能为空",null,3);
 			$title= htmlspecialchars($_POST['title']);
 			
-			$guanli= htmlspecialchars($_POST['guanli']);
-			$glfatie= htmlspecialchars($_POST['glfatie']);
-			$huifu= htmlspecialchars($_POST['huifu']);
-			$shenhe= htmlspecialchars($_POST['shenhe']);
+			// $guanli= htmlspecialchars($_POST['guanli']);
+			// $glfatie= htmlspecialchars($_POST['glfatie']);
+			// $huifu= htmlspecialchars($_POST['huifu']);
+			// $shenhe= htmlspecialchars($_POST['shenhe']);
 			
-			$checkemail=_checkemail($guanli);
-			$checkemobile=_checkmobile($guanli);
-			if($checkemail===false && $checkemobile===false){
-				_message("圈子管理员信息填写错误");
-			}
-			$res=$this->db->GetOne("SELECT uid FROM `@#_member` WHERE `email`='$guanli' or `mobile`='$guanli'");
-			if(empty($res)){
-				_message("圈子管理员不存在");
-			}else{
-				$guanli=$res['uid'];
-			}
+			// $checkemail=_checkemail($guanli);
+			// $checkemobile=_checkmobile($guanli);
+			// if($checkemail===false && $checkemobile===false){
+			// 	_message("圈子管理员信息填写错误");
+			// }
+			// $res=$this->db->GetOne("SELECT uid FROM `@#_member` WHERE `email`='$guanli' or `mobile`='$guanli'");
+			// if(empty($res)){
+			// 	_message("圈子管理员不存在");
+			// }else{
+			// 	$guanli=$res['uid'];
+			// }
 			
-			$jiaru= $_POST['jiaru'];
+			// $jiaru= $_POST['jiaru'];
 			$jianjie=htmlspecialchars($_POST['jianjie']);
-			$gongao=htmlspecialchars($_POST['gongao']);
+			// $gongao=htmlspecialchars($_POST['gongao']);
 			$time= time();			
 			$img = htmlspecialchars($_POST['img']);
-			$this->db->Query("INSERT INTO `@#_quanzi`(title,img,guanli,jianjie,gongao,jiaru,time,glfatie,huifu,shenhe)VALUES('$title','$img','$guanli','$jianjie','$gongao','$jiaru','$time','$glfatie','$huifu','$shenhe')");
-			_message("添加成功");
+			$rul = $this->db->Query("INSERT INTO `@#_quanzi_tiezi`(`hueiyuan`,`title`,`img`,`neirong`,`time`,`type`,`shenhe`) VALUES('管理员','$title','$img','$jianjie','$time','1','Y')");
+			if($rul) {
+				_message("添加成功");
+			}else {
+				_message("添加失败");
+			}
+			
 		}
 		include $this->tpl(ROUTE_M,'quanzi.insert');
 	}
@@ -127,7 +179,7 @@ class quanzi extends admin {
 		$qzid = intval($this->segment(4));	
 		if(!$qzid)_message("参数错误");
 		$num=20;
-		$total=$this->db->GetCount("select * from `@#_quanzi_tiezi` where `qzid`= '$qzid'"); 
+		$total=$this->db->GetCount("select * from `@#_quanzi_tiezi` where `qzid`= '$qzid' and `tiezi` = '0' and `pid` = '0' and `shenhe` = 'Y'"); 
 		$page=System::load_sys_class('page');
 		if(isset($_GET['p'])){
 			$pagenum=$_GET['p'];
@@ -136,34 +188,41 @@ class quanzi extends admin {
 		if($pagenum>$page->page){
 			$pagenum=$page->page;
 		}	
-		$tiezi=$this->db->GetPage("select * from `@#_quanzi_tiezi` where `qzid`= '$qzid'",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));		
+		$tiezi=$this->db->GetPage("select * from `@#_quanzi_tiezi` where `qzid`= '$qzid' and `tiezi` = '0' and `pid` = '0' and `shenhe` = 'Y'",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));		
 		include $this->tpl(ROUTE_M,'quanzi.tiezi');
 	}
 	
-	/*帖子修改*/
+	/*帖子查看*/
 	public function tiezi_update(){
 		$id=$this->segment(4);
-		if(isset($_POST["submit"])){
-			$title= $_POST['title'];
-			$neirong= $_POST['neirong'];
-			$zhiding= $_POST['zhiding'];
-			if($title==null || $neirong==null){
-				_message("不能为空");
+		$tiezi=$this->db->GetOne("select * from `@#_quanzi_tiezi` where `id`='$id' and `shenhe` = 'Y'");
+		$user = $this->db->GetOne("select username from `@#_member` where uid = '$tiezi[hueiyuan]' limit 1");
+		$tiezi['user'] = $user['username'];
+		$ids = explode(',', $tiezi['reward']);
+		$rusers = '';
+		if($ids && is_array($ids)) {
+			foreach ($ids as $key => $v) {
+				$users = $this->db->GetOne("select username from `@#_member` where uid = '$v'");
+				if($rusers) {
+					$rusers .= ','.$users['username'];
+				}else {
+					$rusers = $users['username'];
+				}
 			}
-			$this->db->Query("UPDATE `@#_quanzi_tiezi` SET `title`='$title',`neirong`='$neirong',`zhiding`='$zhiding' where`id`='$id'");
-			_message("修改成功",WEB_PATH."/group/quanzi/");
 		}
-		$tiezi=$this->db->GetOne("select * from `@#_quanzi_tiezi` where `id`='$id'");
-		
+		$tiezi['ruser'] = $rusers;
 		include $this->tpl(ROUTE_M,'quanzi.tiezi.update');
 	}
 	
 	//显示全部留言
 	public function liuyan(){
 		
-		$tiezi=$this->db->getlist("select * from `@#_quanzi_tiezi` ");
+		$id=$this->segment(4);//帖子id
+		if(!$id) {
+			_message("帖子id错误");
+		}
 		$num=20;
-		$total=$this->db->GetCount("select * from `@#_quanzi_hueifu`"); 
+		$total=$this->db->GetCount("select * from `@#_quanzi_tiezi` where `tiezi` = '$id' "); 
 		$page=System::load_sys_class('page');
 		if(isset($_GET['p'])){
 			$pagenum=$_GET['p'];
@@ -172,7 +231,14 @@ class quanzi extends admin {
 		if($pagenum>$page->page){
 			$pagenum=$page->page;			
 		}	
-		$hueifu=$this->db->GetPage("select * from `@#_quanzi_hueifu`",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));		
+		$hueifu=$this->db->GetPage("select * from `@#_quanzi_tiezi` where `tiezi` = '$id'",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));		
+		foreach($hueifu as $k => $val) {
+			$user = $this->db->GetOne("select username from `@#_member` where uid = '$val[hueiyuan]' limit 1");
+			$pid = $this->db->GetOne("select hueiyuan from `@#_quanzi_tiezi` where id = '$val[pid]' limit 1");
+			$puser = $this->db->GetOne("select username from `@#_member` where uid = '$pid[hueiyuan]' limit 1");
+			$hueifu[$k]['user'] = $user['username'];
+			$hueifu[$k]['puser'] = $puser['username'];
+		}
 		include $this->tpl(ROUTE_M,'quanzi.liuyan');
 	}
 	
@@ -195,7 +261,7 @@ class quanzi extends admin {
 			//$this->db->Query("DELETE FROM `@#_quanzi_hueifu` where `tzid`='$id'");
 		}
 		if($deltype == 'quanzi_hueifu'){		
-			$this->db->Query("DELETE FROM `@#_quanzi_hueifu` where `id`='$id'");
+			$this->db->Query("DELETE FROM `@#_quanzi_tiezi` where `id`='$id'");
 		}
 		_message("删除成功");
 	}

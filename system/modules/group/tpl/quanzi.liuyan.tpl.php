@@ -26,23 +26,17 @@ function hueifu(id){
 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="mgr_table">
 	<tr class="thead" align="center">
 		<td width="5%" height="30">ID</td>
-		<td width="10%">帖子名称</td>
-		<td width="40%">回复内容</td>
-		<td width="10%">会员</td>
-		<td width="10%">管理</td>
+		<td width="10%">回复内容</td>
+		<td width="40%">回复人</td>
+		<td width="10%">被回复人</td>
+		<td width="10%">操作</td>
 	</tr>
 	<?php foreach($hueifu AS $v) { ?>
 	<tr align="center" class="mgr_tr">
 		<td height="30"><?php echo $v['id'];?></td>
-		<td><?php 
-		foreach($tiezi AS $tz) {
-			if($v['tzid']==$tz['id']){	
-				echo $tz['title'];
-			}
-		}
-		?></td>
-		<td><?php echo $v['hueifu'];?></td>
-		<td><?php echo $v['hueiyuan'];?></td>
+		<td><?php echo $v['neirong']		?></td>
+		<td><?php echo $v['user'];?></td>
+		<td><?php echo $v['puser'];?></td>
 		<td class="action">
 			<span>[<a onclick="hueifu(<?php echo $v['id'];?>)" href="javascript:;">删除</a>]</span>
 		</td>		

@@ -25,8 +25,8 @@ body{ background-color:#fff}
 <div class="bk10"></div>
 <div class="header lr10">
 	 <a style="color:#f60" <?php echo ($types=='tiezi')?'class="this"' :''; ?> href="<?php echo G_MODULE_PATH; ?>/quanzi/shenhe_list/tiezi">未审核的帖子</a>
-	 <span class="span_fenge lr5">|</span>
-	 <a style="color:#f60" <?php echo ($types=='huifu')?'class="this"' :''; ?> href="<?php echo G_MODULE_PATH; ?>/quanzi/shenhe_list/huifu">未审核的回复</a>
+	<!-- <span class="span_fenge lr5">|</span>
+	 <a style="color:#f60" <?php echo ($types=='huifu')?'class="this"' :''; ?> href="<?php echo G_MODULE_PATH; ?>/quanzi/shenhe_list/huifu">未审核的回复</a>-->
 </div>
 
 <?php 
@@ -34,11 +34,11 @@ body{ background-color:#fff}
 ?>
 <div class="bk20"></div>
 <div class="tiezi lr10">
-	<div class="info"><h5><?php echo $v['title']; ?></h5>
-    发布人:<span><a href="#"><?php echo get_user_name($v['hueiyuan']); ?></a></span>发布时间:<span><?php echo date("Y-m-d H:i:s",$v['time']); ?></span>
+	<div class="info"><h3>标题：<?php echo $v['title']; ?></h3>
+    &nbsp;&nbsp;&nbsp;发布人:<span><a href="#"><?php echo get_user_name($v['hueiyuan']); ?></a></span>&nbsp;&nbsp;&nbsp;发布时间:<span><?php echo date("Y-m-d H:i:s",$v['time']); ?></span>
     </div>
     <div class="content">
-    	<?php echo $v['neirong']; ?>
+    	内容：<?php echo $v['neirong']; ?>
     </div>
     <div class="ajax">
     	<input type="submit" value=" 通过审核 "  onClick="shenheok(<?php echo $v['id']; ?>)" class="button">
