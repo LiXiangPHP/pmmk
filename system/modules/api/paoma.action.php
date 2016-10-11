@@ -251,7 +251,9 @@ class paoma extends SystemAction {
 		$bet = $db->GetOne("SELECT * FROM `@#_bet_result` where `issue` = '$issue'");
 		if($bet)
 		{
+
 			$betresult = explode(',',$bet['result']);
+			$bet['result'] = strtr($bet['result'],array('10'=>'0'));
 			$code = "200";
 			$sum = $betresult[0]+$betresult[1];
 			if((int)$sum%2 == 0){
@@ -408,14 +410,18 @@ class paoma extends SystemAction {
 
 
 		}
+
 		// print_r($aaa);die;
 		foreach ($aaa as $k => $v) {
 			$result .= $v.",";
 			# code...
 		}
 		$result = rtrim($result, ',');
+
 		$sql="INSERT INTO `@#_bet_result`(result,issue,time)VALUES('$result','$issue','$time')";
 		$query = $db->Query($sql);
+		$result = strtr($result,array('10'=>'0'));
+				// echo $result;die;
 		if($query){
 
 			$code = "200";
@@ -438,11 +444,11 @@ class paoma extends SystemAction {
 			}
 			if($f)
 			{
-				echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']));die;
+				echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$result));die;
 			}
 			else
 			{
-				return array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']);
+				return array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$result);
 			}
 
 		}
