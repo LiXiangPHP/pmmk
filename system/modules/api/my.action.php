@@ -433,6 +433,26 @@ class my extends SystemAction {
 			
 				
 	}
+	//晒单
+	public function shaidan()
+	{
+		$db = System::load_sys_class('model');
+		$token = isset($_POST['token']) ? $_POST['token'] : "kong";
+		$info = System::token_uid($token);
+		
+		$shaidan=$db->Getlist("select sd_id,sd_shopid,sd_content,sd_photolist,sd_ping,sd_time from `@#_shaidan` where `sd_userid`='$info[uid]' order by `sd_id`");
+		// print_R($shaidan);die;
+		foreach ($shaidan as $k => $v) {
+			$aa = $db->GetOne("select title from `@#_shoplist` where `id`='$v[sd_shopid]' ");
+			
+			$shaidan[$k]['sd_shopid'] = strip_tags($aa['title']);
+			$shaidan[$k]['sd_content'] = strip_tags($v['sd_content']);
+			$shaidan[$k]['sd_photolist'] = array_filter(explode(';',$v['sd_photolist'])); 
+
+		}
+		$code = 200;
+		echo json_encode(array("code"=>$code,"data"=>$shaidan));
+	}
 
 }
 
