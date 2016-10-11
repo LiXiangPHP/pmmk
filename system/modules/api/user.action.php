@@ -82,6 +82,83 @@ class user extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg ,'data'=>$data);
 			echo json_encode($json);die;
 		}
+	}
+
+
+	//个人信息
+	public function json_person() {
+		$code = '';
+		$msg  = '';
+		$data = array();
+		$db = System::load_sys_class('model');
+		$token = trim($_POST['token']);
+		$info = System::token_uid($token);
+		if($info['code'] == 200) {
+			$name     = $_POST['name'];
+			$sex   = $_POST['sex'];
+			$img       = stripslashes($_POST['img']);//去掉船餐过程中的反斜杠
+			$imgname   = 'member';
+			$new_file  = '';
+			$pic_path = 'images/upload/user';
+			if(!file_exists($pic_path)) {
+				if(!mkdir($pic_path, 0777)) {
+					$code = 100;
+					$msg = "目录创建失败";
+					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+					echo json_encode($json);die;
+				}
+				
+			}
+			if($img) {
+				if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $img, $result)){
+					$type = $result[2];
+					$new_file = "{$pic_path}/{$imgname}.{$type}";//图片存储路径
+					if (!file_put_contents($new_file, base64_decode(str_replace($result[1], '', $img)))){
+						$code = 100;
+						$msg = "图片上传失败";
+						$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+						echo json_encode($json);die;
+					}
+				}else {
+					$tmp = base64_decode($img);
+					$new_file = "{$pic_path}/{$imgname}.jpg";//图片存储路径
+					if (!file_put_contents($new_file, $tmp)){
+						$code = 100;
+						$msg = "图片上传失败";
+						$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+						echo json_encode($json);die;
+					}	
+				}
+			}else {
+				$pic = $db->GetOne("select img from `@#_member` where `uid` = '$info[uid]' limit 1");
+				$new_file = $pic['img'];
+			}
+			
+			if($name && $sex) {
+				$res = $db->Query("UPDATE `@#_member` SET `username` = '$name', `sex` = '$sex', `img` = '$new_file' where `uid` = '$info[uid]'");
+				if($res) {
+					$code = 200;
+					$msg = "修改成功";
+					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+					echo json_encode($json);
+				}else {
+					$code = 100;
+					$msg = "修改失败";
+					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+					echo json_encode($json);
+				}
+			}else {
+				$code = 300;
+				$msg = "操作失败";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);
+			}
+		}else {
+			$code = 300;
+			$msg = "用户未登录";
+			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			echo json_encode($json);
+		}
 	}	
 		
 }
