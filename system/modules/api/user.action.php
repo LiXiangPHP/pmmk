@@ -130,8 +130,10 @@ class user extends SystemAction {
 					}	
 				}
 			}else {
-				$pic = $db->GetOne("select img from `@#_member` where `uid` = '$info[uid]' limit 1");
-				$new_file = $pic['img'];
+				$code = 100;
+				$msg = "修改失败";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
 			}
 			
 			if($name && $sex) {
