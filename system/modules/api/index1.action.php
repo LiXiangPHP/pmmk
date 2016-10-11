@@ -8,15 +8,16 @@ class index1 extends SystemAction {
 		$db = System::load_sys_class('model');
 		//banner
 		$bannerurl = $db->GetList("select img from `@#_slide` ");
+		foreach($bannerurl as $k=>$v) {
+				$bannerurl[$k]['img'] = "gangmaduobao.com/statics/uploads/".$v['img'];
+			}
 		//最新获奖信息
 		$member_record=$db->GetList("select a.username,a.shopname from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and b.q_uid is not null  order by a.id DESC LIMIT 7");
 		//商品列表
 		$hotshop = $db->GetList("select id,thumb,title,money,qishu,canyurenshu,shenyurenshu from `@#_shoplist` leftjion  where `q_uid` is null and `renqi` = '1' order by id DESC LIMIT 6 ");
 		foreach($hotshop as $k=>$v) {
 				$hotshop[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
-				$hotshop['hotshop'][] = $hotshop[$k];
 			}
-
 		$data = array(
 		'banner'=>$bannerurl,
 		'zxhjxx'=>$member_record,
@@ -29,7 +30,7 @@ class index1 extends SystemAction {
 			$code = 100;
 			$msg = "数据为空";
 		}
-		$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+		$json = array('code' => $code, 'msg' => $msg, 'data' => $data);		
 		echo json_encode($json);
 		
 
@@ -61,7 +62,6 @@ class index1 extends SystemAction {
 		$data = $db->GetPage("select canyurenshu,shenyurenshu,title,money,thumb from `@#_shoplist` where `q_uid` is null order by shenyurenshu asc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 		foreach($data as $k=>$v) {
 				$data[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
-				$data['data'][] = $data[$k];
 			}
 		if($data) {
 				
@@ -80,7 +80,6 @@ class index1 extends SystemAction {
 			$data = $db->GetPage("select a.username,a.shopname,b.q_user_code,b.q_end_time,b.thumb from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and b.q_uid is not null  order by a.id DESC LIMIT 12");
 			foreach($data as $k=>$v) {
 				$data[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
-				$data['data'][] = $data[$k];
 			}
 			if($data) {
 				$code = 200;

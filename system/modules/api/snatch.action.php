@@ -23,7 +23,6 @@ class snatch extends SystemAction {
 			}
 			foreach($newdata as $k=>$v) {
 			$newdata[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
-			$newdata['newdata'][] = $newdata[$k];
 			}
 			if($newdata) {
 				$code = 200;
@@ -70,7 +69,6 @@ class snatch extends SystemAction {
 			}
 			foreach($newdata as $k=>$v) {
 			$newdata[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
-			$newdata['newdata'][] = $newdata[$k];
 			}
 			if($newdata) {
 				$code = 200;

@@ -12,7 +12,6 @@ class order extends SystemAction {
 				$data = $db->GetList("select b.q_end_time,a.shopname,a.shopqishu,b.thumb from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and  a.uid='$info[uid]' and a.huode>10000000 and status like '%未发货%' ");
 				foreach($data as $k=>$v) {
 				$data[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
-				$data['data'][] = $data[$k];
 				}
 				if($data) {
 					$code = 200;
@@ -30,7 +29,6 @@ class order extends SystemAction {
 				$data = $db->GetList("select b.q_end_time,a.shopname,a.shopqishu,b.thumb from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and  a.uid='$info[uid]' and a.huode>10000000 and status like '%已发货,待收货%' ");
 				foreach($data as $k=>$v) {
 				$data[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
-				$data['data'][] = $data[$k];
 				}
 				if($data) {
 					$code = 200;
@@ -48,7 +46,6 @@ class order extends SystemAction {
 				$data = $db->GetList("select b.q_end_time,a.shopname,a.shopqishu,b.thumb from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and  a.uid='$info[uid]' and a.huode>10000000 and status like '%已发货,已完成%' ");
 				foreach($data as $k=>$v) {
 				$data[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
-				$data['data'][] = $data[$k];
 				}
 				if($data) {
 					$code = 200;
