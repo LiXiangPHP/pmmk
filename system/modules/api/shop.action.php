@@ -102,7 +102,15 @@ class shop extends SystemAction {
 		$Sdata = $this->db->GetPage("SELECT b.img,b.username, a.sd_id id,a.sd_title title,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments  FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 		foreach($Sdata as $v) {
 			$v['img'] = "gangmaduobao.com/statics/uploads/".$v['img'];
-			$v['photolist'] = "gangmaduobao.com/statics/uploads/".$v['photolist'];
+			$photo = explode(";",$v['photolist']);
+			foreach ($photo as $key => $value) {
+				if($value) {
+					$photo[$key] = "gangmaduobao.com/statics/uploads/".$value;
+				}else {
+					unset($photo[$key]);
+				}
+			}
+			$v['photolist'] = $photo;
 			$data['data'][] = $v;
 		}
 		if($data['data']) {
@@ -256,7 +264,15 @@ class shop extends SystemAction {
 			$comnum = 0;
 			foreach($Sdata as $v) {
 				$v['img'] = "gangmaduobao.com/statics/uploads/".$v['img'];
-				$v['photolist'] = "gangmaduobao.com/statics/uploads/".$v['photolist'];
+				$photo = explode(";",$v['photolist']);
+				foreach ($photo as $key => $value) {
+					if($value) {
+						$photo[$key] = "gangmaduobao.com/statics/uploads/".$value;
+					}else {
+						unset($photo[$key]);
+					}
+				}
+				$v['photolist'] = $photo;
 				$data['data'][] = $v;
 				$comnum += $v['comments'];
 				$data['cnum'] = $comnum;
