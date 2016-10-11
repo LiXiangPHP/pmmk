@@ -54,7 +54,7 @@ class paoma extends SystemAction {
 		if($s < 5 )
 		{
 			$status = 'prize';
-			$time = $s;
+			$PrizeTime = $s;
 		}
 		$LastResult1=$db->GetOne("select result from `@#_bet_result` WHERE `issue` = '$lastissue'");
 		$LastResult = explode(',',$LastResult1['result']);
@@ -89,7 +89,7 @@ class paoma extends SystemAction {
 
 
 
-		$data = array('issue'=>$issue,'lastissue'=>$lastissue,'qihao'=>$qihao,'status'=>$status,'WaitTime'=>$WaitTime,'GameTime'=>$GameTime,'detail'=>$detail,'LastResult'=>$LastResult,'sum'=>$sum,'NowResult'=>$NowResult,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'PrizeTime'=>$time);
+		$data = array('issue'=>$issue,'lastissue'=>$lastissue,'qihao'=>$qihao,'status'=>$status,'WaitTime'=>$WaitTime,'GameTime'=>$GameTime,'detail'=>$detail,'LastResult'=>$LastResult,'sum'=>$sum,'NowResult'=>$NowResult,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'PrizeTime'=>$PrizeTime);
 		$json = array('code' => $code,'data'=>$data);
 		echo json_encode($json);
 
