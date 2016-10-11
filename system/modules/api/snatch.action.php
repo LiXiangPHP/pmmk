@@ -21,6 +21,10 @@ class snatch extends SystemAction {
 	            $newdata [] = $j;  
 	        	}
 			}
+			foreach($newdata as $k=>$v) {
+			$newdata[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
+			$newdata['newdata'][] = $newdata[$k];
+			}
 			if($newdata) {
 				$code = 200;
 				$msg = "查询成功";
@@ -63,6 +67,10 @@ class snatch extends SystemAction {
 	        	foreach($v as $i=>$j){
 	            $newdata [] = $j;  
 	        	}
+			}
+			foreach($newdata as $k=>$v) {
+			$newdata[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
+			$newdata['newdata'][] = $newdata[$k];
 			}
 			if($newdata) {
 				$code = 200;

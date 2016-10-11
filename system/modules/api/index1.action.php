@@ -12,6 +12,11 @@ class index1 extends SystemAction {
 		$member_record=$db->GetList("select a.username,a.shopname from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and b.q_uid is not null  order by a.id DESC LIMIT 7");
 		//商品列表
 		$hotshop = $db->GetList("select id,thumb,title,money,qishu,canyurenshu,shenyurenshu from `@#_shoplist` leftjion  where `q_uid` is null and `renqi` = '1' order by id DESC LIMIT 6 ");
+		foreach($hotshop as $k=>$v) {
+				$hotshop[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
+				$hotshop['hotshop'][] = $hotshop[$k];
+			}
+
 		$data = array(
 		'banner'=>$bannerurl,
 		'zxhjxx'=>$member_record,
@@ -54,6 +59,10 @@ class index1 extends SystemAction {
 		$page=System::load_sys_class('page');
 		$page->config($total,$num,$pagenum,"0");
 		$data = $db->GetPage("select canyurenshu,shenyurenshu,title,money,thumb from `@#_shoplist` where `q_uid` is null order by shenyurenshu asc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		foreach($data as $k=>$v) {
+				$data[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
+				$data['data'][] = $data[$k];
+			}
 		if($data) {
 				
 				$code = 200;
@@ -69,6 +78,10 @@ class index1 extends SystemAction {
 		//最新揭晓
 		if ($type==2) {	
 			$data = $db->GetPage("select a.username,a.shopname,b.q_user_code,b.q_end_time,b.thumb from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and b.q_uid is not null  order by a.id DESC LIMIT 12");
+			foreach($data as $k=>$v) {
+				$data[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
+				$data['data'][] = $data[$k];
+			}
 			if($data) {
 				$code = 200;
 				$msg = "查询成功";
