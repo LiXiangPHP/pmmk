@@ -36,16 +36,12 @@ class paoma extends SystemAction {
 		$s = 300-($sytime - $ge*300);
 		$WaitTime = 0;
 		
-		if($s > 140 )
+		if($s > 125 )
 		{
 			$status = 'wait';
 			$WaitTime = $s-125;
 		}
-		if( $s >125 && $s<=140)
-		{
-			$status = 'no';
-			$WaitTime = $s-125;
-		}
+
 		if($s >5 && $s<=125)
 		{
 			$status = 'game';
@@ -58,6 +54,7 @@ class paoma extends SystemAction {
 		if($s < 5 )
 		{
 			$status = 'prize';
+			$time = $s;
 		}
 		$LastResult1=$db->GetOne("select result from `@#_bet_result` WHERE `issue` = '$lastissue'");
 		$LastResult = explode(',',$LastResult1['result']);
@@ -92,7 +89,7 @@ class paoma extends SystemAction {
 
 
 
-		$data = array('issue'=>$issue,'lastissue'=>$lastissue,'qihao'=>$qihao,'status'=>$status,'WaitTime'=>$WaitTime,'GameTime'=>$GameTime,'detail'=>$detail,'LastResult'=>$LastResult,'sum'=>$sum,'NowResult'=>$NowResult,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize);
+		$data = array('issue'=>$issue,'lastissue'=>$lastissue,'qihao'=>$qihao,'status'=>$status,'WaitTime'=>$WaitTime,'GameTime'=>$GameTime,'detail'=>$detail,'LastResult'=>$LastResult,'sum'=>$sum,'NowResult'=>$NowResult,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'PrizeTime'=>$time);
 		$json = array('code' => $code,'data'=>$data);
 		echo json_encode($json);
 
@@ -116,6 +113,24 @@ class paoma extends SystemAction {
 			$msg = '请登录';
 			echo json_encode(array("code"=>$code,"msg"=>$msg));die;
 		}
+		$time = time();
+		$chushi = date("Y-m-d 00:00:00",$time);
+		$Endtime=$chushi;
+		$Endtime=strtotime($Endtime);
+		//现在时间过去多少秒
+		$sytime = $time-$Endtime;
+		// echo $Endtime;die;
+		// 有多少个5分钟
+		$ge = intval(floor($sytime/300));
+		//剩余多少秒
+		$s = 300-($sytime - $ge*300);
+		if($s <=140)
+		{
+			$code = 100;
+			$msg = '不能下注';
+			echo json_encode(array("code"=>$code,"msg"=>$msg));die;
+		}
+
 		$bet = stripslashes($_POST['bet']);
 		// $arr = array('冠军'=>array("2"=>"2","3"=>"11"),'亚军'=>array("2"=>"2"));
 		// echo json_encode($arr);die;
