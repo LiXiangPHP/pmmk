@@ -242,6 +242,7 @@ class paoma extends SystemAction {
 
 
 		$db = System::load_sys_class('model');
+		// echo 111;die;
 		if(!$issue)
 		{
 			$issue = $_POST['issue'];
@@ -355,45 +356,59 @@ class paoma extends SystemAction {
 			else{
 				$ci2 = $ci;
 			}
-			foreach ($p as $k => $v) {
-				$vming = mb_substr($v['name'] , 0 , 3);
-				if($v['name'] == $value)
-				{
-					// print_r($flag);die;
-					// print_r($flag['ming']);
-					// print_r( $flag['ci']);
-					// echo $value;
-					// print_r($flag['ci']);die;
-					if($v['p'] < $m && !in_array($ming, $flag['ming']) && !in_array($ci, $flag['ci']))
+			if($p)
+			{
+				foreach ($p as $k => $v) {
+					$vming = mb_substr($v['name'] , 0 , 3);
+					if($v['name'] == $value)
 					{
-						// print_r($o[$key]);die;
-						
-						// echo mb_substr($v['name'] , 0 , 3);die;
-						$aaa[] = $ci;
-						$flag['ming'][] = $ming;
-						$flag['ci'][] = $ci;
+						// print_r($flag);die;
+						// print_r($flag['ming']);
+						// print_r( $flag['ci']);
+						// echo $value;
+						// print_r($flag['ci']);die;
+						if($v['p'] < $m && !in_array($ming, $flag['ming']) && !in_array($ci, $flag['ci']))
+						{
+							// print_r($o[$key]);die;
+							
+							// echo mb_substr($v['name'] , 0 , 3);die;
+							$aaa[] = $ci;
+							$flag['ming'][] = $ming;
+							$flag['ci'][] = $ci;
 
+						}
+						else
+						{
+							// print_r($value);die;
+							 // echo $v['name']; 
+							 // echo $ci."|";
+							break;
+						}
+						
 					}
-					else
+					elseif(!in_array($ming, $flag['ming']) && $ming!=$vming &&!in_array($ci2, $flag['ci']))
 					{
-						// print_r($value);die;
-						 // echo $v['name']; 
-						 // echo $ci."|";
-						break;
+						// print_r($ming);die;
+						$aaa[] = $ci2;
+						$flag['ming'][] = $ming;
+						$flag['ci'][] = $ci2;
 					}
 					
-				}
-				elseif(!in_array($ming, $flag['ming']) && $ming!=$vming &&!in_array($ci2, $flag['ci']))
-				{
-					// print_r($ming);die;
-					$aaa[] = $ci2;
-					$flag['ming'][] = $ming;
-					$flag['ci'][] = $ci2;
-				}
-				
 
+				}
 			}
+			elseif(!in_array($ming, $flag['ming']) && $ming!=$vming &&!in_array($ci2, $flag['ci']))
+			{
+				// print_r($ming);die;
+				$aaa[] = $ci2;
+				$flag['ming'][] = $ming;
+				$flag['ci'][] = $ci2;
+			}
+
+
+
 		}
+		// print_r($aaa);die;
 		foreach ($aaa as $k => $v) {
 			$result .= $v.",";
 			# code...
@@ -447,6 +462,7 @@ class paoma extends SystemAction {
 		}
 
 	}
+	//定时任务
 	function returns()
 	{
 		$db = System::load_sys_class('model');
@@ -510,16 +526,34 @@ class paoma extends SystemAction {
 			echo json_encode(array("code"=>$code,"msg"=>$msg));die;
 		}
 		$uid = $info['uid'];
-		$user_bet = $db->GetList("SELECT * FROM `@#_bet` where `uid` = $uid ");
-		// print_r($user_bet);die;
-		foreach ($user_bet as $k => $v) {
-			$bet[$v['issue']][] = $v;
+		$user_bet = $db->GetList("SELECT sum(profit),issue,sum(number) FROM `@#_bet` where `uid` = $uid  group by `issue`");
+		
+		echo json_encode(array('code'=>$code,'data'=>$user_bet));die;
+
+	}
+	function profit_issue()
+	{
+		if(!$_POST)
+		{
+			$code = 100;
+			$msg = '错误';
+			echo json_encode(array("code"=>$code,"msg"=>$msg));die;
 		}
-		foreach ($bet as $key => $value) {
+		$db = System::load_sys_class('model');
+		$token = isset($_POST['token']) ? $_POST['token'] : "kong";
+		$info = System::token_uid($token);
+		if(!$info['uid'])
+		{
+			$code = 100;
+			$msg = '请登录';
+			echo json_encode(array("code"=>$code,"msg"=>$msg));die;
+		}
+		$uid = $info['uid'];
+		$issue = $_POST['issue'];
+		$user_bet = $db->GetList("SELECT * FROM `@#_bet` where `uid` = $uid  and `issue` = $issue");
+		foreach ($user_bet as $k => $v) {
 			
 		}
-
-
 	}
 }
 ?>
