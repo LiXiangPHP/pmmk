@@ -38,7 +38,7 @@ class order extends SystemAction {
 					$code = 400;
 					$msg = "数据为空";
 				}
-				$json = array('code' => $code, 'msg' => $msg, 'moneytoal' => $money, 'data' => $data);
+				$json = array('code' => $code, 'msg' => $msg,  'data' => $data);
 				echo json_encode($json);
 			}
 			//已收货
@@ -55,7 +55,7 @@ class order extends SystemAction {
 					$code = 400;
 					$msg = "数据为空";
 				}
-				$json = array('code' => $code, 'msg' => $msg, 'moneytoal' => $money, 'data' => $data);
+				$json = array('code' => $code, 'msg' => $msg,  'data' => $data);
 				echo json_encode($json);
 			}
 			
@@ -69,11 +69,11 @@ class order extends SystemAction {
 	}
 	//确认收货接口
 	public function qr(){
-		
+		$db = System::load_sys_class('model');
 		$info = System::token_uid($token);
 		$id = isset($_POST['id']) ? $_POST['id'] : null;
 		$token = isset($_POST['token']) ? $_POST['token'] : null;
-		$data = $db->GetList("select * from `@#_member_go_record` where id=$id  ");
+		$data = $db->GetOne("select * from `@#_member_go_record` where id=$id  ");
 		if($data) {
 					$code = 200;
 					$msg = "成功";
