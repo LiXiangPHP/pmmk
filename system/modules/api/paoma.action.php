@@ -56,6 +56,10 @@ class paoma extends SystemAction {
 			$status = 'prize';
 			$PrizeTime = $s;
 		}
+		else
+		{
+			$PrizeTime = 5;
+		}
 		$LastResult1=$db->GetOne("select result from `@#_bet_result` WHERE `issue` = '$lastissue'");
 		$LastResult = explode(',',$LastResult1['result']);
 		$sum = $LastResult[0]+$LastResult[1];
