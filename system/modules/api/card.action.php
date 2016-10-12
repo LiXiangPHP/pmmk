@@ -65,24 +65,26 @@ class card extends SystemAction {
 					$data['data'][] = $v;
 				}
 			}
-			$anws = $this->db->GetList("select id from `@#_quanzi_tiezi` where qzid = 1 and hueiyuan = '$info[uid]' and tiezi != 0");
+			$lid = $this->db->GetList("select id from `@#_quanzi_tiezi` where hueiyuan = '$info[uid]' and tiezi = 0");
 			$ids = '';
-			foreach($anws as $v) {
+			foreach ($lid as $key => $value) {
 				if($ids) {
-					$ids .= ','.$v['id'];
+					$ids .= ','.$value['id'];
 				}else {
-					$ids = $v['id'];
+					$ids = $value['id'];
 				}
 			}
-			// $sql = "select * from `@#_quanzi_tiezi` where qzid = 1 and hueiyuan != '$info[uid]' and ifsee = 0 and pid in ($ids)";
-			$reply = $this->db->GetList("select * from `@#_quanzi_tiezi` where qzid = 1 and hueiyuan != '$info[uid]' and ifsee = 0 and  pid in($ids)");
-			// print_r($reply);die;
-			if($reply) {
-				if(count($reply)>1) {
-					$data['reply'] = count($reply)."条新消息";//多人回复返回回复人数
+			$anws = $this->db->GetList("select * from `@#_quanzi_tiezi` where tiezi in($ids) and ifsee = 0");
+			// print_r($anws);die;
+			if($anws) {
+				if(count($anws)>1) {
+					$data['reply'] = count($anws)."条新消息";//多人回复返回回复人数
 				}else {
-					foreach($reply as $v) {
+					foreach($anws as $v) {
 						$user = $this->db->GetOne("select username from `@#_member` where uid = '$v[hueiyuan]'");
+						if($v['hueiyuan'] == $info['uid']) {
+							$data['reply'] = '';
+						}
 						$data['reply'] = $user['username']."回复了你";//单人回复返回会员昵称
 					}
 				}
@@ -337,6 +339,7 @@ class card extends SystemAction {
 			$imgname   = date('Ymdhis',time());
 			$new_file  = '';
 			$pic_path = 'images/upload/' . date("Ymd");
+			$imgurl = '';
 			if(!file_exists($pic_path)) {
 				if(!mkdir($pic_path, 0777)) {
 					$code = 100;
@@ -346,30 +349,40 @@ class card extends SystemAction {
 				}
 				
 			}
-			if($img) {
-				if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $img, $result)){
-					$type = $result[2];
-					$new_file = "{$pic_path}/{$imgname}.{$type}";//图片存储路径
-					if (!file_put_contents($new_file, base64_decode(str_replace($result[1], '', $img)))){
-						$code = 100;
-						$msg = "发帖失败";
-						$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-						echo json_encode($json);die;
+			$imgs = explode(',',$img);
+			foreach($imgs as $key => $val) {
+				if($val) {
+					if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $val, $result)){
+						$type = $result[2];
+						$imgname  = $imgname.rand(100,999);
+						$new_file = "{$pic_path}/{$imgname}.{$type}";//图片存储路径
+						if (!file_put_contents($new_file, base64_decode(str_replace($result[1], '', $val)))){
+							$code = 100;
+							$msg = "发帖失败";
+							$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+							echo json_encode($json);die;
+						}
+					}else {
+						$tmp = base64_decode($val);
+						$imgname  = $imgname.rand(100,999);
+						$new_file = "{$pic_path}/{$imgname}.jpg";//图片存储路径
+						if (!file_put_contents($new_file, $tmp)){
+							$code = 100;
+							$msg = "发帖失败";
+							$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+							echo json_encode($json);die;
+						}	
 					}
+				}
+				if($imgurl) {
+					$imgurl .= ",".$new_file;
 				}else {
-					$tmp = base64_decode($img);
-					$new_file = "{$pic_path}/{$imgname}.jpg";//图片存储路径
-					if (!file_put_contents($new_file, $tmp)){
-						$code = 100;
-						$msg = "发帖失败";
-						$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-						echo json_encode($json);die;
-					}	
+					$imgurl = $new_file;
 				}
 			}
-			
+			echo $imgurl;die;
 			if($title && $content) {
-				$sql = "insert into `@#_quanzi_tiezi`(`qzid`,`hueiyuan`,`title`,`neirong`,`time`,`img`) values('$qzid','$user','$title','$content','$time','$new_file')";
+				$sql = "insert into `@#_quanzi_tiezi`(`qzid`,`hueiyuan`,`title`,`neirong`,`time`,`img`) values('$qzid','$user','$title','$content','$time','$imgurl')";
 				if($this->db->Query($sql)) {
 					$code = 200;
 					$msg = "发帖成功";
