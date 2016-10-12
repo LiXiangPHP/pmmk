@@ -548,7 +548,8 @@ class paoma extends SystemAction {
 		}
 		$uid = $info['uid'];
 		$code = 200;
-		$user_bet = $db->GetList("SELECT sum(profit),issue,sum(number) FROM `@#_bet` where `uid` = $uid  group by `issue`");
+		$user_bet = $db->GetList("SELECT sum(profit) as sumprofit ,issue,sum(number) as sumnumber  FROM `@#_bet` where `uid` = $uid  group by `issue`");
+
 		echo json_encode(array('code'=>$code,'data'=>$user_bet));die;
 
 	}
