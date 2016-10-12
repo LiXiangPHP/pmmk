@@ -51,8 +51,11 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$Sdata = $this->db->GetPage("SELECT id,`qishu` periods,`title`,`money`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain  FROM `@#_shoplist` where `cateid` = '$cateid'",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$Sdata = $this->db->GetPage("SELECT id,`qishu` periods,`title`,`money`,`thumb`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain  FROM `@#_shoplist` where `cateid` = '$cateid'",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			foreach($Sdata as $v) {
+				if($v['thumb']) {
+					$v['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
+				}
 				$data['data'][] = $v;
 			}
 			if($data['data']) {
@@ -392,8 +395,11 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$Sdata = $this->db->GetPage("select id,`qishu` periods,`title`,`money`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain from `@#_shoplist` where title like '%$keywords%' ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$Sdata = $this->db->GetPage("select id,`qishu` periods,`title`,`thumb`,`money`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain from `@#_shoplist` where title like '%$keywords%' ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			foreach($Sdata as $v) {
+				if($v['thumb']) {
+					$v['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
+				}
 				$data['data'][] = $v;
 			}
 			if($data['data']) {
