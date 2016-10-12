@@ -1,5 +1,4 @@
 <?php
-
 defined('G_IN_SYSTEM')or exit("no");
 
 class cart extends SystemAction {
@@ -41,7 +40,7 @@ class cart extends SystemAction {
         $info = System::token_uid($uid);
         if ($info['code']==200) {
                 $db = System::load_sys_class('model');
-                $data = $db->GetList("SELECT l.id,l.title,l.money,l.yunjiage,l.canyurenshu,l.shenyurenshu,l.thumb,c.num FROM `@#_shoplist` l,`@#_shopcart` c,`@#_member` m WHERE l.id = c.good_id AND m.uid = '$info[uid]'");
+                $data = $db->GetList("SELECT l.id,l.title,l.money,l.yunjiage,l.canyurenshu,l.shenyurenshu,l.thumb,c.num FROM `@#_shoplist` l,`@#_shopcart` c,`@#_member` m WHERE m.uid = '$info[uid]' AND l.id = c.good_id AND c.user_id =  m.uid");
             if (!empty($data)) {
                 $code = 200;
                 $msg = "查询成功";
