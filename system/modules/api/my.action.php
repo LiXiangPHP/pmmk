@@ -439,12 +439,16 @@ class my extends SystemAction {
 		$db = System::load_sys_class('model');
 		$token = isset($_POST['token']) ? $_POST['token'] : "kong";
 		$info = System::token_uid($token);
-		
-		$shaidan=$db->Getlist("select sd_id,sd_shopid,sd_content,sd_photolist,sd_ping,sd_time from `@#_shaidan` where `sd_userid`='$info[uid]' order by `sd_id`");
+		if($info['code'] == 100) {
+			$code = 300;
+			$msg = "用户未登陆";
+			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			echo json_encode($json);die;
+		}
+		$shaidan=$db->Getlist("select sd_id,sd_userid,sd_shopid,sd_content,sd_photolist,sd_ping,sd_time from `@#_shaidan` where `sd_userid`='$info[uid]' order by `sd_id`");
 
 		foreach ($shaidan as $k => $v) {
-			$aa = $db->GetOne("select title from `@#_shoplist` where `id`='$v[sd_shopid]' ");
-			
+			$aa = $db->GetOne("select title from `@#_shoplist` where `id`='$v[sd_shopid]' ");			
 			$shaidan[$k]['sd_shopid'] = strip_tags($aa['title']);
 			$shaidan[$k]['sd_content'] = strip_tags($v['sd_content']);
 			$arr = array_filter(explode(',',$v['sd_photolist']));
@@ -455,6 +459,9 @@ class my extends SystemAction {
 
 		}
 
+		$uu = $db->GetOne("select username,img from `@#_member` where `uid`='$info[uid]' ");	
+		$shaidan['user'] = strip_tags($uu['username']);
+		$shaidan['userimg'] = "gangmaduobao.com/".strip_tags($uu['img']);
 		// print_R($shaidan);die;
 		$code = 200;
 		echo json_encode(array("code"=>$code,"data"=>$shaidan));

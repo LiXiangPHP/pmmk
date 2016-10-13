@@ -97,7 +97,7 @@ class user extends SystemAction {
 			$name     = $_POST['name'];
 			$sex   = $_POST['sex'];
 			$img       = stripslashes($_POST['img']);//去掉船餐过程中的反斜杠
-			$imgname   = 'member';
+			$imgname   = 'member'.$info['uid'];
 			$new_file  = '';
 			$pic_path = 'images/upload/user';
 			if(!file_exists($pic_path)) {

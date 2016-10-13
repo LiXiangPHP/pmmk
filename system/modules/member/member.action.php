@@ -806,7 +806,7 @@ HTML;
 			}
 			_message("设置成功");
 		}
-		include $this->tpl(ROUTE_M,'member.inviter_lists');
+		include $this->tpl(ROUTE_M,'member.scorerules');
 	}
 }
 
