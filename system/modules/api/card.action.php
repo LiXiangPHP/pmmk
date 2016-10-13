@@ -45,7 +45,14 @@ class card extends SystemAction {
 					$v['username'] = "管理员";
 					$v['identity'] = "admin";
 					$v['reward'] = 0;//未打赏
-					$v['img']    = 'gangmaduobao.com/'.$v['img'];
+					$arr = explode(',',$v['img']);
+					$arrs = '';
+					foreach($arr as $key => $vall) {
+						if($vall) {
+							$arrs[] = 'gangmaduobao.com/'.$vall;
+						}						
+					}
+					$v['img'] = $arrs;
 					unset($v['type']);
 					unset($v['uid']);
 					$data['data'][] = $v;
@@ -53,7 +60,14 @@ class card extends SystemAction {
 					$user = $this->db->GetOne("select username from `@#_member` where uid = '$v[uid]'  LIMIT 1");
 					$v['username'] = $user['username'];
 					$v['identity'] = "user";
-					$v['img']    = 'gangmaduobao.com/'.$v['img'];
+					$arr = explode(',',$v['img']);
+					$arrs = '';
+					foreach($arr as $key => $vall) {
+						if($vall) {
+							$arrs[] = 'gangmaduobao.com/'.$vall;
+						}						
+					}
+					$v['img'] = $arrs;
 					$rew = explode(',',$v['reward']);
 					if(in_array($info['uid'],$rew)) {
 						$v['reward'] = 1;//已打赏
@@ -180,9 +194,9 @@ class card extends SystemAction {
 		}
 		if($cardid) {
 			//评论状态更改
-			$rult = $this->db->Query("update `@#_quanzi_tiezi` set ifsee = 1,dianji = dianji + 1  where tiezi = '$cardid'");
+			$rult = $this->db->Query("update `@#_quanzi_tiezi` set ifsee = 1,dianji = dianji + 1  where tiezi = '$cardid' or id = '$cardid'");
 			if(!$rult) {
-				$code = 300;
+				$code = 3001;
 				$msg = "操作失败";
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 				echo json_encode($json);die;
@@ -199,7 +213,12 @@ class card extends SystemAction {
 				$user = $this->db->GetOne("select username from `@#_member` where uid = '$Cdata[hueiyuan]' limit 1");
 				$data['data']['id'] = $Cdata['id'];
 				$data['data']['title'] = $Cdata['title'];
-				$data['data']['img'] = 'gangmaduobao.com/'.$Cdata['img'];
+
+				// $data['data']['img'] = 'gangmaduobao.com/'.$Cdata['img'];
+				$imgs = explode(',',$Cdata['img']);
+				foreach($imgs as $k => $v) {
+					$data['data']['img'][] ="gangmaduobao.com/".$v; 
+				}
 				$data['data']['time'] = $Cdata['time'];
 				$data['data']['content'] = $Cdata['neirong'];
 				$data['data']['total'] = $Cdata['hueifu'];
@@ -224,7 +243,11 @@ class card extends SystemAction {
 			}else {//后台发帖
 				$data['data']['id']= $Cdata['id'];
 				$data['data']['title']= $Cdata['title'];
-				$data['data']['img']= 'gangmaduobao.com/'.$Cdata['img'];
+				// $data['data']['img']= 'gangmaduobao.com/'.$Cdata['img'];
+				$imgs = explode(',',$Cdata['img']);
+				foreach($imgs as $k => $v) {
+					$data['data']['img'][] ="gangmaduobao.com/".$v; 
+				}
 				$data['data']['time'] = $Cdata['time'];
 				$data['data']['total'] = $Cdata['hueifu'];
 				$data['data']['content']= $Cdata['neirong'];
@@ -380,7 +403,6 @@ class card extends SystemAction {
 					$imgurl = $new_file;
 				}
 			}
-			echo $imgurl;die;
 			if($title && $content) {
 				$sql = "insert into `@#_quanzi_tiezi`(`qzid`,`hueiyuan`,`title`,`neirong`,`time`,`img`) values('$qzid','$user','$title','$content','$time','$imgurl')";
 				if($this->db->Query($sql)) {
