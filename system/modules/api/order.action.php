@@ -44,7 +44,7 @@ class order extends SystemAction {
 			//已收货
 			if ($type==3) {
 				$db = System::load_sys_class('model');
-				$data = $db->GetList("select b.q_end_time,a.shopname,a.shopqishu,a.id,b.thumb from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and  a.uid='$info[uid]' and a.huode>10000000 and status like '%已发货,已完成%' ");
+				$data = $db->GetList("select b.q_end_time,a.shopname,a.shopqishu,a.yishaidan,a.id,b.thumb from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and  a.uid='$info[uid]' and a.huode>10000000 and status like '%已发货,已完成%' ");
 				foreach($data as $k=>$v) {
 				$data[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
 				}
@@ -156,6 +156,7 @@ class order extends SystemAction {
 					$code = 200;
 					$msg = "成功";
 					$data = $db->Query("INSERT INTO `@#_shaidan`(`sd_userid`,`sd_shopid`,`sd_qishu`,`sd_content`,`sd_photolist`,`sd_time`)VALUES('$sd_userid','$sd_shopid','$sd_qishu','$sd_content','$sd_photolist','$sd_time')");
+					$data1 = $db->Query("update `@#_member_go_record` set yishaidan='1' where id=$id ") ;
 				}else {
 					$code = 400;
 					$msg = "失败";
