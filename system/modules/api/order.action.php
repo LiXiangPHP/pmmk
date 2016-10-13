@@ -70,32 +70,38 @@ class order extends SystemAction {
 	//确认收货接口
 	public function qr(){
 		$db = System::load_sys_class('model');
-		$info = System::token_uid($token);
-		$id = isset($_POST['id']) ? $_POST['id'] : null;
 		$token = isset($_POST['token']) ? $_POST['token'] : null;
-		$data = $db->GetOne("select * from `@#_member_go_record` where id=$id  ");
-		if($data) {
-					$code = 200;
-					$msg = "成功";
-					$data = $db->Query("update `@#_member_go_record` set status='已付款,已发货,已完成' where id=$id ") ;
-				}else {
-					$code = 400;
-					$msg = "失败";
-				}
-				$json = array('code' => $code, 'msg' => $msg );
-				echo json_encode($json);
+		$info = System::token_uid($token);
+		if ($info['code']==200) {
+			$id = isset($_POST['id']) ? $_POST['id'] : null;		
+			$data = $db->GetOne("select * from `@#_member_go_record` where id=$id  ");
+			if($data) {
+						$code = 200;
+						$msg = "成功";
+						$data = $db->Query("update `@#_member_go_record` set status='已付款,已发货,已完成' where id=$id ") ;
+					}else {
+						$code = 400;
+						$msg = "失败";
+					}
+					$json = array('code' => $code, 'msg' => $msg );
+					echo json_encode($json);
+		}else{
+			$json = array('code' => 300, 'msg' => '请登录');
+			echo json_encode($json);
+		}
+		
 	
 	}
 	//我要晒单
 	public function wysd(){
+		$token = isset($_POST['token']) ? $_POST['token'] : null;
 		$db = System::load_sys_class('model');
 		$info = System::token_uid($token);
-		$token = isset($_POST['token']) ? $_POST['token'] : null;
-
+		if ($info['code']==200) {
 		$img       = stripslashes($_POST['img']);//去掉船餐过程中的反斜杠
 		$imgname   = date('Ymdhis',time());
 		$new_file  = '';
-		$pic_path = 'shaidan/' . date("Ymd");
+		$pic_path = 'statics/uploads/shaidan/' . date("Ymd");
 		if(!file_exists($pic_path)) {
 			if(!mkdir($pic_path, 0777)) {
 				$code = 100;
@@ -157,6 +163,11 @@ class order extends SystemAction {
 				$json = array('code' => $code, 'msg' => $msg );
 				echo json_encode($json);
 
+		}else{
+			$json = array('code' => 300, 'msg' => '请登录');
+			echo json_encode($json);
+		}
+		
 
 	}
 }
