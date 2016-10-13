@@ -30,11 +30,13 @@ class group extends base {
 		include templates("group","index");
 	}
 	public function show() {
-		$id=abs(intval($this->segment(4)));
+		// $id=abs(intval($this->segment(4)));
+		$id = 1;
 		if(!$id){
 			_message("还没有建立改圈子");
 		}
 		$quanzi=$this->db->GetOne("select * from `@#_quanzi` where `id` = '$id'");		
+		print_r($quanzi);die;
 		if(!$quanzi){
 			_message("还没有建立改圈子");
 		}
