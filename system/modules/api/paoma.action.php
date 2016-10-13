@@ -576,7 +576,15 @@ class paoma extends SystemAction {
 		}
 		$uid = $info['uid'];
 		$issue = $_POST['issue'];
-		$user_bet = $db->GetList("SELECT * FROM `@#_bet` where `uid` = $uid  and `issue` = $issue");
+		if($issue)
+		{
+			$user_bet = $db->GetList("SELECT * FROM `@#_bet` where `uid` = $uid  and `issue` = $issue");
+		}
+		else
+		{
+			$user_bet = $db->GetList("SELECT * FROM `@#_bet` where `uid` = $uid ");
+		}
+		
 
 		foreach ($user_bet as $k => $v) {
 			$result[]  = array("issue"=>$v['issue'],"name"=>$v['name'],"number"=>$v['number'],"profit"=>$v['profit']);

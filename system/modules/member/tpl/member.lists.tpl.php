@@ -32,7 +32,6 @@
 					<option value="uid">会员uid</option>
 					<option value="money" >账户金额</option>
 					<option value="score">会员福分</option>
-					<option value="jingyan">会员经验</option>
                     <option value="login_time">登陆时间</option>
 					<option value="time">注册时间</option>
 	</select>
@@ -68,14 +67,11 @@
 		<tr>
             <th align="center">UID</th>
             <th align="center">用户名</th>
-            <th align="center">邮箱</th>
             <th align="center">手机</th>
             <th align="center">金额</th>
-			<th align="center">福分</th> 
-			<th align="center">经验值</th>			
+			<th align="center">福分</th> 			
 			<th align="center">登陆时间,地址,IP</th>
-			<th align="center">注册时间</th>		
-			<th align="center">账户绑定</th>
+			<th align="center">注册时间</th>
             <th align="center">管理</th>
 		</tr>
     </thead>
@@ -84,14 +80,11 @@
 			<tr>
 				<td align="center"><?php echo $v['uid']; ?></td>
 				<td align="center"><?php echo $v['username']; ?></td>	
-				<td align="center"><?php echo $v['email']; ?> <?php if($v['emailcode']==1){?><span style="color:#0c0">√</span><?php }else{ ?><span style="color:red">×</span><?php } ?></td>	
 				<td align="center"><?php echo $v['mobile']; ?> <?php if($v['mobilecode']==1){?><span style="color:#0c0">√</span><?php }else{ ?><span style="color:red">×</span><?php } ?></td>	
 				<td align="center"><?php echo $v['money']; ?></td>
 				<td align="center"><?php echo $v['score']; ?></td>
-				<td align="center"><?php echo $v['jingyan']; ?></td>				
 				<td align="center"><?php echo _put_time($v['login_time'],"未登录"); ?>,<?php echo trim($v['user_ip'],","); ?></td>	
 				<td align="center"><?php echo _put_time($v['time']); ?></td>
-				<td align="center"><?php echo trim($v['band'],","); ?></td>
 				<td align="center">
 					<?php if($table=='@#_member_del'): ?>
 					<a href="<?php echo G_MODULE_PATH; ?>/member/huifu/<?php echo $v['uid'];?>">恢复</a>				

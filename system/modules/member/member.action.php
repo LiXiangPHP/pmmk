@@ -335,11 +335,11 @@ class member extends admin {
 				$jingyan_start=htmlspecialchars(trim($_POST['jingyan_start']));
 				$jingyan_end=htmlspecialchars(trim($_POST['jingyan_end'])); 
 				if(empty($name) || empty($jingyan_start)  || empty($jingyan_end)){
-					_message('会员组或者经验值不能为空');
+					_message('会员组或者积分值不能为空');
 				}elseif( $jingyan_start >= $jingyan_end){
-					 _message('开始经验不能大于结束经验');
+					 _message('开始积分不能大于结束积分');
 				}elseif($jingyan_end <= $jingyan_start){ 
-					_message('结束经验不能小于开始经验');
+					_message('结束积分不能小于开始积分');
 				}
 				$sql="UPDATE `@#_member_group` SET `name`='$name',`jingyan_start`='$jingyan_start', `jingyan_end`='$jingyan_end' WHERE `groupid`='$id'";
 				$this->db->Query($sql);
@@ -784,6 +784,29 @@ HTML;
 			$signlist[$k]['oscore'] = $stotal;			
 		}
 		include $this->tpl(ROUTE_M,'member.sign_lists');
+	}
+
+	public function scorerules() {
+		$info=$this->AdminInfo;
+		// print_r($info);die;
+		if(!$info['neirong'])
+		{
+			echo '没有权限！';die;
+		}
+		$Slist = $this->db->GetList("select * from `@#_proportionality`");
+		if(isset($_POST['submit'])){
+			
+			unset($_POST['submit']);
+			$con = $_POST;
+			print_r($content);die;
+			$res = $this->db->Query("UPDATE `@#_proportionality` SET `scoredhb` = '$con[score]', `duobaodhb` = '$con[yb]' WHERE `id` = '$con[id]'' ");
+			
+			if(!$res){
+				_message("设置失败");
+			}
+			_message("设置成功");
+		}
+		include $this->tpl(ROUTE_M,'member.inviter_lists');
 	}
 }
 
