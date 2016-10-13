@@ -372,7 +372,7 @@ class card extends SystemAction {
 				}
 				
 			}
-			$imgs = explode(',',$img);
+			$imgs = explode('-',$img);
 			foreach($imgs as $key => $val) {
 				if($val) {
 					if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $val, $result)){

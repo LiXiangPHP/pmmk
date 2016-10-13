@@ -786,7 +786,28 @@ HTML;
 		include $this->tpl(ROUTE_M,'member.sign_lists');
 	}
 
-	
+	public function scorerules() {
+		$info=$this->AdminInfo;
+		// print_r($info);die;
+		if(!$info['neirong'])
+		{
+			echo '没有权限！';die;
+		}
+		$Slist = $this->db->GetList("select * from `@#_proportionality`");
+		if(isset($_POST['submit'])){
+			
+			unset($_POST['submit']);
+			$con = $_POST;
+			print_r($content);die;
+			$res = $this->db->Query("UPDATE `@#_proportionality` SET `scoredhb` = '$con[score]', `duobaodhb` = '$con[yb]' WHERE `id` = '$con[id]'' ");
+			
+			if(!$res){
+				_message("设置失败");
+			}
+			_message("设置成功");
+		}
+		include $this->tpl(ROUTE_M,'member.inviter_lists');
+	}
 }
 
 ?>
