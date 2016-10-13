@@ -86,6 +86,79 @@ class order extends SystemAction {
 				echo json_encode($json);
 	
 	}
+	//我要晒单
+	public function wysd(){
+		$db = System::load_sys_class('model');
+		$info = System::token_uid($token);
+		$token = isset($_POST['token']) ? $_POST['token'] : null;
+
+		$img       = stripslashes($_POST['img']);//去掉船餐过程中的反斜杠
+		$imgname   = date('Ymdhis',time());
+		$new_file  = '';
+		$pic_path = 'shaidan/' . date("Ymd");
+		if(!file_exists($pic_path)) {
+			if(!mkdir($pic_path, 0777)) {
+				$code = 100;
+				$msg = "目录创建失败";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
+			}
+				
+		}
+		$imgs = explode(',',$img);
+			foreach($imgs as $key => $val) {
+				if($val) {
+					if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $val, $result)){
+						$type = $result[2];
+						$imgname  = $imgname.rand(100,999);
+						$new_file = "{$pic_path}/{$imgname}.{$type}";//图片存储路径
+						if (!file_put_contents($new_file, base64_decode(str_replace($result[1], '', $val)))){
+							$code = 100;
+							$msg = "发帖失败";
+							$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+							echo json_encode($json);die;
+						}
+					}else {
+						$tmp = base64_decode($val);
+						$imgname  = $imgname.rand(100,999);
+						$new_file = "{$pic_path}/{$imgname}.jpg";//图片存储路径
+						if (!file_put_contents($new_file, $tmp)){
+							$code = 100;
+							$msg = "发帖失败";
+							$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+							echo json_encode($json);die;
+						}	
+					}
+				}
+				if($imgurl) {
+					$imgurl .= ",".$new_file;
+				}else {
+					$imgurl = $new_file;
+				}
+			}
+
+
+		$id = isset($_POST['id']) ? $_POST['id'] : null;
+		$array = $db->GetOne("select * from `@#_member_go_record` where id=$id  ");
+		$sd_userid = $array['uid'];
+		$sd_shopid = $array['shopid'];
+		$sd_qishu = $array['shopqishu'];
+		$sd_content = isset($_POST['content']) ? $_POST['content'] : null;
+		$sd_photolist = $imgurl;
+		$sd_time = time();
+		if($sd_content) {
+					$code = 200;
+					$msg = "成功";
+					$data = $db->Query("INSERT INTO `@#_shaidan`(`sd_userid`,`sd_shopid`,`sd_qishu`,`sd_content`,`sd_photolist`,`sd_time`)VALUES('$sd_userid','$sd_shopid','$sd_qishu','$sd_content','$sd_photolist','$sd_time')");
+				}else {
+					$code = 400;
+					$msg = "失败";
+				}
+				$json = array('code' => $code, 'msg' => $msg );
+				echo json_encode($json);
+
+
+	}
 }
 
 ?>
