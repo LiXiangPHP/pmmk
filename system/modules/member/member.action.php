@@ -786,14 +786,7 @@ HTML;
 		include $this->tpl(ROUTE_M,'member.sign_lists');
 	}
 
-	public function inviter() {
-		$info=$this->AdminInfo;
-		// print_r($info);die;
-		if(!$info['neirong'])
-		{
-			echo '没有权限！';die;
-		}
-	}
+	
 }
 
 ?>
