@@ -455,7 +455,7 @@ class card extends SystemAction {
 				echo json_encode($json);die;
 			}
 
-			if(!$Cdata['hueiyuan']) {
+			if($Cdata['hueiyuan'] == '管理员') {
 				$code = 100;
 				$msg = "管理员发帖不许赏";
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
