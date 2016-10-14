@@ -161,6 +161,46 @@ class user extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
 		}
+	}
+
+	//修改密码
+	public function json_pwd() {
+		$code = '';
+		$msg  = '';
+		$data = array();
+		$db = System::load_sys_class('model');
+		$token = trim($_POST['token']);
+		$info = System::token_uid($token);
+		if($info['code'] == 200) {
+			$newpwd   = md5($_POST['newpassword']);
+			$pwd = md5($_POST['password']);
+			$user = $db->GetOne("select * from `@#_member` where `uid` = '$info[uid]' and `password` = '$pwd'");
+			if(!$user) {
+				$code = 100;
+				$msg = "密码错误";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
+			}
+			if($newpwd) {				
+				$res = $db->Query("update `@#_member` set `password` = '$newpwd' where `uid` = '$info[uid]'");
+				if($res) {
+					$code = 200;
+					$msg = "修改成功";
+					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+					echo json_encode($json);die;
+				}
+			}else {
+				$code = 100;
+				$msg = "操作失败";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
+			}
+		}else {
+			$code = 300;
+			$msg = "用户未登录";
+			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			echo json_encode($json);
+		}
 	}	
 		
 }
