@@ -798,7 +798,7 @@ HTML;
 			
 			unset($_POST['submit']);
 			$con = $_POST;
-			$res = $this->db->Query("UPDATE `@#_proportionality` SET `scoredhb` = '$con[score]', `duobaodhb` = '$con[yb]' WHERE `id` = '$con[id]'' ");
+			$res = $this->db->Query("UPDATE `@#_proportionality` SET `scoredhb` = '$con[score]', `duobaodhb` = '$con[yb]' WHERE `id` = '$con[id]' ");
 			
 			if(!$res){
 				_message("设置失败");
