@@ -26,15 +26,16 @@ input.button{ display:inline-block}
   
   	<?php foreach($Slist as $sign) { ?>
   	 <tr>
-  	 		<td width="300" align="right">积&nbsp;&nbsp;分:<input type="text" name="day-<?php echo $sign['id'] ?>" value="<?php echo $sign['number'] ?>" class="input-text"></td>	
-			<td>夺宝币:<input type="text" name="num-<?php echo $sign['id'] ?>" value="<?php echo $sign['points'];?>" class="input-text"></td>
+  	 		<td width="300" align="right">积&nbsp;&nbsp;分:<input type="text" name="score" value="<?php echo $sign['scoredhb'] ?>" class="input-text"></td>	
+			<td>夺宝币:<input type="text" name="yb" value="<?php echo $sign['duobaodhb'];?>" class="input-text"></td>
 		</tr>
 	<?php } ?>	
 		<tr>
-        	<td width="300" align="right"></td>
-            <td>		
-            <input type="submit" class="button" name="submit" value="提交" >
-            </td>
+        	<td width="300" align="right">
+            <input type="hidden"  name="id" value="<?php echo $sign['id'];?>" >
+            <input type="submit" class="button" name="submit" value="提交" > 
+          </td>
+            <td>  </td>
 		</tr>
 </table>
 </form>

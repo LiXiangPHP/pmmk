@@ -458,10 +458,12 @@ class my extends SystemAction {
 			$shaidan[$k]['sd_photolist'] =  $arr;
 
 		}
-
-		$uu = $db->GetOne("select username,img from `@#_member` where `uid`='$info[uid]' ");	
-		$shaidan['user'] = strip_tags($uu['username']);
-		$shaidan['userimg'] = "gangmaduobao.com/".strip_tags($uu['img']);
+		if($shaidan) {
+			$uu = $db->GetOne("select username,img from `@#_member` where `uid`='$info[uid]' ");	
+			$shaidan['user'] = strip_tags($uu['username']);
+			$shaidan['userimg'] = "gangmaduobao.com/".strip_tags($uu['img']);
+		}
+		
 		// print_R($shaidan);die;
 		$code = 200;
 		echo json_encode(array("code"=>$code,"data"=>$shaidan));

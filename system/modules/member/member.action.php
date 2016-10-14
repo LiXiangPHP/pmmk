@@ -798,7 +798,6 @@ HTML;
 			
 			unset($_POST['submit']);
 			$con = $_POST;
-			print_r($content);die;
 			$res = $this->db->Query("UPDATE `@#_proportionality` SET `scoredhb` = '$con[score]', `duobaodhb` = '$con[yb]' WHERE `id` = '$con[id]'' ");
 			
 			if(!$res){
