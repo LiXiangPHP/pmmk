@@ -209,7 +209,7 @@ class card extends SystemAction {
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 				echo json_encode($json);die;
 			}
-			if($Cdata['hueiyuan']) {//会员发帖
+			if($Cdata['hueiyuan'] != '管理员') {//会员发帖
 				$user = $this->db->GetOne("select username from `@#_member` where uid = '$Cdata[hueiyuan]' limit 1");
 				$data['data']['id'] = $Cdata['id'];
 				$data['data']['title'] = $Cdata['title'];
@@ -302,7 +302,7 @@ class card extends SystemAction {
 			echo json_encode($json);die;
 		}
 		if($cardid  && $content && $times) {
-			$ptime = $this->db->GetOne("select time,shenhe from `@#_quanzi_tiezi` where id = '$cardid' limit 1");//被评论者时间
+			$ptime = $this->db->GetOne("select time,shenhe from `@#_quanzi_tiezi` where id = '$cardid' limit 1");//被评论贴时间，状态
 			if($ptime['shenhe'] == 'N') {
 				$code = 100;
 				$msg = "操作失败";
