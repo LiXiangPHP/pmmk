@@ -196,7 +196,7 @@ class card extends SystemAction {
 			//评论状态更改
 			$rult = $this->db->Query("update `@#_quanzi_tiezi` set ifsee = 1,dianji = dianji + 1  where tiezi = '$cardid' or id = '$cardid'");
 			if(!$rult) {
-				$code = 3001;
+				$code = 100;
 				$msg = "操作失败";
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 				echo json_encode($json);die;
@@ -204,7 +204,7 @@ class card extends SystemAction {
 			//返回参数
 			$Cdata = $this->db->GetOne("select * from `@#_quanzi_tiezi` where id = '$cardid' and tiezi = 0 and pid = 0 and shenhe = 'Y'");
 			if(!$Cdata) {
-				$code = 300;
+				$code = 100;
 				$msg = "操作失败";
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 				echo json_encode($json);die;
@@ -276,7 +276,7 @@ class card extends SystemAction {
 			}
 			// print_r($data);die;
 		}else {
-			$code = 300;
+			$code = 100;
 			$msg = "操作失败";
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
@@ -304,7 +304,7 @@ class card extends SystemAction {
 		if($cardid  && $content && $times) {
 			$ptime = $this->db->GetOne("select time,shenhe from `@#_quanzi_tiezi` where id = '$cardid' limit 1");//被评论者时间
 			if($ptime['shenhe'] == 'N') {
-				$code = 300;
+				$code = 100;
 				$msg = "操作失败";
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 				echo json_encode($json);die;
@@ -315,7 +315,7 @@ class card extends SystemAction {
 			}else {
 				$pid = $this->db->GetOne("select id,hueiyuan from `@#_quanzi_tiezi` where  tiezi = '$cardid' and time = '$times' limit 1");
 				if($pid['hueiyuan'] == $info['uid']) {
-					$code = 300;
+					$code = 100;
 					$msg = "自己评论不可回复";
 					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 					echo json_encode($json);die;
@@ -337,7 +337,7 @@ class card extends SystemAction {
 				echo json_encode($json);
 			}
 		}else {
-			$code = 300;
+			$code = 100;
 			$msg = "操作失败";
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);		
@@ -417,7 +417,7 @@ class card extends SystemAction {
 					echo json_encode($json);
 				}
 			}else {
-				$code = 300;
+				$code = 100;
 				$msg = "操作失败";
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 				echo json_encode($json);
@@ -521,7 +521,7 @@ class card extends SystemAction {
 			}
 			
 		}else {
-			$code = 300;
+			$code = 100;
 			$msg = "操作失败";
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
