@@ -73,7 +73,7 @@ class shop extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
 		}else {
-			$code = 300;
+			$code = 100;
 			$msg = "操作失败";
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
@@ -180,7 +180,7 @@ class shop extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
 		}else {
-			$code = 300;
+			$code = 100;
 			$msg = "操作失败";
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
@@ -232,7 +232,7 @@ class shop extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
 		}else {
-			$code = 300;
+			$code = 100;
 			$msg = "操作失败";
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
@@ -301,7 +301,7 @@ class shop extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
 		}else {
-			$code = 300;
+			$code = 100;
 			$msg = "操作失败";
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
@@ -364,7 +364,7 @@ class shop extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
 		}else {
-			$code = 300;
+			$code = 100;
 			$msg = "操作失败";
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
@@ -419,7 +419,7 @@ class shop extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
 		}else {
-			$code = 300;
+			$code = 100;
 			$msg = "操作失败";
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);

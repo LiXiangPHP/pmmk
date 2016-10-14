@@ -75,7 +75,7 @@
 				$json = array('type' => $type,'code' => $code, 'msg' => $msg, 'data' => $data);
 				echo json_encode($json);
 			}else{
-				$code = 300;
+				$code = 100;
 				$msg = "没有传入正确的type";
 				$json = array('code' => $code, 'msg' => $msg);
 			}
