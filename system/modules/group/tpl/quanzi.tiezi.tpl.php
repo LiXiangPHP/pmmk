@@ -58,9 +58,9 @@ function tiezi(id){
 	<?php } ?> 
 </table>
 
-<?php if($total>$num) {?> 
+
 <div id="pages"><ul><li>共 <?php echo $total; ?> 条</li><?php echo $page->show('one','li'); ?></ul></div>
 
-<?php } ?> 	
+	
 </body>
 </html> 

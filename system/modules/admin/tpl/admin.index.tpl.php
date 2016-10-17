@@ -221,7 +221,7 @@ function api_off_on_open(key){
         <li><a href="javascript:void(0);" src="<?php echo G_MODULE_PATH; ?>/content/model">内容模型</a></li>
         <li><a href="javascript:void(0);" src="<?php echo G_MODULE_PATH; ?>/category/lists">栏目管理</a></li>
         <li class="head">模块管理</li>
-        <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/group/quanzi">贴子模块</a></li>  
+        <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/group/quanzi/tiezi">贴子模块</a></li>  
         <li><a href="javascript:void(0);" src="<?php echo G_MODULE_PATH; ?>/link/lists">友情链接</a></li>
         <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/admanage/admanage_admin">广告模块</a></li>
          <!--

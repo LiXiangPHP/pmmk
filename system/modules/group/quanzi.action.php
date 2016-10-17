@@ -176,19 +176,33 @@ class quanzi extends admin {
 	
 	/*显示圈子里面全部帖子*/
 	public function tiezi(){
-		$qzid = intval($this->segment(4));	
-		if(!$qzid)_message("参数错误");
-		$num=20;
-		$total=$this->db->GetCount("select * from `@#_quanzi_tiezi` where `qzid`= '$qzid' and `tiezi` = '0' and `pid` = '0' and `shenhe` = 'Y'"); 
+		// $qzid = intval($this->segment(4));	
+		// if(!$qzid)_message("参数错误");
+		$num = 20;
+		$total=$this->db->GetCount("select * from `@#_quanzi_tiezi` where `tiezi` = '0' and `pid` = '0' and `shenhe` = 'Y'"); 
 		$page=System::load_sys_class('page');
 		if(isset($_GET['p'])){
 			$pagenum=$_GET['p'];
-		}else{$pagenum=1;}		
+		}else{$pagenum=1;}	
 		$page->config($total,$num,$pagenum,"0"); 
 		if($pagenum>$page->page){
 			$pagenum=$page->page;
-		}	
-		$tiezi=$this->db->GetPage("select * from `@#_quanzi_tiezi` where `qzid`= '$qzid' and `tiezi` = '0' and `pid` = '0' and `shenhe` = 'Y'",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));		
+		}
+		$rews = $this->db->GetOne("select score from `@#_reward` ");	
+		$tiezi=$this->db->GetPage("select * from `@#_quanzi_tiezi` where `tiezi` = '0' and `pid` = '0' and `shenhe` = 'Y'",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));		
+		foreach ($tiezi as $k => $val) {
+			$user = $this->db->GetOne("select mobile from `@#_member` where uid = '$val[hueiyuan]'");
+			$tiezi[$k]['mobile'] = $user['mobile'];
+			if(strlen($val['neirong']) > 15) {
+				for ($i = 0; $i < 15;$i++) {
+					if(ord($val['neirong'][$i]) > 128) $i++;
+					 $tiezi[$k]['neirong'] = substr($val['neirong'],0,$i)."...";
+				}
+			}
+			$rew = explode(',',$val['reward']);
+			$num = count($rew);
+			$tiezi[$k]['score'] = $num * $rews['score'];
+		}
 		include $this->tpl(ROUTE_M,'quanzi.tiezi');
 	}
 	
