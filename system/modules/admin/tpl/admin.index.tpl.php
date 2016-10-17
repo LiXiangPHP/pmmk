@@ -164,6 +164,7 @@ function api_off_on_open(key){
             <li class="normal"><a href="#" onClick="secBoard('nav',4,'template','界面管理');"<?php if(!$info['yemian']){?> style='display: none'<?php } ?>>界面管理</a></li>
             <li class="normal"><a href="#" onClick="secBoard('nav',5,'yunapp','云应用');"<?php if(!$info['yun']){?> style='display: none'<?php } ?>>云应用</a></li>
             <li class="normal"><a href="#" onClick="secBoard('nav',6,'paoma','跑马管理');" <?php if(!$info['xitong']){?> style='display: none'<?php } ?>>跑马管理</a></li>
+            <li class="normal"><a href="#" onClick="secBoard('nav',7,'app','APP版本');" <?php if(!$info['xitong']){?> style='display: none'<?php } ?>>APP版本</a></li>
         </ul>
     </div>
 </div><!--header end-->
