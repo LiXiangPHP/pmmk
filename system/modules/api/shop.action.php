@@ -147,7 +147,7 @@ class shop extends SystemAction {
 			echo json_encode($json);die;
 		}
 		if($gid) {
-			$data = $this->db->GetOne("SELECT qishu periods,title,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
+			$data = $this->db->GetOne("SELECT id, qishu periods,title,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
 			if($data['remain'] == 0) {
 				$data['state'] = "已揭晓";
 			}else {
@@ -157,7 +157,7 @@ class shop extends SystemAction {
 			foreach ($data['picarr'] as $k => $v) {
 				$data['picarr'][$k] = "gangmaduobao.com/statics/uploads/".$v;
 			}
-
+			$data['url'] = "gangmaduobao.com/?/mobile/mobile/goodsdesc/".$gid;
 			$uids = $this->db->GetList("SELECT uid FROM `@#_member_go_record` where shopid = '$gid' and shopqishu = '$data[periods]'");
 			$ids = '';
 			foreach($uids as $v) {
