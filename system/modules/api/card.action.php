@@ -45,14 +45,15 @@ class card extends SystemAction {
 					$v['username'] = "管理员";
 					$v['identity'] = "admin";
 					$v['reward'] = 0;//未打赏
-					$arr = explode(',',$v['img']);
-					$arrs = '';
-					foreach($arr as $key => $vall) {
-						if($vall) {
-							$arrs[] = 'gangmaduobao.com/'.$vall;
-						}						
-					}
-					$v['img'] = $arrs;
+					// $arr = explode(',',$v['img']);
+					// $arrs = '';
+					// foreach($arr as $key => $vall) {
+					// 	if($vall) {
+					// 		$arrs[] = 'gangmaduobao.com/'.$vall;
+					// 	}						
+					// }
+					// $v['img'] = $arrs;
+					$v['img'] = 'gangmaduobao.com/'.$v['img'];
 					unset($v['type']);
 					unset($v['uid']);
 					$data['data'][] = $v;
@@ -60,14 +61,15 @@ class card extends SystemAction {
 					$user = $this->db->GetOne("select username from `@#_member` where uid = '$v[uid]'  LIMIT 1");
 					$v['username'] = $user['username'];
 					$v['identity'] = "user";
-					$arr = explode(',',$v['img']);
-					$arrs = '';
-					foreach($arr as $key => $vall) {
-						if($vall) {
-							$arrs[] = 'gangmaduobao.com/'.$vall;
-						}						
-					}
-					$v['img'] = $arrs;
+					// $arr = explode(',',$v['img']);
+					// $arrs = '';
+					// foreach($arr as $key => $vall) {
+					// 	if($vall) {
+					// 		$arrs[] = 'gangmaduobao.com/'.$vall;
+					// 	}						
+					// }
+					// $v['img'] = $arrs;
+					$v['img'] = 'gangmaduobao.com/'.$v['img'];
 					$rew = explode(',',$v['reward']);
 					if(in_array($info['uid'],$rew)) {
 						$v['reward'] = 1;//已打赏
@@ -214,11 +216,11 @@ class card extends SystemAction {
 				$data['data']['id'] = $Cdata['id'];
 				$data['data']['title'] = $Cdata['title'];
 
-				// $data['data']['img'] = 'gangmaduobao.com/'.$Cdata['img'];
-				$imgs = explode(',',$Cdata['img']);
-				foreach($imgs as $k => $v) {
-					$data['data']['img'][] ="gangmaduobao.com/".$v; 
-				}
+				$data['data']['img'] = 'gangmaduobao.com/'.$Cdata['img'];
+				// $imgs = explode(',',$Cdata['img']);
+				// foreach($imgs as $k => $v) {
+				// 	$data['data']['img'][] ="gangmaduobao.com/".$v; 
+				// }
 				$data['data']['time'] = $Cdata['time'];
 				$data['data']['content'] = $Cdata['neirong'];
 				$data['data']['total'] = $Cdata['hueifu'];
@@ -243,11 +245,11 @@ class card extends SystemAction {
 			}else {//后台发帖
 				$data['data']['id']= $Cdata['id'];
 				$data['data']['title']= $Cdata['title'];
-				// $data['data']['img']= 'gangmaduobao.com/'.$Cdata['img'];
-				$imgs = explode(',',$Cdata['img']);
-				foreach($imgs as $k => $v) {
-					$data['data']['img'][] ="gangmaduobao.com/".$v; 
-				}
+				$data['data']['img']= 'gangmaduobao.com/'.$Cdata['img'];
+				// $imgs = explode(',',$Cdata['img']);
+				// foreach($imgs as $k => $v) {
+				// 	$data['data']['img'][] ="gangmaduobao.com/".$v; 
+				// }
 				$data['data']['time'] = $Cdata['time'];
 				$data['data']['total'] = $Cdata['hueifu'];
 				$data['data']['content']= $Cdata['neirong'];
@@ -362,7 +364,7 @@ class card extends SystemAction {
 			$imgname   = date('Ymdhis',time());
 			$new_file  = '';
 			$pic_path = 'images/upload/' . date("Ymd");
-			$imgurl = '';
+			// $imgurl = '';
 			if(!file_exists($pic_path)) {
 				if(!mkdir($pic_path, 0777)) {
 					$code = 100;
@@ -372,39 +374,62 @@ class card extends SystemAction {
 				}
 				
 			}
-			$imgs = explode('-',$img);
-			foreach($imgs as $key => $val) {
-				if($val) {
-					if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $val, $result)){
-						$type = $result[2];
-						$imgname  = $imgname.rand(100,999);
-						$new_file = "{$pic_path}/{$imgname}.{$type}";//图片存储路径
-						if (!file_put_contents($new_file, base64_decode(str_replace($result[1], '', $val)))){
-							$code = 100;
-							$msg = "发帖失败";
-							$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-							echo json_encode($json);die;
-						}
-					}else {
-						$tmp = base64_decode($val);
-						$imgname  = $imgname.rand(100,999);
-						$new_file = "{$pic_path}/{$imgname}.jpg";//图片存储路径
-						if (!file_put_contents($new_file, $tmp)){
-							$code = 100;
-							$msg = "发帖失败";
-							$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-							echo json_encode($json);die;
-						}	
+			// $imgs = explode('-',$img);//多图片上传
+			// foreach($imgs as $key => $val) {
+			// 	if($val) {
+			// 		if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $val, $result)){
+			// 			$type = $result[2];
+			// 			// $imgname  = $imgname.rand(100,999);
+			// 			$new_file = "{$pic_path}/{$imgname}.{$type}";//图片存储路径
+			// 			if (!file_put_contents($new_file, base64_decode(str_replace($result[1], '', $val)))){
+			// 				$code = 100;
+			// 				$msg = "发帖失败";
+			// 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			// 				echo json_encode($json);die;
+			// 			}
+			// 		}else {
+			// 			$tmp = base64_decode($val);
+			// 			// $imgname  = $imgname.rand(100,999);
+			// 			$new_file = "{$pic_path}/{$imgname}.jpg";//图片存储路径
+			// 			if (!file_put_contents($new_file, $tmp)){
+			// 				$code = 100;
+			// 				$msg = "发帖失败";
+			// 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			// 				echo json_encode($json);die;
+			// 			}	
+			// 		}
+			// 	}
+				// if($imgurl) {
+				// 	$imgurl .= ",".$new_file;
+				// }else {
+				// 	$imgurl = $new_file;
+				// }
+			// }
+
+			if($img) {
+				if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $img, $result)){
+					$type = $result[2];
+					$new_file = "{$pic_path}/{$imgname}.{$type}";//图片存储路径
+					if (!file_put_contents($new_file, base64_decode(str_replace($result[1], '', $img)))){
+						$code = 100;
+						$msg = "发帖失败";
+						$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+						echo json_encode($json);die;
 					}
-				}
-				if($imgurl) {
-					$imgurl .= ",".$new_file;
 				}else {
-					$imgurl = $new_file;
+					$tmp = base64_decode($img);
+					$new_file = "{$pic_path}/{$imgname}.jpg";//图片存储路径
+					if (!file_put_contents($new_file, $tmp)){
+						$code = 100;
+						$msg = "发帖失败";
+						$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+						echo json_encode($json);die;
+					}	
 				}
 			}
 			if($title && $content) {
-				$sql = "insert into `@#_quanzi_tiezi`(`qzid`,`hueiyuan`,`title`,`neirong`,`time`,`img`) values('$qzid','$user','$title','$content','$time','$imgurl')";
+				// $sql = "insert into `@#_quanzi_tiezi`(`qzid`,`hueiyuan`,`title`,`neirong`,`time`,`img`) values('$qzid','$user','$title','$content','$time','$imgurl')";
+				$sql = "insert into `@#_quanzi_tiezi`(`qzid`,`hueiyuan`,`title`,`neirong`,`time`,`img`) values('$qzid','$user','$title','$content','$time','$new_file')";
 				if($this->db->Query($sql)) {
 					$code = 200;
 					$msg = "发帖成功";
