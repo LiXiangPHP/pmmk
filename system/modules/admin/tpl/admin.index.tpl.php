@@ -200,6 +200,7 @@ function api_off_on_open(key){
             <?php if($info['yemian']){?> <li class="left_date"><a href="#" onClick="secBoard('nav',4,'template','界面管理');">界面管理</a></li><?php } ?>
             <?php if($info['yun']){?> <li class="left_date"><a href="#" onClick="secBoard('nav',5,'yunapp','云应用');">云应用</a></li><?php } ?>
             <?php if($info['yun']){?> <li class="left_date"><a href="#" onClick="secBoard('nav',6,'paoma','跑马管理');">跑马管理</a></li><?php } ?>
+            <?php if($info['yun']){?> <li class="left_date"><a href="#" onClick="secBoard('nav',7,'paoma','APP版本');">APP版本</a></li><?php } ?>
         </ul>
         <?php } ?>
      <ul class="left_date" id="content">
@@ -301,6 +302,10 @@ function api_off_on_open(key){
      <!-- <li class="head">充值卡管理</li>
         <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/czk/vote_admin/">充值卡管理</a></li>
          -->
+    </ul>
+    <ul class="left_date" id="app">
+        <li class="head">版本管理</li>
+         <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/admin/app/update">版本更新</a></li>
     </ul>
 	 <div style="padding:30px 10px; color:#ccc">
      	<p>
