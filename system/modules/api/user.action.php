@@ -201,6 +201,35 @@ class user extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
 		}
+	}
+
+	//忘记密码
+	public function json_reset() {
+		$code = '';
+		$msg  = '';
+		$data = array();
+		$db = System::load_sys_class('model');
+		$mobile = $_POST['mobile'];
+		$pwd = md5($_POST['password']);
+		if($pwd && $mobile) {
+			$res = $db->Query("update `@#_member` set `password` = '$pwd' where `mobile` = '$mobile'");
+			if($res) {
+				$code = 200;
+				$msg = "修改成功";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);
+			}else {
+				$code = 100;
+				$msg = "修改失败";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);
+			}
+		}else {
+			$code = 100;
+			$msg = "操作失败";
+			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			echo json_encode($json);
+		}
 	}	
 		
 }
