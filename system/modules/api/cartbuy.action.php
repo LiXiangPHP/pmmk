@@ -47,6 +47,12 @@ public function json_cartbuy(){
             $dizhi = $db->GetOne("SELECT * FROM `@#_member_dizhi` WHERE id = '$addressid'");
 //            print_r($dizhi);
             $members = $db->GetOne("SELECT * FROM `@#_member` WHERE uid = '$info[uid]'");
+            if($members['money'] < $moeny){
+                $code = 100;
+                $msg = "用户余额不足;购买失败";
+                $json = array('code' => $code, 'msg' => $msg);
+                echo json_encode($json);die;
+            }
 //            print_r($members);
             $uphoto = $members['img'];
 //            print_r($uphoto);
@@ -88,8 +94,9 @@ public function json_cartbuy(){
 //                print_r($shop['canyurenshu']);
                 $shop['goods_count_num'] = $codes_len;
                 $shop['title'] = addslashes($shop['title']);
-//                print_r( $shop['title']);
+//                print_r( $shop['title']);die;
                 $this->shoplist[$key] = $shop;
+//                print_r($shopids);
                 $uid = $info['uid'];
                 if($codes_len){
                     $insert_html.="('$dingdancode','$dingdancode_tmp','$uid','$username','$uphoto','$shop[id]','$shop[title]','$shop[qishu]','$codes_len','$money','$codes','$pay_type','$ip','$status','$time'),";
@@ -98,46 +105,48 @@ public function json_cartbuy(){
             $sql="INSERT INTO `@#_member_go_record` (`code`,`code_tmp`,`uid`,`username`,`uphoto`,`shopid`,`shopname`,`shopqishu`,`gonumber`,`moneycount`,`goucode`,`pay_type`,`ip`,`status`,`time`) VALUES ";
             $sql.=trim($insert_html,',');
             $dingdanadd = $db->Query($sql);
+//            print_r($dingdanadd);die;
             if(!empty($dingdanadd)){
-                $moneycount = $members['money'] - $moeny;
-                $memberdel = $db->Query("UPDATE `@#_member` SET `money`='$moneycount' WHERE uid='$info[uid]'");
-                if(!empty($memberdel)){
-                    $code = 100;
-                    $msg = "户余额不足，购买失败";
-                    $json = array('code' => $code, 'msg' => $msg);
-                    echo json_encode($json);die;
-                }
-            }
-            if ($db->Query("DELETE FROM `@#_shopcart` WHERE user_id='$info[uid]' and good_id in ($shopids)") !== false) {
-                $status='已付款,未发货,未完成';
-                if (is_array($Sdata)) {
-                    foreach ($Sdata['data'] as $k => $v) {
-                        $canyu = $db->GetOne("SELECT shenyurenshu,canjiarenshu FROM `@#_shoplist` WHERE id = '$v[id]'");
-                        $shenyu = $canyu['shenyurenshu'] - $v['renshu'];
-                        $canjia = $canyu['canjiarenshu'] + $v['renshu'];
-                        $renshuup = $db->Query("UPDATE `@#_shoplist` SET `shenyurenshu`='$shenyu',`canyurenshu` = '$canjia' WHERE id = '$v[id]'");
-                        if (empty($renshuup)){
-                            $code = 100;
-                            $msg = "购买失败";
-                            $json = array('code' => $code, 'msg' => $msg);
-                            echo json_encode($json);die;
+                    if ($db->Query("DELETE FROM `@#_shopcart` WHERE user_id='$info[uid]' and good_id in ($shopids)") !== false) {
+                        $status='已付款,未发货,未完成';
+                        if (is_array($Sdata)) {
+                            foreach ($Sdata['data'] as $k => $v) {
+                                $canyu = $db->GetOne("SELECT shenyurenshu,canyurenshu FROM `@#_shoplist` WHERE id = '$v[id]'");
+                                $shenyu = $canyu['shenyurenshu'] - $v['renshu'];
+                                $canjia = $canyu['canyurenshu'] + $v['renshu'];
+                                $renshuup = $db->Query("UPDATE `@#_shoplist` SET `shenyurenshu`='$shenyu',`canyurenshu` = '$canjia' WHERE id = '$v[id]'");
+                                if (empty($renshuup)){
+                                    $code = 100;
+                                    $msg = "商品表未更新;购买失败";
+                                    $json = array('code' => $code, 'msg' => $msg);
+                                    echo json_encode($json);die;
+                                }
+                            }
                         }
+                        $statusup = $db->Query("UPDATE `@#_member_go_record` SET `status`='$status' WHERE code In ($codes)");
+                        $moneycount = $members['money'] - $moeny;
+                        $memberdel = $db->Query("UPDATE `@#_member` SET `money`='$moneycount' WHERE uid='$info[uid]'");
+//                          print_r($memberdel);die;
+                        if(!empty($statusup) & !empty($memberdel)){
+                            $code = 200;
+                            $msg = "购买成功";
+                        } else {
+                            $code = 100;
+                            $msg = "订单状态未更新;购买失败";
+                        }
+                        $json = array('code' => $code, 'msg' => $msg);
+                        echo json_encode($json);
                     }
-                }
-                $ctatusup = $db->Query("UPDATE `@#_member_go_record` SET `status`='$status' WHERE code In ($codes)");
-                if(!empty($ctatusup)){
-                    $code = 200;
-                    $msg = "购买成功";
-                } else {
-                    $code = 100;
-                    $msg = "购买失败";
-                }
+            }else{
+                $code = 100;
+                $msg = "订单未添加，购买失败";
                 $json = array('code' => $code, 'msg' => $msg);
-                echo json_encode($json);
-                }
+                echo json_encode($json);die;
+            }
         }else{
             $json = array('code' => 300, 'msg' => '请登录', 'data' => $data);
             echo json_encode($json);
         }
     }
+
 }
