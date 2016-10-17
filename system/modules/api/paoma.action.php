@@ -211,7 +211,7 @@ class paoma extends SystemAction {
 		}
 		$page=System::load_sys_class('page');
 		$page->config($total,$num,$pagenum,"0");
-		$Sdata = $db->GetPage("SELECT result,issue,time  FROM `@#_bet_result` ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		$Sdata = $db->GetPage("SELECT result,issue,time  FROM `@#_bet_result` order by issue desc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 		foreach($Sdata as $v) {
 			
 			$result=  $v['result'];
@@ -582,12 +582,36 @@ class paoma extends SystemAction {
 		}
 		else
 		{
-			$user_bet = $db->GetList("SELECT * FROM `@#_bet` where `uid` = $uid ");
-		}
+			$pagenum = $_POST['p'];
+			$total = $db->GetCount("SELECT * FROM `@#_bet` where `uid` = $uid order by issue DESC");
+			$num = 10;
+			$yushu=$total%$num;
+			if($yushu > 0) {
+				$yeshu=floor($total/$num)+1;
+			}else {
+				$yeshu=floor($total/$num);
+			}
+			if($pagenum >= $yeshu) {
+				$pagenum = $yeshu;
+			}
+			$page=System::load_sys_class('page');
+			$page->config($total,$num,$pagenum,"0");
+			$user_bet = $db->GetPage("SELECT * FROM `@#_bet` where `uid` = $uid order by issue DESC",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 		
+			// if($user_bet) {
+			// 	$user_bet['ptotal'] = $yeshu;
+			// }
 
-		foreach ($user_bet as $k => $v) {
-			$result[]  = array("issue"=>$v['issue'],"name"=>$v['name'],"number"=>$v['number'],"profit"=>$v['profit']);
+			 // print_r($user_bet);die;
+		}
+			
+
+			foreach ($user_bet as $k => $v) {
+				$result[]  = array("issue"=>$v['issue'],"name"=>$v['name'],"number"=>$v['number'],"profit"=>$v['profit']);
+		}
+		if($yeshu)
+		{
+			$result['ptotal'] = $yeshu;
 		}
 		$code = 200;
 		echo json_encode(array('code'=>$code,'data'=>$result));die;
