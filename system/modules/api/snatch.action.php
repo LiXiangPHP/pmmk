@@ -10,6 +10,7 @@ class snatch extends SystemAction {
 		$mygm = $db->GetList("select shopqishu,shopid from `@#_member_go_record` where uid='$info[uid]' ");
 			//正在进行
 			if($type==1){
+			$data='';
 			$zhsz = array();
 						
 			foreach($mygm as $v){
@@ -57,7 +58,7 @@ class snatch extends SystemAction {
 			//已揭晓
 			if($type==2){
 			$zhsz = array();
-						
+			$data='';		
 			foreach($mygm as $v){
 				$zhsz[] = $db->GetList("select a.id,a.q_end_time,a.title,a.thumb,a.money,b.mobile from `@#_shoplist` as a,`@#_member` as b where a.q_uid=b.uid and a.qishu='$v[shopqishu]' and a.id='$v[shopid]' and  a.q_end_time is not null and a.q_user is not null ");				
 			}

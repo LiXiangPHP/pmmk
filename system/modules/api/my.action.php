@@ -365,7 +365,6 @@ class my extends SystemAction {
 		if ($info['code']==200) {
 			//积分纪录
 			if ($type==1) {	
-				$data='';
 				$pagenum = isset($_POST['pagenum']) ? $_POST['pagenum'] : null;
 				if(empty($pagenum)) {
 				$pagenum=1;
@@ -396,7 +395,6 @@ class my extends SystemAction {
 			}
 			//夺宝币记录
 			if ($type==2) {	
-				$data='';
 				$pagenum = isset($_POST['pagenum']) ? $_POST['pagenum'] : null;
 				if(empty($pagenum)) {
 				$pagenum=1;
