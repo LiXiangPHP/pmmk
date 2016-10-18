@@ -56,8 +56,7 @@ class pay {
 			$Cartlist = $this->scookie;
 		}else{
 			$Cartlist=json_decode(stripslashes(_getcookie('Cartlist')),true);
-		}	
-				
+		}
 		
 		$shopids='';			//商品ID
 		if(is_array($Cartlist)){			
