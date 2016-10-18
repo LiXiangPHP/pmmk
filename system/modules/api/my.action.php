@@ -435,7 +435,8 @@ class my extends SystemAction {
 	}
 	//晒单
 	public function shaidan()
-	{
+	{	
+		$data = array();
 		$db = System::load_sys_class('model');
 		$token = isset($_POST['token']) ? $_POST['token'] : "kong";
 		$info = System::token_uid($token);
@@ -451,22 +452,23 @@ class my extends SystemAction {
 			$aa = $db->GetOne("select title from `@#_shoplist` where `id`='$v[sd_shopid]' ");			
 			$shaidan[$k]['sd_shopid'] = strip_tags($aa['title']);
 			$shaidan[$k]['sd_content'] = strip_tags($v['sd_content']);
+			// $shaidan[$k]['sd_photolist'] = array_filter(explode(';',$v['sd_photolist']));
 			$arr = array_filter(explode(',',$v['sd_photolist']));
 			foreach ($arr as $key => $value) {
 				$arr[$key] = 'gangmaduobao.com/'.$value;
 			}
 			$shaidan[$k]['sd_photolist'] =  $arr;
-
+			$data['data'][] = $shaidan[$k];
 		}
 		if($shaidan) {
 			$uu = $db->GetOne("select username,img from `@#_member` where `uid`='$info[uid]' ");	
-			$shaidan['user'] = strip_tags($uu['username']);
-			$shaidan['userimg'] = "gangmaduobao.com/".strip_tags($uu['img']);
+			$data['user'] = strip_tags($uu['username']);
+			$data['userimg'] = "gangmaduobao.com/".strip_tags($uu['img']);
 		}
 		
 		// print_R($shaidan);die;
 		$code = 200;
-		echo json_encode(array("code"=>$code,"data"=>$shaidan));
+		echo json_encode(array("code"=>$code,"data"=>$data));
 	}
 
 }
