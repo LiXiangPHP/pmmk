@@ -25,7 +25,7 @@ public function cart_buy()
         $data = $_POST['data'];
         $uid = $_POST['uid'];    
         $info = System::token_uid($uid);
-        $uid = 694;
+        $uid = $info['uid'];
         $pay_checkbox= true ;
         $pay_type_id=false;
         $fufen = 0;     
