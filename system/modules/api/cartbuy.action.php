@@ -68,11 +68,14 @@ public function cart_buy()
             echo json_encode(array("code"=>$code,"msg"=>$msg));die;
         }
         if(($check)&($db->Query("DELETE FROM `@#_shopcart` WHERE user_id='$info[uid]' and good_id in ($shopids)") !== false)){
-            
-            echo "购买成功";die;
+            $code=200;
+            $msg ="购买成功";
+            echo json_encode(array("code"=>$code,"msg"=>$msg));die;
             
         }else{
-            echo "购买失败";die;
+            $code=100;
+            $msg ="购买失败";
+            echo json_encode(array("code"=>$code,"msg"=>$msg));die;
             //失败    
         }       
         exit;
