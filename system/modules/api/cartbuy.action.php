@@ -67,7 +67,7 @@ public function cart_buy()
             $msg = "商品支付失败";
             echo json_encode(array("code"=>$code,"msg"=>$msg));die;
         }
-        if(($check)&($db->Query("DELETE FROM `@#_shopcart` WHERE user_id='$info[uid]' and good_id in ($shop[id])") !== false)){
+        if(($check)&($db->Query("DELETE FROM `@#_shopcart` WHERE user_id='$info[uid]' and good_id in ($shopids)") !== false)){
             
             echo "购买成功";die;
             
