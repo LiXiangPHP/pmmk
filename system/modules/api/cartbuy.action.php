@@ -67,18 +67,15 @@ public function cart_buy()
             $msg = "商品支付失败";
             echo json_encode(array("code"=>$code,"msg"=>$msg));die;
         }
-        if($check){
+        if(($check)&($db->Query("DELETE FROM `@#_shopcart` WHERE user_id='$info[uid]' and good_id in ($shop[id])") !== false)){
             
-            echo "成功";die;
+            echo "购买成功";die;
             
         }else{
-            echo "失败";die;
+            echo "购买失败";die;
             //失败    
         }       
         exit;
-
-
-
 
 }
     public function init($uid=null,$pay_type=null,$fukuan_type='',$addmoney=''){    
@@ -364,7 +361,8 @@ public function cart_buy()
                     if($codes_len){
                         $insert_html.="('$dingdancode','$dingdancode_tmp','$uid','$username','$uphoto','$shop[id]','$shop[title]','$shop[qishu]','$codes_len','$money','$codes','$pay_type','$ip','$status','$time'),";     
                     }
-            }           
+            }
+//          print_r($shop[id]);die;
             $sql="INSERT INTO `@#_member_go_record` (`code`,`code_tmp`,`uid`,`username`,`uphoto`,`shopid`,`shopname`,`shopqishu`,`gonumber`,`moneycount`,`goucode`,`pay_type`,`ip`,`status`,`time`) VALUES ";
             $sql.=trim($insert_html,',');               
             //$this->db->Query("set global max_allowed_packet = 2*1024*1024*10");
