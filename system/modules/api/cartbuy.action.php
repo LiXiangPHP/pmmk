@@ -25,12 +25,11 @@ class cartbuy extends SystemAction {
         $data = $_POST['data'];
         $uid = $_POST['uid'];
         $info = System::token_uid($uid);
-        // if ($info['code']!==200) {
-        //     $json = array('code' => 300, 'msg' => '请登录', 'data' => $data);
-        //     echo json_encode($json);die;
-        // }
-        // $uid = $info['uid'];
-        $uid = 694;
+         if ($info['code']!==200) {
+             $json = array('code' => 300, 'msg' => '请登录', 'data' => $data);
+             echo json_encode($json);die;
+         }
+        $uid = $info['uid'];
         $pay_checkbox= true ;
         $pay_type_id=false;
         $fufen = 0;
