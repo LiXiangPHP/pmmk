@@ -64,7 +64,7 @@ class cartbuy extends SystemAction {
         // $pay->pay_type_bank = $pay_type_bank;
         $ok = $this->init($uid,$pay_type_id,'go_record');    //云购商品
         if($ok !== 'ok'){
-            $code=200;
+            $code=100;
             $msg = $ok;
             echo json_encode(array("code"=>$code,"msg"=>$msg));die;
         }
@@ -174,7 +174,8 @@ class cartbuy extends SystemAction {
                     unset($shoplist[$key]);
                 }
             }
-            if(count($shoplist) < 1){
+//            if(count($shoplist) < 1){
+            if(count($shopids) < 1){
                 $scookies_arr = '0';
                 $this->db->Autocommit_rollback();
                 if($shopguoqi){
