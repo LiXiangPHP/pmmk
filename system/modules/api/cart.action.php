@@ -38,6 +38,7 @@ class cart extends SystemAction {
     public function json_cartshow() {
         $uid = $_POST['uid'];
         $info = System::token_uid($uid);
+        $data = array();
         if ($info['code']==200) {
                 $db = System::load_sys_class('model');
                 $Sdata = $db->GetList("SELECT l.id,l.title,l.money,l.yunjiage,l.canyurenshu,l.shenyurenshu,l.thumb,c.num FROM `@#_shoplist` l,`@#_shopcart` c,`@#_member` m WHERE m.uid = '$info[uid]' AND l.id = c.good_id AND c.user_id =  m.uid");
@@ -55,7 +56,7 @@ class cart extends SystemAction {
             } else {
                 $code = 400;
                 $msg = "查询失败";
-                $json = array('code' => $code, 'msg' => $msg);
+                $json = array('code' => $code, 'msg' => $msg,'data' => $data);
                 echo json_encode($json);
             }
         }else {
