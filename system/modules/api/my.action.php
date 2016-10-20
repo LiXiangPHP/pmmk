@@ -370,7 +370,7 @@ class my extends SystemAction {
 				$pagenum=1;
 				}
 				$total = $db->GetCount("select * from `@#_member_account` where uid='$info[uid]' and pay like '%福分%'  ");	
-				$num = 10;
+				$num = 12;
 				$yushu = $total%$num;
 					if($yushu > 0) {
 						$yeshu=floor($total/$num)+1;
@@ -382,7 +382,7 @@ class my extends SystemAction {
 					}
 				$page=System::load_sys_class('page');
 				$page->config($total,$num,$pagenum,"0");		
-				$data = $db->GetPage("select type,content,money,time from `@#_member_account` where uid='$info[uid]' and pay like '%福分%' ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+				$data = $db->GetPage("select type,content,money,time from `@#_member_account` where uid='$info[uid]' and pay like '%福分%' order by time desc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 				if($data) {
 					$code = 200;
 					$msg = "查询成功";
@@ -400,7 +400,7 @@ class my extends SystemAction {
 				$pagenum=1;
 				}
 				$total = $db->GetCount("select * from `@#_member_account` where uid='$info[uid]' and pay like '%福分%'  ");	
-				$num = 10;
+				$num = 12;
 				$yushu = $total%$num;
 					if($yushu > 0) {
 						$yeshu=floor($total/$num)+1;
@@ -412,7 +412,7 @@ class my extends SystemAction {
 					}
 				$page=System::load_sys_class('page');
 				$page->config($total,$num,$pagenum,"0");		
-				$data = $db->GetPage("select type,content,money,time from `@#_member_account` where uid='$info[uid]' and pay like '%账户%' ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+				$data = $db->GetPage("select type,content,money,time from `@#_member_account` where uid='$info[uid]' and pay like '%账户%' order by time desc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 				if($data) {
 					$code = 200;
 					$msg = "查询成功";
