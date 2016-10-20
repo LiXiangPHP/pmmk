@@ -25,11 +25,12 @@ class cartbuy extends SystemAction {
         $data = $_POST['data'];
         $uid = $_POST['uid'];
         $info = System::token_uid($uid);
-        if ($info['code']!==200) {
-            $json = array('code' => 300, 'msg' => '请登录', 'data' => $data);
-            echo json_encode($json);die;
-        }
-        $uid = $info['uid'];
+        // if ($info['code']!==200) {
+        //     $json = array('code' => 300, 'msg' => '请登录', 'data' => $data);
+        //     echo json_encode($json);die;
+        // }
+        // $uid = $info['uid'];
+        $uid = 694;
         $pay_checkbox= true ;
         $pay_type_id=false;
         $fufen = 0;
@@ -48,6 +49,14 @@ class cartbuy extends SystemAction {
         }
         $Cartlist['MoenyCount'] = $data->money;
         $this->Cartlist = $Cartlist;
+        if(is_array($Cartlist)){
+            foreach($Cartlist as $key => $val){
+                $shopids.=intval($key).',';
+            }
+            $shopids=str_replace(',0','',$shopids);
+            $shopids=trim($shopids,',');
+
+        }
         // $pay=System::load_app_class('pay','pay');
         // //$pay->scookie = json_decode(base64_decode($_POST['cookies']));
 
@@ -60,7 +69,6 @@ class cartbuy extends SystemAction {
             echo json_encode(array("code"=>$code,"msg"=>$msg));die;
         }
         $check = $this->go_pay($pay_checkbox);
-
         if($check === 'not_pay'){
             $code=100;
             $msg = "未选择支付平台";
@@ -131,7 +139,6 @@ class cartbuy extends SystemAction {
             $shopids=trim($shopids,',');
 
         }
-
         $shoplist=array();      //商品信息
         if($shopids!=NULL){
             $shoplist=$this->db->GetList("SELECT * FROM `@#_shoplist` where `id` in($shopids) and `q_uid` is null for update",array("key"=>"id"));
