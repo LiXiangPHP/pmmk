@@ -50,12 +50,14 @@ class cart extends SystemAction {
             if (!empty($data)) {
                 $code = 200;
                 $msg = "查询成功";
+                $json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+                echo json_encode($json);
             } else {
-                $code = 100;
+                $code = 400;
                 $msg = "查询失败";
+                $json = array('code' => $code, 'msg' => $msg);
+                echo json_encode($json);
             }
-            $json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-            echo json_encode($json);
         }else {
             $json = array('code' => 300, 'msg' => '请登录', 'data' => $data);
             echo json_encode($json);
