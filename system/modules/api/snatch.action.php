@@ -7,7 +7,7 @@ class snatch extends SystemAction {
 		$token = isset($_POST['token']) ? $_POST['token'] : null;
 		$info = System::token_uid($token);
 		if ($info['code']==200) {
-		$mygm = $db->GetList("select shopqishu,shopid from `@#_member_go_record` where uid='$info[uid]' order by time desc  ");
+		$mygm = $db->GetList("select shopqishu,shopid from `@#_member_go_record` where uid='$info[uid]' ");
 			//正在进行
 			if($type==1){
 			$newdata=array();
@@ -60,7 +60,7 @@ class snatch extends SystemAction {
 			$zhsz = array();
 			$newdata=array();		
 			foreach($mygm as $v){
-				$zhsz[] = $db->GetList("select a.id,a.q_end_time,a.title,a.thumb,a.money,b.mobile from `@#_shoplist` as a,`@#_member` as b where a.q_uid=b.uid and a.qishu='$v[shopqishu]' and a.id='$v[shopid]' and  a.q_end_time is not null and a.q_user is not null  ");				
+				$zhsz[] = $db->GetList("select a.id,a.q_end_time,a.title,a.thumb,a.money,b.mobile from `@#_shoplist` as a,`@#_member` as b where a.q_uid=b.uid and a.qishu='$v[shopqishu]' and a.id='$v[shopid]' and  a.q_end_time is not null and a.q_user is not null ");				
 			}
 			$data=array_filter($zhsz,create_function('$v','return !empty($v);'));
 			foreach($data as $k=>$v){
