@@ -148,7 +148,7 @@ class cartbuy extends SystemAction {
         }
         $MoenyCount= 0;
         $shopguoqi = 0;
-        if(count($shoplist)>=1){
+        if(count($shopids)>=1){
             $scookies_arr = array();
             $scookies_arr['MoenyCount'] = 0;
             foreach($Cartlist as $key => $val){
