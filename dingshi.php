@@ -7,7 +7,7 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 		$bet = $db->GetOne("SELECT * FROM `@#_bet` where `returns` = 0 order by time desc");
 		$issue = $bet['issue'];
 		$bet_result = $db->GetOne("SELECT * FROM `@#_bet_result` where `issue` = $issue");
-		if(!$bet_result)
+		if($bet_result)
 		{
 			$res = $bet_result;
 		}
@@ -38,12 +38,12 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 					$db->Autocommit_rollback();
 				}
 				$db->Autocommit_commit();
-				// echo date("Y-m-d H:i:s");
+				echo date("Y-m-d H:i:s").$v['id']."收益".$profit;
 			}
 			else
 			{
 				$query1 = $db->Query("UPDATE `@#_bet` SET `returns`='1',`profit`='0' WHERE (`id`='$v[id]')");
-				// echo date("Y-m-d H:i:s");
+				echo date("Y-m-d H:i:s").$v['id']."收益0";
 			}
 		}
 	function betopen($issue = "")
