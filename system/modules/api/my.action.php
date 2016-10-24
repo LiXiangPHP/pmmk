@@ -464,6 +464,9 @@ class my extends SystemAction {
 			$uu = $db->GetOne("select username,img from `@#_member` where `uid`='$info[uid]' ");	
 			$data['user'] = strip_tags($uu['username']);
 			$data['userimg'] = "gangmaduobao.com/".strip_tags($uu['img']);
+		}else {
+			$code = 100;
+			echo json_encode(array("code"=>$code,"data"=>$data)); die;
 		}
 		
 		// print_R($shaidan);die;
