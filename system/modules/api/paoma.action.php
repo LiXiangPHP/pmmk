@@ -26,7 +26,7 @@ class paoma extends SystemAction {
 
 		// }
 		// echo 111;die;
-		$issue=$db->GetOne("select issue from `@#_bet` WHERE `issue` LIKE '%".$nianyue."%' order by issue DESC");
+		$issue=$db->GetOne("select issue from `@#_bet_result` WHERE `issue` LIKE '%".$nianyue."%' order by issue DESC");
 		$issue = $issue['issue'];
 		if($issue)
 		{
@@ -35,7 +35,7 @@ class paoma extends SystemAction {
 		}
 		else
 		{
-			$lastissue=$db->GetOne("select issue from `@#_bet`  order by issue DESC");
+			$lastissue=$db->GetOne("select issue from `@#_bet_result`  order by issue DESC");
 			$lastissue = $lastissue['issue'];
 			$issue = $nianyue."1";
 		}
@@ -54,20 +54,20 @@ class paoma extends SystemAction {
 		$s = 300-($sytime - $ge*300);
 		$WaitTime = 0;
 		
-		if($s > 125 )
+		if($s > 40 )
 		{
 			$status = 'wait';
-			$WaitTime = $s-125;
+			$WaitTime = $s-40;
 		}
 
-		if($s >5 && $s<=125)
+		if($s >5 && $s<=25)
 		{
 			$status = 'game';
 			$GameTime = $s;
 		}
 		if(!$GameTime)
 		{
-			$GameTime = 120;
+			$GameTime = 20;
 		}
 		if($s < 5 )
 		{
@@ -146,7 +146,7 @@ class paoma extends SystemAction {
 		$ge = intval(floor($sytime/300));
 		//剩余多少秒
 		$s = 300-($sytime - $ge*300);
-		if($s <=140)
+		if($s <=40)
 		{
 			$code = 100;
 			$msg = '不能下注';

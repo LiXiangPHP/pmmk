@@ -295,8 +295,8 @@ function api_off_on_open(key){
         <!-- <li><a href="javascript:void(0);" src="<?php echo G_ADMIN_PATH; ?>/fund/fundset">公益基金</a></li> -->
          <li><a href="javascript:void(0);" src="<?php echo WEB_PATH; ?>/admin/paoma/show">设置赔率</a></li>
     <li><a href="javascript:void(0);" src="<?php echo G_ADMIN_PATH; ?>/paoma/betlist">下注列表</a></li>
-    <li><a href="javascript:void(0);" src="<?php echo G_ADMIN_PATH; ?>/paoma/betset">下注设置</a></li>
-    <li><a href="javascript:void(0);" src="<?php echo G_ADMIN_PATH; ?>/auto_register/show">往期记录</a></li>
+    <!-- <li><a href="javascript:void(0);" src="<?php echo G_ADMIN_PATH; ?>/paoma/betset">下注设置</a></li> -->
+    <li><a href="javascript:void(0);" src="<?php echo G_ADMIN_PATH; ?>/admin/paoma/lastshow">往期记录</a></li>
 
     
      <!-- <li class="head">充值卡管理</li>

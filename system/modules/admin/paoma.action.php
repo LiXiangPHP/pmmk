@@ -50,6 +50,7 @@ class paoma extends admin {
 		 // print_R($option_list);die;
 		include $this->tpl(ROUTE_M,'paoma.lists');
 	}
+
 	public function update_odds()
 	{
 		$odds = $_POST['odds'];
@@ -116,6 +117,52 @@ class paoma extends admin {
 		$betlist=$this->db->GetPage("SELECT * FROM `@#_bet` WHERE $list_where",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0,));
 		include $this->tpl(ROUTE_M,'bet.lists');
 
+	}
+	public function lastshow()
+	{
+		$this->ment=array(
+						array("lists","下注管理",ROUTE_M.'/'.ROUTE_C."/lastshow"),
+						array("qishu","期数倒序",ROUTE_M.'/'.ROUTE_C."/lastshow/qishu"),
+						array("money","期数正序",ROUTE_M.'/'.ROUTE_C."/lastshow/qishuasc"),
+						array("money","赔率倒序",ROUTE_M.'/'.ROUTE_C."/lastshow/peilv"),
+						array("money","赔率正序",ROUTE_M.'/'.ROUTE_C."/lastshow/peilvasc"),
+					
+		);		
+	    $cateid=$this->segment(4);
+	 //    $issue=$this->db->GetOne("SELECT issue FROM `@#_bet` order by `issue` DESC limit 1");
+		// $issue = $issue['issue'];
+		$list_where = "1 = 1";
+		if($cateid){
+
+			if($cateid=='qishu'){
+				$list_where .= " order by `issue` DESC";
+			}
+			if($cateid=='qishuasc'){
+				$list_where .= " order by `issue` ASC";
+			}
+			if($cateid=='peilv'){
+				$list_where .= " order by `odds` DESC";
+			}
+			if($cateid=='peilvasc'){
+				$list_where .= " order by `odds` ASC";
+			}
+			if($cateid==''){
+				$list_where .= "  order by `time` DESC";
+			}
+					
+		}else{
+			$list_where .= " order by `time` DESC";
+		}		
+		// echo $list_where;die;
+		
+		$num=20;
+		$total=$this->db->GetCount("SELECT COUNT(*) FROM `@#_bet` WHERE $list_where"); 
+		$page=System::load_sys_class('page');
+		if(isset($_GET['p'])){$pagenum=$_GET['p'];}else{$pagenum=1;}	
+		$page->config($total,$num,$pagenum,"0");
+		$betlist=$this->db->GetPage("SELECT * FROM `@#_bet` WHERE $list_where",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0,));
+		// print_r($total);die;
+		include $this->tpl(ROUTE_M,'bet.lists');
 	}
 	public function bet_del()
 	{
