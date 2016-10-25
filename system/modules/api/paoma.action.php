@@ -8,6 +8,24 @@ class paoma extends SystemAction {
 		$time = time();
 		$nianyue = date("Ymd",$time);
 		$qihao = date("Y/m/d",$time);
+		// for ($i=2; $i < 12; $i++) { 
+		// 	$number1 = "大";
+		// 	$number2 = "小";
+		// 	$number3 = "单";
+		// 	$number4 = "双";
+		// 	$odds = '1.00000';
+		// 	$sql1="INSERT INTO `@#_option_detail`(number,odds,oid)VALUES('$number1','$odds','$i')";
+		// 	$sqlreg = $db->Query($sql1);
+		// 	$sql2="INSERT INTO `@#_option_detail`(number,odds,oid)VALUES('$number2','$odds','$i')";
+		// 	$sqlreg = $db->Query($sql2);
+		// 	$sql3="INSERT INTO `@#_option_detail`(number,odds,oid)VALUES('$number3','$odds','$i')";
+		// 	$sqlreg = $db->Query($sql3);
+		// 	$sql4="INSERT INTO `@#_option_detail`(number,odds,oid)VALUES('$number4','$odds','$i')";
+		// 	$sqlreg = $db->Query($sql4);
+			
+
+		// }
+		// echo 111;die;
 		$issue=$db->GetOne("select issue from `@#_bet` WHERE `issue` LIKE '%".$nianyue."%' order by issue DESC");
 		$issue = $issue['issue'];
 		if($issue)
@@ -84,14 +102,14 @@ class paoma extends SystemAction {
 		$option=$db->GetList("select * from `@#_option`");
 		foreach ($option as $k => $v) {
 			// print_r($v);die;
-			$detail[$v['name']]=$db->GetList("select number,odds from `@#_option_detail` where `oid` = '$v[id]' order by number ASC"  );
+			$detail[$v['name']]=$db->GetList("select number,odds from `@#_option_detail` where `oid` = '$v[id]' order by id ASC"  );
 			
 		}
 		$NowResult = '';
 		$code = 200;
 		
 
-
+		// print_r($detail);die;
 
 		$data = array('issue'=>$issue,'lastissue'=>$lastissue,'qihao'=>$qihao,'status'=>$status,'WaitTime'=>$WaitTime,'GameTime'=>$GameTime,'detail'=>$detail,'LastResult'=>$LastResult,'sum'=>$sum,'NowResult'=>$NowResult,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'PrizeTime'=>$PrizeTime);
 		$json = array('code' => $code,'data'=>$data);
