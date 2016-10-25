@@ -53,11 +53,10 @@ class paoma extends SystemAction {
 		//剩余多少秒
 		$s = 300-($sytime - $ge*300);
 		$WaitTime = 0;
-		
-		if($s > 40 )
+		if($s > 25 )
 		{
 			$status = 'wait';
-			$WaitTime = $s-40;
+			$WaitTime = $s-25;
 		}
 
 		if($s >5 && $s<=25)
