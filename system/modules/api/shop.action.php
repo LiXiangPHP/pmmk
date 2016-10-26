@@ -14,6 +14,8 @@ class shop extends SystemAction {
 		$msg = '';
 		$data = array();
 		$data = $this->db->GetList("select cateid,name from `@#_category` where model = 1 and parentid != 0");
+		$arr = $this->db->GetList("select cateid,name from `@#_category` where model = 1 and parentid = 0 and channel = 111");
+		$data = array_merge($arr,$data);
 		// echo "<pre>";
 		// print_r($data);die;
 		if($data) {
