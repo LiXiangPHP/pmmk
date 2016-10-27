@@ -170,8 +170,8 @@ class shop extends SystemAction {
 			}else {
 				$data['ustate'] = "您还未参与本期夺宝";
 			}
-			echo "<pre>";
-			print_r($data);die;
+			// echo "<pre>";
+			// print_r($data);die;
 			if($data) {
 				$code = 200;
 				$msg = "查询成功";
