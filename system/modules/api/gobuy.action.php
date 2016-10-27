@@ -77,21 +77,15 @@ class gobuy extends SystemAction {
         if(!$check){
             $code=100;
             $msg = "商品支付失败";
-            $cartdel = $db->Query("DELETE FROM `@#_shopcart` WHERE user_id='$uid' and good_id in ($shopids)");
             echo json_encode(array("code"=>$code,"msg"=>$msg));die;
         }
         if($check){
-            $cartdel = $db->Query("DELETE FROM `@#_shopcart` WHERE user_id='$uid' and good_id in ($shopids)");
-            if($cartdel!== false){
                 $code=200;
                 $msg ="购买成功";
                 echo json_encode(array("code"=>$code,"msg"=>$msg));die;
-            }
-
         }else{
             $code=100;
             $msg ="购买失败";
-            $cartdel = $db->Query("DELETE FROM `@#_shopcart` WHERE user_id='$uid' and good_id in($shopids)");
             echo json_encode(array("code"=>$code,"msg"=>$msg));die;
             //失败
         }
@@ -181,13 +175,13 @@ class gobuy extends SystemAction {
                 if($shopguoqi){
                     return '限时揭晓过期商品不能购买!';
                 }else{
-                    return '购物车里没有商品!';
+                    return '没有选择商品!';
                 }
             }
         }else{
             $scookies_arr = '0';
             $this->db->Autocommit_rollback();
-            return '购物车里商品已经卖完或已下架!';
+            return '商品已经卖完或已下架!';
         }
 
 
