@@ -7,7 +7,7 @@ class snatch extends SystemAction {
 		$token = isset($_POST['token']) ? $_POST['token'] : null;
 		$info = System::token_uid($token);
 		if ($info['code']==200) {
-		$mygm = $db->GetList("select shopqishu,shopid from `@#_member_go_record` where uid='$info[uid]' ");
+		$mygm = $db->GetList("select time,shopqishu,shopid from `@#_member_go_record` where uid='$info[uid]' ");
 			//正在进行
 			if($type==1){
 			$newdata=array();
@@ -25,14 +25,15 @@ class snatch extends SystemAction {
 			foreach($newdata as $k=>$v) {
 			$newdata[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
 			}
-			if($newdata) {
+			$nndata = array_reverse($newdata);
+			if($nndata) {
 				$code = 200;
 				$msg = "查询成功";
 			}else {
 				$code = 400;
 				$msg = "数据为空";
 			}
-			$json = array('type' => $type,'code' => $code, 'msg' => $msg, 'data' => $newdata);
+			$json = array('type' => $type,'code' => $code, 'msg' => $msg, 'data' => $nndata);
 			echo json_encode($json);			
 			}
 
@@ -71,6 +72,7 @@ class snatch extends SystemAction {
 			foreach($newdata as $k=>$v) {
 			$newdata[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
 			}
+			$nndata = array_reverse($newdata);
 			if($newdata) {
 				$code = 200;
 				$msg = "查询成功";
@@ -78,12 +80,12 @@ class snatch extends SystemAction {
 				$code = 400;
 				$msg = "数据为空";
 			}
-			$json = array('type' => $type,'code' => $code, 'msg' => $msg, 'data' => $newdata);
+			$json = array('type' => $type,'code' => $code, 'msg' => $msg, 'data' => $nndata);
 			echo json_encode($json);			
 			}
 
 		}else{
-			$json = array('code' => 300, 'msg' => '请登录', 'data' => $newdata);
+			$json = array('code' => 300, 'msg' => '请登录');
 			echo json_encode($json);
 		}	
 		
