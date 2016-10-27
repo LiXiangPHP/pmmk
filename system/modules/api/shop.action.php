@@ -15,7 +15,7 @@ class shop extends SystemAction {
 		$data = array();
 		$data = $this->db->GetList("select cateid,name from `@#_category` where model = 1 and parentid != 0");
 		$arr = $this->db->GetList("select cateid,name from `@#_category` where model = 1 and parentid = 0 and channel = 111");
-		
+		$data = array_merge($arr,$data);
 		// echo "<pre>";
 		// print_r($data);die;
 		if($data) {
@@ -149,7 +149,7 @@ class shop extends SystemAction {
 			echo json_encode($json);die;
 		}
 		if($gid) {
-			$data = $this->db->GetOne("SELECT id, qishu periods,title,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
+			$data = $this->db->GetOne("SELECT id, qishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
 			if($data['remain'] == 0) {
 				$data['state'] = "已揭晓";
 			}else {
@@ -170,8 +170,8 @@ class shop extends SystemAction {
 			}else {
 				$data['ustate'] = "您还未参与本期夺宝";
 			}
-			// echo "<pre>";
-			// print_r($data);die;
+			echo "<pre>";
+			print_r($data);die;
 			if($data) {
 				$code = 200;
 				$msg = "查询成功";
@@ -384,7 +384,7 @@ class shop extends SystemAction {
 			$pagenum=1;
 		}
 		if($keywords) {
-			$total = $this->db->GetCount("select * from `@#_shoplist` where `title` like '%$keywords%' and `shenyurenshu` > 0");
+			$total = $this->db->GetCount("select * from `@#_shoplist` where `title` like '%$keywords%'");
 			$num = 10;
 			$yushu=$total%$num;
 			if($yushu > 0) {
@@ -397,7 +397,7 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$Sdata = $this->db->GetPage("select id,`qishu` periods,`title`,`thumb`,`money`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain from `@#_shoplist` where title like '%$keywords%' and `shenyurenshu` > 0",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$Sdata = $this->db->GetPage("select id,`qishu` periods,`title`,`thumb`,`money`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain from `@#_shoplist` where title like '%$keywords%' ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			foreach($Sdata as $v) {
 				if($v['thumb']) {
 					$v['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
