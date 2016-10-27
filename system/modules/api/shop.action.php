@@ -149,7 +149,7 @@ class shop extends SystemAction {
 			echo json_encode($json);die;
 		}
 		if($gid) {
-			$data = $this->db->GetOne("SELECT id, qishu periods,title,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
+			$data = $this->db->GetOne("SELECT id, qishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
 			if($data['remain'] == 0) {
 				$data['state'] = "已揭晓";
 			}else {
@@ -170,8 +170,8 @@ class shop extends SystemAction {
 			}else {
 				$data['ustate'] = "您还未参与本期夺宝";
 			}
-			// echo "<pre>";
-			// print_r($data);die;
+			echo "<pre>";
+			print_r($data);die;
 			if($data) {
 				$code = 200;
 				$msg = "查询成功";
