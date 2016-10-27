@@ -12,6 +12,15 @@ class cart extends SystemAction {
         if ($info['code']==200) {
             $db = System::load_sys_class('model');
             $uidm = $db->GetOne("SELECT * FROM `@#_shopcart` WHERE good_id = '$id' AND user_id = '$info[uid]'");
+            $shenyu = $db->GetOne("SELECT shenyurenshu FROM `@#_shoplist` WHERE id = '$id'");
+//            print_r($shenyu);die;
+//            print_r($uidm);die;
+            if($num>$shenyu['shenyurenshu']){
+                $code = 100;
+                $msg = "购买人数大于剩余人数";
+                $json = array('code' => $code, 'msg' => $msg);
+                echo json_encode($json);die;
+            }
             if(!empty($uidm)){
                 $numm =$num + $uidm['num'];
                 $numadd = $db->Query("UPDATE `@#_shopcart` SET num ='$numm' WHERE good_id = '$id' AND user_id = '$info[uid]'");
