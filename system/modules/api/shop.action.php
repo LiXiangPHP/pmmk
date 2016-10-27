@@ -15,7 +15,7 @@ class shop extends SystemAction {
 		$data = array();
 		$data = $this->db->GetList("select cateid,name from `@#_category` where model = 1 and parentid != 0");
 		$arr = $this->db->GetList("select cateid,name from `@#_category` where model = 1 and parentid = 0 and channel = 111");
-		$data = array_merge($arr,$data);
+		
 		// echo "<pre>";
 		// print_r($data);die;
 		if($data) {
@@ -149,7 +149,7 @@ class shop extends SystemAction {
 			echo json_encode($json);die;
 		}
 		if($gid) {
-			$data = $this->db->GetOne("SELECT id, qishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
+			$data = $this->db->GetOne("SELECT id, qishu periods,title,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
 			if($data['remain'] == 0) {
 				$data['state'] = "已揭晓";
 			}else {
