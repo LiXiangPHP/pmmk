@@ -22,11 +22,46 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 		$result1 = array();
 		foreach ($result as $key => $value) {
 			$result1[] = $option[$key].$value;
+			if($value%2==0)
+			{
+				$result1[] = $option[$key].双;
+			}
+			else{
+				$result1[] = $option[$key].单;
+			}
+			if($value >= 5 )
+			{
+				$result1[] = $option[$key].大;
+			}
+			else{
+				$result1[] = $option[$key].小;
+			}
+
 		}
 		$result1[] = "冠亚军和".$sum;
+		if($sum%2==0)
+		{
+			$result1[] = "冠亚军和双";
+		}
+		else
+		{
+			$result1[] = "冠亚军和单";	
+		}
+		if($sum >=11)
+		{
+			$result1[] = "冠亚军和大";
+		}
+		else
+		{
+			$result1[] = "冠亚军和小";
+		}
+
+		// print_R($result1);die;
 		foreach ($bet as $k => $v) {
+			// echo $v['name'];die;
 			if(in_array($v['name'],$result1))
 			{
+				// echo 111;die;
 				$profit = $v['number']*$v['odds'];
 				$members = $db->GetOne("SELECT * FROM `@#_member` where `uid` = '$v[uid]'");
 				$db->Autocommit_start();

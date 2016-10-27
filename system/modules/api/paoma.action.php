@@ -31,7 +31,9 @@ class paoma extends SystemAction {
 		if($issue)
 		{
 			$lastissue = $issue;
-			$issue = $lastissue+1;
+			$lastissue1 = substr($issue,8);
+			$issue = $lastissue1+1;
+			$issue = $nianyue.$issue;
 		}
 		else
 		{
