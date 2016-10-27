@@ -26,7 +26,7 @@ class paoma extends SystemAction {
 
 		// }
 		// echo 111;die;
-		$issue=$db->GetOne("select issue from `@#_bet_result` WHERE `issue` LIKE '%".$nianyue."%' order by issue DESC");
+		$issue=$db->GetOne("select issue from `@#_bet_result` WHERE `issue` LIKE '%".$nianyue."%' order by id DESC");
 		$issue = $issue['issue'];
 		if($issue)
 		{
@@ -41,6 +41,7 @@ class paoma extends SystemAction {
 			$lastissue = $lastissue['issue'];
 			$issue = $nianyue."1";
 		}
+
 		$aa = date("h:i:s",$time);
 		// echo $time.'|';
 		//初始时间
