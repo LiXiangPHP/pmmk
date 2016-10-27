@@ -31,8 +31,12 @@ editurl['imageManager']='<?php echo G_ADMIN_PATH; ?>/ueditor/imagemanager';
 <div class="table_form lr10">
 <form method="post" action="">
 	<table width="100%"  cellspacing="0" cellpadding="0">
-		
-		 <tr>
+		<tr>
+			<td align="right">问题详情：</td>
+			<td><textarea  disabled="disable" class="wid400"  style="height:60px" ><?php echo $info['issue']; ?></textarea>
+            </td>
+		</tr>
+		<tr>
 			<td align="right">回复详情：</td>
 			<td><textarea name="description" class="wid400" onKeyUp="gbcount(this,300,'textdescription');" style="height:60px"><?php echo $info['reply']; ?></textarea><br> <span>还能输入<b id="textdescription">300</b>个字符</span>
             </td>
