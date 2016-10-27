@@ -147,7 +147,11 @@ class my extends SystemAction {
 		
 			$arrs = array();
 			for($k=0;$k <= $member['sign_in_time'];$k++) {
-				$arrs[] = date('Y-m-d',strtotime('-'.$k.' days',$member['sign_in_date']));
+				if($k == $member['sign_in_time']) {
+					$arrs[] = date('Y-m-d',$member['sign_in_date']);
+				}else {
+					$arrs[] = date('Y-m-d',strtotime('-'.$k.' days',$member['sign_in_date']));
+				}
 			}
 
 			foreach($arr as $k => $val) {

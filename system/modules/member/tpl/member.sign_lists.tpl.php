@@ -47,7 +47,7 @@ function signs(id){
 		<span>[<a onclick="signs(<?php echo $v['id'];?>)" href="javascript:;">删除</a>]</span>
 		</td>		
 	</tr>
-	<?php } ?> 
+	<?php } ?>
 </table>
 
 <?php if($total>$num) {?> 
