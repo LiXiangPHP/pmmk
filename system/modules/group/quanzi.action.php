@@ -13,7 +13,7 @@ class quanzi extends admin {
 			array("addcard","添加帖子",ROUTE_M.'/'.ROUTE_C."/insert"),	
 			array("addcate","待审核",ROUTE_M.'/'.ROUTE_C."/shenhe_list/tiezi"),	
 			//array("addcate","帖子回复查看",ROUTE_M.'/'.ROUTE_C."/liuyan"),
-			array("design","裳积分",ROUTE_M.'/'.ROUTE_C."/design"),	
+			// array("design","裳积分",ROUTE_M.'/'.ROUTE_C."/design"),	
 		);
 		$this->db=System::load_sys_class("model");
 	} 
