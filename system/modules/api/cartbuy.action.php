@@ -30,8 +30,9 @@ class cartbuy extends SystemAction {
              echo json_encode($json);die;
          }
         $uid = $info['uid'];
+        $this->address_id = $_POST['address_id'];
         // $uid = 694;
-        $pay_checkbox= true ;
+        $pay_checkbox= true;
         $pay_type_id=false;
         $fufen = 0;
         $db = System::load_sys_class('model');
@@ -386,11 +387,11 @@ class cartbuy extends SystemAction {
 
             $this->shoplist[$key] = $shop;
             if($codes_len){
-                $insert_html.="('$dingdancode','$dingdancode_tmp','$uid','$username','$uphoto','$shop[id]','$shop[title]','$shop[qishu]','$codes_len','$money','$codes','$pay_type','$ip','$status','$time'),";
+                $insert_html.="('$dingdancode','$dingdancode_tmp','$uid','$username','$uphoto','$shop[id]','$shop[title]','$shop[qishu]','$codes_len','$money','$codes','$pay_type','$ip','$status','$time','$this->address_id'),";
             }
         }
-        $sql="INSERT INTO `@#_member_go_record` (`code`,`code_tmp`,`uid`,`username`,`uphoto`,`shopid`,`shopname`,`shopqishu`,`gonumber`,`moneycount`,`goucode`,`pay_type`,`ip`,`status`,`time`) VALUES ";
-
+        $sql="INSERT INTO `@#_member_go_record` (`code`,`code_tmp`,`uid`,`username`,`uphoto`,`shopid`,`shopname`,`shopqishu`,`gonumber`,`moneycount`,`goucode`,`pay_type`,`ip`,`status`,`time`,`address_id`) VALUES ";
+        // echo $this->address_id;die;
         $sql.=trim($insert_html,',');
         //$this->db->Query("set global max_allowed_packet = 2*1024*1024*10");
         // echo $sql;die;
