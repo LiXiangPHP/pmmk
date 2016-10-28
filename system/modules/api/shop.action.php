@@ -214,9 +214,15 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$Pdata = $this->db->GetPage("SELECT title,username,img,user_ip ip,qishu periods,q_user_code gcode,canyurenshu part, q_end_time etime FROM `@#_shoplist` a, `@#_member` b where q_showtime = 'N' and q_user_code IS NOT NULL and sid = '$item[sid]' and a.q_uid = b.uid",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$Pdata = $this->db->GetPage("SELECT title,qishu periods,q_user_code gcode,canyurenshu part, q_end_time etime, q_user FROM `@#_shoplist` where q_showtime = 'N' and q_user_code IS NOT NULL and sid = '$item[sid]' ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+
 			foreach($Pdata as $v) {
-				$v['img'] = "gangmaduobao.com/statics/uploads/".$v['img'];
+				$user = unserialize($v['q_user']);
+				$v['username'] = $user['username'];
+				$v['img'] = "gangmaduobao.com/statics/uploads/".$user['img'];
+				$ip = $this->db->GetOne("select ip from `@#_member` where uid = '$user[uid]'");
+				$v['ip'] = $ip['ip'];
+				unset($v['q_user']);
 				$data['data'][] = $v;
 			}
 			if($data['data']) {
