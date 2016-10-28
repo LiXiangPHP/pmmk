@@ -173,8 +173,8 @@ class cartbuy extends SystemAction {
                     unset($shoplist[$key]);
                 }
             }
-//            if(count($shoplist) < 1){
-            if(count($shopids) < 1){
+           if(count($shoplist) < 1){
+            // if(count($shopids) < 1){
                 $scookies_arr = '0';
                 $this->db->Autocommit_rollback();
                 if($shopguoqi){
