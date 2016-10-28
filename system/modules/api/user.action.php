@@ -23,7 +23,8 @@ class user extends SystemAction {
 				$db->Query("UPDATE `@#_member` SET `user_ip` = '$user_ip',`login_time` = '$time', `token` = '$token' where `uid` = '$member[uid]'");
 				$code = 200;
 				$msg = "";
-				$data = $token;
+				$yaoqing = "10000".$member[uid];
+				$data = array("token"=>$token,"yaoqing"=>$yaoqing);
 			
 			}
 
@@ -41,7 +42,10 @@ class user extends SystemAction {
 		$name=$_POST['username'];
 		$password=$_POST['password'];
 		$verify=$_POST['verify'];
+		$yaoqing=substr($_POST['yaoqing'],5);
+		// echo $yaoqing;die;
 		$code = $_COOKIE['code'];
+
 		// if($verify != $code)
 		// {
 		// 	$code = 100;
@@ -68,7 +72,7 @@ class user extends SystemAction {
 
 		$time=time();
 		$userpassword=md5($password);
-		$sql="INSERT INTO `@#_member`(username,mobile,password,img,emailcode,mobilecode,time)VALUES('$name','$name','$userpassword','photo/member.jpg','-1','1','$time')";
+		$sql="INSERT INTO `@#_member`(username,mobile,password,img,emailcode,mobilecode,time,yaoqing)VALUES('$name','$name','$userpassword','photo/member.jpg','-1','1','$time','$yaoqing')";
 		$sqlreg = $db->Query($sql);
 		if($sqlreg)
 		{
