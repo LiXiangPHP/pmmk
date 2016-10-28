@@ -30,6 +30,7 @@ class cartbuy extends SystemAction {
              echo json_encode($json);die;
          }
         $uid = $info['uid'];
+        // $uid = 694;
         $pay_checkbox= true ;
         $pay_type_id=false;
         $fufen = 0;
@@ -235,6 +236,10 @@ class cartbuy extends SystemAction {
 
             return $pay_1;
         }
+        else
+        {
+            return false;
+        }
         if(!is_array($this->pay_type)){
             return 'not_pay';
         }
@@ -262,7 +267,6 @@ class cartbuy extends SystemAction {
         $fufen = System::load_app_config("user_fufen",'','member');
 
         $query_1 = $this->set_dingdan('账户','A');
-
         /*会员购买过账户剩余金额*/
         $Money = $this->members['money'] - $this->MoenyCount + $this->fufen_to_money;
         $query_fufen = true;
@@ -273,13 +277,17 @@ class cartbuy extends SystemAction {
             $pay_zhifu_name = '福分';
             $this->MoenyCount = $this->fufen;
         }
-
+        // echo $this->MoenyCount;die;
         //更新用户账户金额
-        $query_2 = $this->db->Query("UPDATE `@#_member` SET `money`='$Money' WHERE (`uid`='$uid')");            //金额
-        $query_3 = $info = $this->db->GetOne("SELECT * FROM  `@#_member` WHERE (`uid`='$uid') LIMIT 1");
-        $query_4 = $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('$uid', '-1', '$pay_zhifu_name', '云购了商品', '{$this->MoenyCount}', '$time')");
-        $query_5 = true;
-        $query_insert = true;
+        if($query_1)
+        {
+            $query_2 = $this->db->Query("UPDATE `@#_member` SET `money`='$Money' WHERE (`uid`='$uid')");            //金额
+            $query_3 = $info = $this->db->GetOne("SELECT * FROM  `@#_member` WHERE (`uid`='$uid') LIMIT 1");
+            $query_4 = $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('$uid', '-1', '$pay_zhifu_name', '云购了商品', '{$this->MoenyCount}', '$time')");
+            $query_5 = true;
+            $query_insert = true;
+        }
+        
 
 
         $goods_count_num = 0;
@@ -382,8 +390,10 @@ class cartbuy extends SystemAction {
             }
         }
         $sql="INSERT INTO `@#_member_go_record` (`code`,`code_tmp`,`uid`,`username`,`uphoto`,`shopid`,`shopname`,`shopqishu`,`gonumber`,`moneycount`,`goucode`,`pay_type`,`ip`,`status`,`time`) VALUES ";
+
         $sql.=trim($insert_html,',');
         //$this->db->Query("set global max_allowed_packet = 2*1024*1024*10");
+        // echo $sql;die;
         return $this->db->Query($sql);
     }
 
