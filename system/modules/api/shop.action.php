@@ -140,14 +140,14 @@ class shop extends SystemAction {
 		$msg = '';
 		$data = array();
 		$gid = abs(intval($_POST['gid']));
-		$token = trim($_POST['token']);
-		$info = System::token_uid($token);
-		if($info['code'] == 100) {
-			$code = 300;
-			$msg = "用户未登陆";
-			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-			echo json_encode($json);die;
-		}
+		// $token = trim($_POST['token']);
+		// $info = System::token_uid($token);
+		// if($info['code'] == 100) {
+		// 	$code = 300;
+		// 	$msg = "用户未登陆";
+		// 	$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+		// 	echo json_encode($json);die;
+		// }
 		if($gid) {
 			$data = $this->db->GetOne("SELECT id, qishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
 			if($data['remain'] == 0) {
@@ -214,12 +214,12 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$Pdata = $this->db->GetPage("SELECT title,qishu periods,q_user_code gcode,canyurenshu part, q_end_time etime, q_user FROM `@#_shoplist` where q_showtime = 'N' and q_user_code IS NOT NULL and sid = '$item[sid]' ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$Pdata = $this->db->GetPage("SELECT title,qishu periods,q_user_code gcode,canyurenshu part, q_end_time etime, q_user FROM `@#_shoplist` where q_showtime = 'N' and q_user_code IS NOT NULL and sid = '$item[sid]' order by periods desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 
 			foreach($Pdata as $v) {
 				$user = unserialize($v['q_user']);
 				$v['username'] = $user['username'];
-				$v['img'] = "gangmaduobao.com/statics/uploads/".$user['img'];
+				$v['img'] = "gangmaduobao.com/".$user['img'];
 				$ip = $this->db->GetOne("select ip from `@#_member` where uid = '$user[uid]'");
 				$v['ip'] = $ip['ip'];
 				unset($v['q_user']);
@@ -274,11 +274,11 @@ class shop extends SystemAction {
 			$Sdata = $this->db->GetPage("SELECT b.img,b.username,a.sd_id id,a.sd_title title,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid and a.sd_shopid = $id ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			$comnum = 0;
 			foreach($Sdata as $v) {
-				$v['img'] = "gangmaduobao.com/statics/uploads/".$v['img'];
+				$v['img'] = "gangmaduobao.com/".$v['img'];
 				$photo = explode(";",$v['photolist']);
 				foreach ($photo as $key => $value) {
 					if($value) {
-						$photo[$key] = "gangmaduobao.com/statics/uploads/".$value;
+						$photo[$key] = "gangmaduobao.com/".$value;
 					}else {
 						unset($photo[$key]);
 					}
@@ -353,7 +353,7 @@ class shop extends SystemAction {
 			$page->config($total,$num,$pagenum,"0");
 			$Idata = $this->db->GetPage("SELECT a.canyurenshu part,b.id,b.username,b.uphoto,b.time,b.ip FROM `@#_shoplist` a, `@#_member_go_record` b where a.id = b.shopid and b.shopid in($ids)",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			foreach($Idata as $v) {
-				$v['uphoto'] = "gangmaduobao.com/statics/uploads/".$v['uphoto'];
+				$v['uphoto'] = "gangmaduobao.com/".$v['uphoto'];
 				$data['data'][] = $v;
 			}
 			if($data['data']) {

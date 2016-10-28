@@ -8,6 +8,21 @@ class card extends SystemAction {
 		$this->db=System::load_sys_class('model');
 	}
 
+	public function bubble_sort($array) { 
+		$count = count($array); 
+		if ($count <= 0) return false; 
+		for($i=0; $i<$count; $i++) { 
+			for($j=$count-1; $j>$i; $j--) { 
+    			if ($array[$j]['ltime'] > $array[$j-1]['ltime']) { 
+     				$tmp = $array[$j];
+    				$array[$j] = $array[$j-1];
+    				$array[$j-1] = $tmp; 
+    			} 
+    		}
+    	}
+		return $array; 
+	}
+
 	//获取帖子列表
 	public function json_cardlist() {
 		$code = '';
@@ -39,6 +54,22 @@ class card extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);die;
 		}
+		foreach($Tdata as $k => $v) {
+			$ltime = $this->db->GetOne("SELECT MAX(`time`) times FROM `@#_quanzi_tiezi` WHERE `tiezi` = '$v[id]'");
+			$Tdata[$k]['ltime'] = $ltime['times'];		
+		}
+		
+		$Tdata = $this->bubble_sort($Tdata);
+		
+		foreach($Tdata as $k => $v) {
+			if($v['ltime']) {
+				unset($Tdata[$k]['ltime']);
+			}
+		}
+
+		// print_r($Tdata);die;
+
+
 		if($info['code'] == 200) {
 			foreach($Tdata as $v) {
 				if($v['type'] == 1) {
@@ -196,13 +227,26 @@ class card extends SystemAction {
 		}
 		if($cardid) {
 			//评论状态更改
-			$rult = $this->db->Query("update `@#_quanzi_tiezi` set ifsee = 1,dianji = dianji + 1  where tiezi = '$cardid' or id = '$cardid'");
-			if(!$rult) {
-				$code = 100;
-				$msg = "操作失败";
-				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-				echo json_encode($json);die;
+			$uid =  $this->db->GetOne("select hueiyuan from `@#_quanzi_tiezi` where id = '$cardid'");
+			if($uid['hueiyuan'] = $info['uid']) {
+				$rult = $this->db->Query("update `@#_quanzi_tiezi` set ifsee = 1,dianji = dianji + 1  where tiezi = '$cardid' or id = '$cardid'");
+				if(!$rult) {
+					$code = 100;
+					$msg = "操作失败";
+					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+					echo json_encode($json);die;
+				}
 			}
+			// $idss = $this->db->GetList("select distinct hueiyuan from `@#_quanzi_tiezi` where tiezi = '$cardid'");
+			// $ids = '';
+			// foreach($idss as $v) {
+			// 	if($ids) {
+			// 		$ids .= ','.$v['hueiyuan'];
+			// 	}else {
+			// 		$ids = $v['hueiyuan'];
+			// 	}
+			// }
+			
 			//返回参数
 			$Cdata = $this->db->GetOne("select * from `@#_quanzi_tiezi` where id = '$cardid' and tiezi = 0 and pid = 0 and shenhe = 'Y'");
 			if(!$Cdata) {
@@ -559,6 +603,7 @@ class card extends SystemAction {
 			echo json_encode($json);
 		}			
 	}
+
 }
 
 
