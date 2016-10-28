@@ -237,10 +237,6 @@ class cartbuy extends SystemAction {
 
             return $pay_1;
         }
-        else
-        {
-            return false;
-        }
         if(!is_array($this->pay_type)){
             return 'not_pay';
         }
