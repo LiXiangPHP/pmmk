@@ -144,7 +144,8 @@ class my extends SystemAction {
 			for($k = 0;$k <=9;$k++) {
 				$arr[]['time'] = date('Y-m-d',strtotime('-'.$k.' days'));
 			}
-		
+			
+			$arr = array_reverse($arr);
 			$arrs = array();
 			for($k=0;$k <= $member['sign_in_time'];$k++) {
 				if($k == $member['sign_in_time']) {
