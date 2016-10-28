@@ -56,20 +56,20 @@ class paoma extends SystemAction {
 		//剩余多少秒
 		$s = 300-($sytime - $ge*300);
 		$WaitTime = 0;
-		if($s > 25 )
+		if($s > 45 )
 		{
 			$status = 'wait';
-			$WaitTime = $s-25;
+			$WaitTime = $s-45;
 		}
 
-		if($s >5 && $s<=25)
+		if($s >5 && $s<=45)
 		{
 			$status = 'game';
 			$GameTime = $s;
 		}
 		if(!$GameTime)
 		{
-			$GameTime = 20;
+			$GameTime = 40;
 		}
 		if($s < 5 )
 		{
