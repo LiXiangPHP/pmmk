@@ -30,7 +30,15 @@ class cartbuy extends SystemAction {
              echo json_encode($json);die;
          }
         $uid = $info['uid'];
-        $this->address_id = $_POST['address_id'];
+        if($_POST['addressid'])
+        {
+            $this->address_id = $_POST['addressid'];
+        }
+        else
+        {
+            $this->address_id = '';
+        }
+        // echo $uid;die;
         // $uid = 694;
         $pay_checkbox= true;
         $pay_type_id=false;
@@ -70,6 +78,7 @@ class cartbuy extends SystemAction {
             echo json_encode(array("code"=>$code,"msg"=>$msg));die;
         }
         $check = $this->go_pay($pay_checkbox);
+        // echo $check;die;
         if($check === 'not_pay'){
             $code=100;
             $msg = "未选择支付平台";
@@ -284,6 +293,10 @@ class cartbuy extends SystemAction {
             $query_5 = true;
             $query_insert = true;
         }
+        else
+        {
+            echo 111;die;
+        }
         
 
 
@@ -380,7 +393,6 @@ class cartbuy extends SystemAction {
             $shop['canyurenshu'] = intval($shop['canyurenshu']) + $codes_len;
             $shop['goods_count_num'] = $codes_len;
             $shop['title'] = addslashes($shop['title']);
-
             $this->shoplist[$key] = $shop;
             if($codes_len){
                 $insert_html.="('$dingdancode','$dingdancode_tmp','$uid','$username','$uphoto','$shop[id]','$shop[title]','$shop[qishu]','$codes_len','$money','$codes','$pay_type','$ip','$status','$time','$this->address_id'),";
