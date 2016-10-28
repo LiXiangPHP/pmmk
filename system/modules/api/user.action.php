@@ -234,6 +234,32 @@ class user extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
 		}
+	}
+	public function invitefriends()
+	{
+		$db = System::load_sys_class('model');
+		$token = isset($_POST['token']) ? $_POST['token'] : "kong";
+		$info = System::token_uid($token);
+		// $info['uid'] = 694;
+		if(!$info['uid'])
+		{
+			$code = 100;
+			$msg = '请登录';
+			echo json_encode(array("code"=>$code,"msg"=>$msg));die;
+		}
+		// $bili = $db->getOne(select * from )
+		$bili = $db->GetOne("select * from `@#_bili`");
+		$bili = $bili['bili'];
+		$invifriends=$db->GetList("select uid,mobile,time from `@#_member` where `yaoqing`='$info[uid]' ORDER BY `time` DESC");
+		foreach ($invifriends as $k => $v) {
+			$total[$v['mobile']]=$db->GetList("select * from `@#_member_account` where `uid`='$v[uid]' and `pay` = '账户' and `type` = 1 ");
+		}
+		$code = 200;
+
+		$json = array('code' => $code, 'data' => array('invifriends'=>$invifriends,'total'=>$total,'bili'=>$bili));
+		echo json_encode($json);
+
+
 	}	
 		
 }

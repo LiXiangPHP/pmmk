@@ -807,6 +807,25 @@ HTML;
 		}
 		include $this->tpl(ROUTE_M,'member.scorerules');
 	}
+	public function ticheng()
+	{
+		if($_POST)
+		{
+			$bili = $_POST['bili'];
+			$id = $_POST['id'];
+			$sql="UPDATE `@#_bili` SET `bili`='$bili' WHERE (`id`='$id')";
+			if($this->db->Query($sql))
+			{
+				echo  1;die;
+			}
+			else
+			{
+				echo  0;die;
+			}
+		}
+		$bili=$this->db->GetOne("SELECT * FROM `@#_bili` ");
+		include $this->tpl(ROUTE_M,'member.ticheng');	
+	}
 }
 
 ?>

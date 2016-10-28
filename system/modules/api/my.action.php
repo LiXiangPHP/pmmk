@@ -324,6 +324,8 @@ class my extends SystemAction {
 					$data = $db->Query("update `@#_member` set score=$nj,money=$nb where uid='$info[uid]'") ;
 					$code = 200;
 					$msg = "添加成功";
+					$db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$info['uid']."', '-1', '福分', '积分兑换夺宝币', '$zj', '".time()."')");
+					$db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$info['uid']."', '2', '账户', '积分兑换夺宝币', '$zb', '".time()."')");
 				}else {
 					$code = 400;
 					$msg = "添加失败";
@@ -347,6 +349,8 @@ class my extends SystemAction {
 					$data = $db->Query("update `@#_member` set score=$nj,money=$nb where uid='$info[uid]'") ;
 					$code = 200;
 					$msg = "添加成功";
+					$db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$info['uid']."', '1', '福分', '夺宝币兑换积分', '$zj', '".time()."')");
+					$db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$info['uid']."', '-1', '账户', '夺宝币兑换积分', '$zb', '".time()."')");
 				}else {
 					$code = 400;
 					$msg = "添加失败";
