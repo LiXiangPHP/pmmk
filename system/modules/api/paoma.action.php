@@ -231,7 +231,7 @@ class paoma extends SystemAction {
 		}
 		$page=System::load_sys_class('page');
 		$page->config($total,$num,$pagenum,"0");
-		$Sdata = $db->GetPage("SELECT result,issue,time  FROM `@#_bet_result` order by issue desc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		$Sdata = $db->GetPage("SELECT result,issue,time  FROM `@#_bet_result` order by id desc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 		foreach($Sdata as $v) {
 			
 			$result=  $v['result'];
