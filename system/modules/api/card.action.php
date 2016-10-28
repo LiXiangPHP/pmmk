@@ -228,7 +228,7 @@ class card extends SystemAction {
 		if($cardid) {
 			//评论状态更改
 			$uid =  $this->db->GetOne("select hueiyuan from `@#_quanzi_tiezi` where id = '$cardid'");
-			if($uid['hueiyuan'] = $info['uid']) {
+			if($uid['hueiyuan'] == $info['uid']) {
 				$rult = $this->db->Query("update `@#_quanzi_tiezi` set ifsee = 1,dianji = dianji + 1  where tiezi = '$cardid' or id = '$cardid'");
 				if(!$rult) {
 					$code = 100;
