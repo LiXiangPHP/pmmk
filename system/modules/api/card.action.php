@@ -454,7 +454,7 @@ class card extends SystemAction {
 			echo json_encode($json);
 		}
 	}
-
+	
 	//打赏
 	public function json_reward() {
 		$code = '';
@@ -462,6 +462,7 @@ class card extends SystemAction {
 		$data = array();
 		$cardid  = abs(intval($_POST['id']));//帖子id 后台发帖不允许点赏
 		$token = trim($_POST['token']);
+		$num = abs(intval($_POST['money']));//赏夺宝币数目
 		$info = System::token_uid($token);
 		// print_r($info);die;
 		if($info['code'] == 100) {
@@ -472,9 +473,15 @@ class card extends SystemAction {
 		}
 		$Udata = $this->db->GetOne("select * from `@#_member` where uid = '$info[uid]' limit 1");//点赏会员信息
 		if($cardid) {
+			if(!$num){
+				$code = 100;
+				$msg = "赏夺宝币数目不能为空";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
+			}
 			$Cdata = $this->db->GetOne("select * from `@#_quanzi_tiezi` where id = '$cardid' limit 1");//帖子信息
 			if($Cdata['shenhe'] == 'N') {
-				$code = 300;
+				$code = 100;
 				$msg = "操作失败";
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 				echo json_encode($json);die;
@@ -487,26 +494,26 @@ class card extends SystemAction {
 				echo json_encode($json);die;
 			}
 
-			$users = $this->db->GetOne("select username from `@#_member` where uid = '$Cdata[hueiyuan]' limit 1");
+			// $users = $this->db->GetOne("select username from `@#_member` where uid = '$Cdata[hueiyuan]' limit 1");
 			// print_r($Udata);die;
-			if($Udata['username'] == $users['username']) {
+			if($Udata['uid'] == $Cdata['hueiyuan']) {
 				$code = 100;
 				$msg = "自己发帖不许赏";
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 				echo json_encode($json);die;
 			}
 			
-			//积分消费
-			$money = $this->db->GetOne("select score from `@#_reward`");
+			//夺宝币消费
+			// $money = $this->db->GetOne("select score from `@#_reward`");
 
-			if($Udata['score'] && $Udata['score'] >= $money['score']) {
-				$score = $Udata['score'] - $money['score'];
-				$res  = $this->db->Query("update `@#_member` set score = '$score' where uid = '$info[uid]'");
-				//积分消费明细
-				$rulo = $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$info['uid']."', '-1', '福分', '赏', '$money[score]', '".time()."')");
+			if($Udata['money'] && $Udata['money'] >= $num) {
+				$money = $Udata['money'] -$num;
+				$res  = $this->db->Query("update `@#_member` set money = '$money' where uid = '$info[uid]'");
+				//消费明细
+				$rulo = $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$info['uid']."', '-1', '账户', '赏', '$num', '".time()."')");
 			}else {
 				$code = 100;
-				$msg = "积分不足";
+				$msg = "夺宝币不足";
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 				echo json_encode($json);die;
 			}
@@ -514,22 +521,22 @@ class card extends SystemAction {
 			if($Cdata['reward']) {
 				$rew = explode(',',$Cdata['reward']);
 				if(in_array($Udata['uid'],$rew)) {
-					$ress = $this->db->Query("update `@#_member` set score = score + '$money[score]' where uid = '$Cdata[hueiyuan]'");
-					//积分消费明细
-					$rult = $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$Cdata['hueiyuan']."', '1', '福分', '赏', '$money[score]', '".time()."')");
+					$ress = $this->db->Query("update `@#_member` set money = money + '$unm' where uid = '$Cdata[hueiyuan]'");
+					//消费明细
+					$rult = $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$Cdata['hueiyuan']."', '1', '账户', '赏', '$num', '".time()."')");
 					$ret  = 1;
 
 				}else {
 					$reward = $Cdata['reward'].",".$Udata['uid'];
-					$ress = $this->db->Query("update `@#_member` set score = score + '$money[score]' where uid = '$Cdata[hueiyuan]'");
-					//积分消费明细
-					$rult = $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$Cdata['hueiyuan']."', '1', '福分', '赏', '$money[score]', '".time()."')");
+					$ress = $this->db->Query("update `@#_member` set money = money + '$num' where uid = '$Cdata[hueiyuan]'");
+					//消费明细
+					$rult = $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$Cdata['hueiyuan']."', '1', '账户', '赏', '$num', '".time()."')");
 					$ret  = $this->db->Query("update `@#_quanzi_tiezi` set reward = '$reward' where id = '$cardid'");
 				}
 			}else {
-				$ress = $this->db->Query("update `@#_member` set score = score + '$money[score]' where uid = '$Cdata[hueiyuan]'");
-				//积分消费明细
-				$rult = $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$Cdata['hueiyuan']."', '1', '福分', '赏', '$money[score]', '".time()."')");
+				$ress = $this->db->Query("update `@#_member` set money = money + '$num' where uid = '$Cdata[hueiyuan]'");
+				//消费明细
+				$rult = $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$Cdata['hueiyuan']."', '1', '账户', '赏', '$num', '".time()."')");
 				$ret  = $this->db->Query("update `@#_quanzi_tiezi` set reward = '$Udata[uid]' where id = '$cardid'");
 			}
 
