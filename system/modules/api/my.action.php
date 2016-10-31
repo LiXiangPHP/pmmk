@@ -320,22 +320,28 @@ class my extends SystemAction {
 				$jbarr = $db->GetOne("select score,money  from `@#_member` where uid='$info[uid]' ");
 				$j = $jbarr['score'];
 				$b = $jbarr['money'];
-				$zh = $bj/$bd;
-				$zb = $zj/$zh;
-				if ($zb) {
-					$nj = $j-$zj;
-					$nb = $b+$zb;
-					$data = $db->Query("update `@#_member` set score=$nj,money=$nb where uid='$info[uid]'") ;
-					$code = 200;
-					$msg = "添加成功";
-					$db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$info['uid']."', '-1', '福分', '积分兑换夺宝币', '$zj', '".time()."')");
-					$db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$info['uid']."', '2', '账户', '积分兑换夺宝币', '$zb', '".time()."')");
-				}else {
-					$code = 400;
-					$msg = "添加失败";
+				if ($jbarr['score']>0) {
+					$zh = $bj/$bd;
+					$zb = $zj/$zh;
+					if ($zb) {
+						$nj = $j-$zj;
+						$nb = $b+$zb;
+						$data = $db->Query("update `@#_member` set score=$nj,money=$nb where uid='$info[uid]'") ;
+						$code = 200;
+						$msg = "添加成功";
+						$db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$info['uid']."', '-1', '福分', '积分兑换夺宝币', '$zj', '".time()."')");
+						$db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$info['uid']."', '2', '账户', '积分兑换夺宝币', '$zb', '".time()."')");
+					}else {
+						$code = 400;
+						$msg = "添加失败";
+					}					
+				}else{
+					$code = 500;
+					$msg = "没有积分";
 				}
 				$json = array('code' => $code, 'msg' => $msg);
 				echo json_encode($json);
+				
 			}
 			if ($type==2) {
 				$zb = isset($_POST['zb']) ? $_POST['zb'] : null;
@@ -345,20 +351,25 @@ class my extends SystemAction {
 				$jbarr = $db->GetOne("select score,money  from `@#_member` where uid='$info[uid]' ");
 				$j = $jbarr['score'];
 				$b = $jbarr['money'];
-				$zh = $bj/$bd;
-				$zj = $zb*$zh;
-				if ($zb) {
-					$nj = $j+$zj;
-					$nb = $b-$zb;
-					$data = $db->Query("update `@#_member` set score=$nj,money=$nb where uid='$info[uid]'") ;
-					$code = 200;
-					$msg = "添加成功";
-					$db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$info['uid']."', '1', '福分', '夺宝币兑换积分', '$zj', '".time()."')");
-					$db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$info['uid']."', '-1', '账户', '夺宝币兑换积分', '$zb', '".time()."')");
-				}else {
-					$code = 400;
-					$msg = "添加失败";
-				}
+				if ($jbarr['money']>0) {
+					$zh = $bj/$bd;
+					$zj = $zb*$zh;
+					if ($zb) {
+						$nj = $j+$zj;
+						$nb = $b-$zb;
+						$data = $db->Query("update `@#_member` set score=$nj,money=$nb where uid='$info[uid]'") ;
+						$code = 200;
+						$msg = "添加成功";
+						$db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$info['uid']."', '1', '福分', '夺宝币兑换积分', '$zj', '".time()."')");
+						$db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('".$info['uid']."', '-1', '账户', '夺宝币兑换积分', '$zb', '".time()."')");
+					}else {
+						$code = 400;
+						$msg = "添加失败";
+					}
+				}else{
+					$code = 500;
+					$msg = "没有积分";
+				}				
 				$json = array('code' => $code, 'msg' => $msg);
 				echo json_encode($json);
 			}
