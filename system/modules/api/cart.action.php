@@ -12,32 +12,26 @@ class cart extends SystemAction {
         if ($info['code']==200) {
             $db = System::load_sys_class('model');
             $uidm = $db->GetOne("SELECT * FROM `@#_shopcart` WHERE good_id = '$id' AND user_id = '$info[uid]'");
-            $shenyu = $db->GetOne("SELECT shenyurenshu FROM `@#_shoplist` WHERE id = '$id'");
-
-            $cartm =$uidm['num'];
-//            print_r($cartm);die;
-//            print_r($shenyu);die;
-//            print_r($uidm);die;
-            $cartnum = $cartm + $num;
-            if($cartnum>$shenyu['shenyurenshu']) {
-                $code = 100;
-                $msg = "添加失败";
-                $json = array('code' => $code, 'msg' => $msg);
-                echo json_encode($json);die;
-            }else{
-                $numadd = $db->Query("UPDATE `@#_shopcart` SET num ='$cartnum' WHERE good_id = '$id' AND user_id = '$info[uid]'");
-                if (!empty($numadd)) {
+            if(!empty($uidm)){
+                $numm =$num + $uidm['num'];
+                $numadd = $db->Query("UPDATE `@#_shopcart` SET num ='$numm' WHERE good_id = '$id' AND user_id = '$info[uid]'");
+                if(!empty($numadd)){
                     $code = 200;
                     $msg = "添加成功";
-                    $json = array('code' => $code, 'msg' => $msg);
-                    echo json_encode($json);
                 }
+            }elseif (!empty($id)&!empty($num)&!empty($info['uid'])&($db->Query("INSERT INTO `@#_shopcart` (`user_id`, `good_id`,`num`) VALUES ('$info[uid]','$id','$num')")!=false)) {
+                $code = 200;
+                $msg = "添加成功";
+            } else {
+                $code = 100;
+                $msg = "添加失败";
             }
-            }else {
+            $json = array('code' => $code, 'msg' => $msg);
+            echo json_encode($json);
+        }else {
             $json = array('code' => 300, 'msg' => '请登录', 'data' => $data);
             echo json_encode($json);
         }
-
     }
 
     /*查看购物车接口*/
