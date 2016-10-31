@@ -56,7 +56,12 @@ class card extends SystemAction {
 		}
 		foreach($Tdata as $k => $v) {
 			$ltime = $this->db->GetOne("SELECT MAX(`time`) times FROM `@#_quanzi_tiezi` WHERE `tiezi` = '$v[id]'");
-			$Tdata[$k]['ltime'] = $ltime['times'];		
+			if($ltime[times]) {
+				$Tdata[$k]['ltime'] = $ltime['times'];	
+			}else {
+				$Tdata[$k]['ltime'] = $v['time'];
+			}
+				
 		}
 		
 		$Tdata = $this->bubble_sort($Tdata);

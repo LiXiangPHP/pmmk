@@ -141,6 +141,13 @@ class user extends SystemAction {
 			}
 			
 			if($name && $sex) {
+				$users = $db->GetList("SELECT * FROM `go_member` WHERE username LIKE '%$name%'");
+				if($users) {
+					$code = 100;
+					$msg = "该昵称已存在";
+					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+					echo json_encode($json);die;
+				}
 				$res = $db->Query("UPDATE `@#_member` SET `username` = '$name', `sex` = '$sex', `img` = '$new_file' where `uid` = '$info[uid]'");
 				if($res) {
 					$code = 200;
