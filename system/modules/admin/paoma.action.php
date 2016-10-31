@@ -183,9 +183,8 @@ class paoma extends admin {
 	public function update_set()
 	{
 		$minmoney = $_POST['minmoney'];
-		$mintime = $_POST['mintime'];
 		$id = $_POST['id'];
-		$sql="UPDATE `@#_bet_set` SET `minmoney`='$minmoney',`mintime`='$mintime' WHERE (`id`='$id')";
+		$sql="UPDATE `@#_bet_set` SET `minmoney`='$minmoney' WHERE (`id`='$id')";
 		if($this->db->Query($sql))
 		{
 			echo  1;die;

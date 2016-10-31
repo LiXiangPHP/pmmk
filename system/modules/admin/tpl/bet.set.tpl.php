@@ -29,8 +29,7 @@ tr{ text-align:center}
         <table width="100%" cellspacing="0">
      	<thead>
         		<tr>
-                    <th width="5%">最小下注金额</th>        
-                    <th width="25%">最晚下注时间</th>    
+                    <th width="5%">设置盈利百分比</th>           
                     <th width="25%">操作</th> 
 
 				</tr>
@@ -39,8 +38,7 @@ tr{ text-align:center}
         	
             <tr>
             
-                <td><input type="text"  style='width: 50px' value='<?php echo $bet_set['minmoney'];?>' id='minmoney'>(必须为整数)</td>
-                <td>结束前<input type="text"  style='width: 50px' value='<?php echo $bet_set['mintime'];?>' id='mintime'>分钟</td>
+                <td><input type="text"  style='width: 50px' value='<?php echo $bet_set['minmoney'];?>' id='minmoney'>%</td>
                 <td><input type="button" class="button" value=" 保存 " id='<?php echo $bet_set['id'];?>'  onclick='change_set(this)'/></td>
                
                 
@@ -65,7 +63,6 @@ function change_set(o)
           data:{  
                    
                    minmoney : minmoney,
-                   mintime : mintime,
                    id   : id
         },  
          type:'post',
