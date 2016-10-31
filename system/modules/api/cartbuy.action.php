@@ -295,7 +295,7 @@ class cartbuy extends SystemAction {
         }
         else
         {
-            echo 111;die;
+            return false;
         }
         
 
