@@ -60,7 +60,7 @@ class index1 extends SystemAction {
 			}
 		$page=System::load_sys_class('page');
 		$page->config($total,$num,$pagenum,"0");
-		$data = $db->GetPage("select id,canyurenshu,shenyurenshu,title,money,thumb from `@#_shoplist` where `q_uid` is null order by shenyurenshu asc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		$data = $db->GetPage("select qishu,id,canyurenshu,shenyurenshu,title,money,thumb from `@#_shoplist` where `q_uid` is null order by shenyurenshu asc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 		foreach($data as $k=>$v) {
 				$data[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
 			}
@@ -78,7 +78,7 @@ class index1 extends SystemAction {
 		}
 		//最新揭晓
 		if ($type==2) {	
-			$data = $db->GetPage("select a.username,a.shopname,b.q_user_code,b.q_end_time,b.thumb,b.id from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and b.q_uid is not null  order by a.id DESC LIMIT 12");
+			$data = $db->GetPage("select a.username,a.shopname,b.q_user_code,b.q_end_time,b.qishu,b.thumb,b.id from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and b.q_uid is not null  order by a.id DESC LIMIT 12");
 			foreach($data as $k=>$v) {
 				$data[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
 			}
