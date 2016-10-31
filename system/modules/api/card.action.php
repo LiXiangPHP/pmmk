@@ -65,7 +65,7 @@ class card extends SystemAction {
 		}
 		
 		$Tdata = $this->bubble_sort($Tdata);
-		
+		// print_r($Tdata);die;
 		foreach($Tdata as $k => $v) {
 			if($v['ltime']) {
 				unset($Tdata[$k]['ltime']);
