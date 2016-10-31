@@ -134,12 +134,15 @@ class my extends SystemAction {
 		$rules  = $this->db->GetList("select * from `@#_signrules` ");
 		if($rules && $member) {
 			$data['time'] = $member['sign_in_time'];
-			foreach($rules as $k => $v) {
-				$arr['num'] = $v['number'];
-				$arr['score'] = $v['points'];
-				$data['rules'][] = $arr; 
+			$string = '';
+			foreach($rules as $v) {
+				if($string) {
+					$string .= '连续签到'.$v['number'].'天以上，可获'.$v['points'].'积分';
+				}else {
+					$string = '连续签到'.$v['number'].'天以上，可获'.$v['points'].'积分';
+				}
 			}
-
+			$data['rules'] = $string;
 			$arr = array();
 			for($k = 0;$k <=9;$k++) {
 				$arr[]['time'] = date('Y-m-d',strtotime('-'.$k.' days'));
