@@ -373,7 +373,7 @@ class paoma extends SystemAction {
 			$p[$v['id']]= array("did"=>$v['did'],"p"=>$pei['odds']*$v['number'],"name"=>$v['name']);
 			
 		}
-		$bet_set=$this->db->GetOne("SELECT * FROM `@#_bet_set` ");
+		$bet_set=$db->GetOne("SELECT * FROM `@#_bet_set` ");
 		$ying = $bet_set['minmoney']/100;
 		$s = 1-$ying;
 		// $s = 0.9;
