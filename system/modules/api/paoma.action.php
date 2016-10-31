@@ -37,7 +37,7 @@ class paoma extends SystemAction {
 		}
 		else
 		{
-			$lastissue=$db->GetOne("select issue from `@#_bet_result`  order by issue DESC");
+			$lastissue=$db->GetOne("select issue from `@#_bet_result`  order by id DESC");
 			$lastissue = $lastissue['issue'];
 			$issue = $nianyue."1";
 		}
@@ -574,7 +574,7 @@ class paoma extends SystemAction {
 		}
 		$uid = $info['uid'];
 		$code = 200;
-		$user_bet = $db->GetList("SELECT sum(profit) as sumprofit ,issue,sum(number) as sumnumber  FROM `@#_bet` where `uid` = $uid  group by `issue`");
+		$user_bet = $db->GetList("SELECT sum(profit) as sumprofit ,issue,sum(number) as sumnumber  FROM `@#_bet` where `uid` = $uid  group by `id`");
 
 		echo json_encode(array('code'=>$code,'data'=>$user_bet));die;
 
@@ -605,7 +605,7 @@ class paoma extends SystemAction {
 		else
 		{
 			$pagenum = $_POST['p'];
-			$total = $db->GetCount("SELECT * FROM `@#_bet` where `uid` = $uid order by issue DESC");
+			$total = $db->GetCount("SELECT * FROM `@#_bet` where `uid` = $uid order by id DESC");
 			$num = 10;
 			$yushu=$total%$num;
 			if($yushu > 0) {
@@ -618,7 +618,7 @@ class paoma extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$user_bet = $db->GetPage("SELECT * FROM `@#_bet` where `uid` = $uid order by issue DESC",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$user_bet = $db->GetPage("SELECT * FROM `@#_bet` where `uid` = $uid order by id DESC",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 		
 			// if($user_bet) {
 			// 	$user_bet['ptotal'] = $yeshu;
