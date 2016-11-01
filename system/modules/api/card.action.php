@@ -648,6 +648,8 @@ class card extends SystemAction {
 						}else {
 							$v['thumb'] = $card['img'];
 						}
+						unset($v['hueiyuan']);
+						unset($v['tiezi']);
 						$data[] = $v;
 					}
 				}else {
@@ -662,6 +664,8 @@ class card extends SystemAction {
 						}else {
 							$v['thumb'] = $card['img'];
 						}
+						unset($v['hueiyuan']);
+						unset($v['tiezi']);
 						$data[] = $v;
 					}
 				}
