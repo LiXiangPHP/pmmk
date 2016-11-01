@@ -320,7 +320,7 @@ class my extends SystemAction {
 				$jbarr = $db->GetOne("select score,money  from `@#_member` where uid='$info[uid]' ");
 				$j = $jbarr['score'];
 				$b = $jbarr['money'];
-				if ($jbarr['score']>0) {
+				if ($jbarr['score']>$zj) {
 					$zh = $bj/$bd;
 					$zb = $zj/$zh;
 					if ($zb) {
@@ -337,7 +337,7 @@ class my extends SystemAction {
 					}					
 				}else{
 					$code = 500;
-					$msg = "没有积分";
+					$msg = "积分不够";
 				}
 				$json = array('code' => $code, 'msg' => $msg);
 				echo json_encode($json);
@@ -351,7 +351,7 @@ class my extends SystemAction {
 				$jbarr = $db->GetOne("select score,money  from `@#_member` where uid='$info[uid]' ");
 				$j = $jbarr['score'];
 				$b = $jbarr['money'];
-				if ($jbarr['money']>0) {
+				if ($jbarr['money']>$zb) {
 					$zh = $bj/$bd;
 					$zj = $zb*$zh;
 					if ($zb) {
@@ -368,7 +368,7 @@ class my extends SystemAction {
 					}
 				}else{
 					$code = 500;
-					$msg = "没有积分";
+					$msg = "夺宝币不够";
 				}				
 				$json = array('code' => $code, 'msg' => $msg);
 				echo json_encode($json);
