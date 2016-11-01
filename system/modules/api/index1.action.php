@@ -47,7 +47,7 @@ class index1 extends SystemAction {
 		if(empty($pagenum)) {
 		$pagenum=1;
 		}
-		$total = $db->GetCount("select * from `@#_shoplist` where `q_uid` is null ");	
+		$total = $db->GetCount("select * from `@#_shoplist` where `q_uid` is null and shengyurenshu>0 ");	
 		$num = 10;
 		$yushu = $total%$num;
 			if($yushu > 0) {
