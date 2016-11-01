@@ -609,6 +609,79 @@ class card extends SystemAction {
 		}			
 	}
 
+	//评论提示信息列表接口
+	public function json_message() {
+		$code = '';
+		$msg  = '';
+		$data = array();
+		$token = trim($_POST['token']);
+		$info = System::token_uid($token);
+		// print_r($info);die;
+		if($info['code'] == 100) {
+			$code = 300;
+			$msg = "用户未登陆";
+			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			echo json_encode($json);die;
+		}
+		$lid = $this->db->GetList("select id from `@#_quanzi_tiezi` where hueiyuan = '$info[uid]' and tiezi = 0");
+		$ids = '';
+		foreach ($lid as $key => $value) {
+			if($ids) {
+				$ids .= ','.$value['id'];
+			}else {
+				$ids = $value['id'];
+			}
+		}
+		$anws = $this->db->GetList("select hueiyuan, tiezi, neirong, time from `@#_quanzi_tiezi` where tiezi in($ids) and ifsee = 0");
+		// print_r($anws);die;
+		if($anws) {
+			foreach($anws as $v) {
+				if($v['hueiyuan'] != '管理员'){
+					$user = $this->db->GetOne("select username, img from `@#_member` where uid = '$v[hueiyuan]'");
+					$card = $this->db->GetOne("select id, img from `@#_quanzi_tiezi` where id = '$v[tiezi]'");
+					if($v['hueiyuan'] != $info['uid']) {
+						$v['id'] = $card['id'];
+						$v['user'] = $user['username'];
+						$v['img'] = 'gangmaduobao.com/'.$user['img'];
+						if($card['img']) {
+							$v['thumb'] = 'gangmaduobao.com/'.$card['img'];
+						}else {
+							$v['thumb'] = $card['img'];
+						}
+						$data[] = $v;
+					}
+				}else {
+					$user = '管理员';
+					$card = $this->db->GetOne("select id, img from `@#_quanzi_tiezi` where id = '$v[tiezi]'");
+					if($v['hueiyuan'] != $info['uid']) {
+						$v['id'] = $card['id'];
+						$v['user'] = $user['username'];
+						$v['img'] = 'gangmaduobao.com/'.$user['img'];
+						if($card['img']) {
+							$v['thumb'] = 'gangmaduobao.com/'.$card['img'];
+						}else {
+							$v['thumb'] = $card['img'];
+						}
+						$data[] = $v;
+					}
+				}
+				
+			}
+			$rult = $this->db->Query("update `@#_quanzi_tiezi` set ifsee = 1  where tiezi in($ids) or id in($ids)");
+			if(!$rult) {
+				$code = 100;
+				$msg = "操作失败";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
+			}
+			$code = 200;
+			$msg = "查询成功";
+			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+			echo json_encode($json);
+		}
+
+	}
+
 }
 
 
