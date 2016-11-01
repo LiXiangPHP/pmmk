@@ -18,14 +18,14 @@ class cart extends SystemAction {
                 $numm = $num + $uidm['num'];
                 if ($numm > $shenyurenshu['shenyurenshu']) {
                     $code = 100;
-                    $msg = "添加失败1";
+                    $msg = "添加失败";
                     $json = array('code' => $code, 'msg' => $msg);
                     echo json_encode($json);
                 } else {
                     $numadd = $db->Query("UPDATE `@#_shopcart` SET num ='$numm' WHERE good_id = '$id' AND user_id = '$info[uid]'");
                     if (!empty($numadd)) {
                         $code = 200;
-                        $msg = "添加成功1";
+                        $msg = "添加成功";
                         $json = array('code' => $code, 'msg' => $msg);
                         echo json_encode($json);
                     }
@@ -37,14 +37,14 @@ class cart extends SystemAction {
 //                print_r($shenyurenshu);die;
                 if($num > $shenyurenshu['shenyurenshu']) {
                     $code = 100;
-                    $msg = "添加失败2";
+                    $msg = "添加失败";
                     $json = array('code' => $code, 'msg' => $msg);
                     echo json_encode($json);
                 }else{
                     $cartadd = $db->Query("INSERT INTO `@#_shopcart` (`user_id`, `good_id`,`num`) VALUES ('$info[uid]','$id','$num')");
                     if ($cartadd != false) {
                         $code = 200;
-                        $msg = "添加成功2";
+                        $msg = "添加成功";
                         $json = array('code' => $code, 'msg' => $msg);
                         echo json_encode($json);
                     }
