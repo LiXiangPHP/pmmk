@@ -320,7 +320,7 @@ class my extends SystemAction {
 				$jbarr = $db->GetOne("select score,money  from `@#_member` where uid='$info[uid]' ");
 				$j = $jbarr['score'];
 				$b = $jbarr['money'];
-				if ($jbarr['score']>$zj) {
+				if ($jbarr['score']=>$zj) {
 					$zh = $bj/$bd;
 					$zb = $zj/$zh;
 					if ($zb) {
@@ -351,7 +351,7 @@ class my extends SystemAction {
 				$jbarr = $db->GetOne("select score,money  from `@#_member` where uid='$info[uid]' ");
 				$j = $jbarr['score'];
 				$b = $jbarr['money'];
-				if ($jbarr['money']>$zb) {
+				if ($jbarr['money']=>$zb) {
 					$zh = $bj/$bd;
 					$zj = $zb*$zh;
 					if ($zb) {
