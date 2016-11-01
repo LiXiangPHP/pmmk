@@ -9,25 +9,47 @@ class cart extends SystemAction {
         $num = $_POST['num'];
         $uid = $_POST['uid'];
         $info = System::token_uid($uid);
+        $data =array();
         if ($info['code']==200) {
             $db = System::load_sys_class('model');
             $uidm = $db->GetOne("SELECT * FROM `@#_shopcart` WHERE good_id = '$id' AND user_id = '$info[uid]'");
-            if(!empty($uidm)){
-                $numm =$num + $uidm['num'];
-                $numadd = $db->Query("UPDATE `@#_shopcart` SET num ='$numm' WHERE good_id = '$id' AND user_id = '$info[uid]'");
-                if(!empty($numadd)){
-                    $code = 200;
-                    $msg = "添加成功";
+            $shenyurenshu = $db->GetOne("SELECT shenyurenshu FROM `@#_shoplist` WHERE id = '$id'");
+            if(!empty($uidm)) {
+                $numm = $num + $uidm['num'];
+                if ($numm > $shenyurenshu['shenyurenshu']) {
+                    $code = 100;
+                    $msg = "添加失败1";
+                    $json = array('code' => $code, 'msg' => $msg);
+                    echo json_encode($json);
+                } else {
+                    $numadd = $db->Query("UPDATE `@#_shopcart` SET num ='$numm' WHERE good_id = '$id' AND user_id = '$info[uid]'");
+                    if (!empty($numadd)) {
+                        $code = 200;
+                        $msg = "添加成功1";
+                        $json = array('code' => $code, 'msg' => $msg);
+                        echo json_encode($json);
+                    }
                 }
-            }elseif (!empty($id)&!empty($num)&!empty($info['uid'])&($db->Query("INSERT INTO `@#_shopcart` (`user_id`, `good_id`,`num`) VALUES ('$info[uid]','$id','$num')")!=false)) {
-                $code = 200;
-                $msg = "添加成功";
-            } else {
-                $code = 100;
-                $msg = "添加失败";
+            }else{
+                $db = System::load_sys_class('model');
+                $shenyurenshu = $db->GetOne("SELECT shenyurenshu FROM `@#_shoplist` WHERE id = '$id'");
+//                print_r($num);die;
+//                print_r($shenyurenshu);die;
+                if($num > $shenyurenshu['shenyurenshu']) {
+                    $code = 100;
+                    $msg = "添加失败2";
+                    $json = array('code' => $code, 'msg' => $msg);
+                    echo json_encode($json);
+                }else{
+                    $cartadd = $db->Query("INSERT INTO `@#_shopcart` (`user_id`, `good_id`,`num`) VALUES ('$info[uid]','$id','$num')");
+                    if ($cartadd != false) {
+                        $code = 200;
+                        $msg = "添加成功2";
+                        $json = array('code' => $code, 'msg' => $msg);
+                        echo json_encode($json);
+                    }
+                }
             }
-            $json = array('code' => $code, 'msg' => $msg);
-            echo json_encode($json);
         }else {
             $json = array('code' => 300, 'msg' => '请登录', 'data' => $data);
             echo json_encode($json);
