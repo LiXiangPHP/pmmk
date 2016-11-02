@@ -113,14 +113,17 @@ class user extends SystemAction {
 				}
 				
 			}
-			if(!$img && !$name && !$sex) {
-				$code = 100;
-				$msg = "请填写修改内容";
-				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-				echo json_encode($json);die;
-			}
 
 			$content = '';
+			if(!$img && !$name && !$sex) {
+				$uu = $db->GetOne("SELECT * FROM `go_member` WHERE uid = '$info[uid]'");
+				if($content) {
+					$content = "`username` = '$uu[username]',`sex` = '$uu[sex]',`img` = '$uu[img]'";
+				}else {
+					$content = "`username` = '$uu[username]',`sex` = '$uu[sex]',`img` = '$uu[img]'";
+				} 
+			}
+
 			if($name) {
 				$users = $db->GetList("SELECT * FROM `go_member` WHERE username LIKE '%$name%'");
 				if($users) {
@@ -170,6 +173,7 @@ class user extends SystemAction {
 				}
 			}
 			if($content) {
+				echo "UPDATE `@#_member` SET $content where `uid` = '$info[uid]'";die;
 				$res = $db->Query("UPDATE `@#_member` SET $content where `uid` = '$info[uid]'");
 				if($res) {
 					$code = 200;
