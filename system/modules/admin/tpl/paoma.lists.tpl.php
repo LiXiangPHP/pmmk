@@ -40,12 +40,10 @@ tr{ text-align:center}
         <tbody>				
         	<?php foreach($option_list as $v) { ?>
             <tr>
-            
                 <td><?php echo $v['number'];?></td>
-                <td><input type="text"  style='width: 50px' value='<?php echo floatval($v['odds']);?>' id ='odds' ></td>
+                <td><input type="text"  style='width:50px'  id ='odds'  value="<?php echo floatval($v['odds']);?> "/></td>
                 <td><input type="button" class="button" value=" 保存 " id='<?php echo $v['id'];?>' onclick='change_odds(this)'/></td>
-               
-                
+
             </tr>
             <?php } ?>
         </tbody>
