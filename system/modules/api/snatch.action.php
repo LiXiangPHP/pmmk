@@ -25,7 +25,7 @@ class snatch extends SystemAction {
 			foreach($newdata as $k=>$v) {
 			$newdata[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
 			}
-			// $nndata = array_reverse($newdata);
+			$nndata = array_reverse($newdata);
 			if($nndata) {
 				$code = 200;
 				$msg = "查询成功";
@@ -33,7 +33,7 @@ class snatch extends SystemAction {
 				$code = 400;
 				$msg = "数据为空";
 			}
-			$json = array('type' => $type,'code' => $code, 'msg' => $msg, 'data' => $newdata);
+			$json = array('type' => $type,'code' => $code, 'msg' => $msg, 'data' => $nndata);
 			echo json_encode($json);			
 			}
 
