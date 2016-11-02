@@ -78,9 +78,17 @@ class index1 extends SystemAction {
 		}
 		//最新揭晓
 		if ($type==2) {	
-			$data = $db->GetPage("select a.username,a.shopname,b.q_user_code,b.q_end_time,b.qishu,b.thumb,b.id from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and b.q_uid is not null  order by a.id DESC LIMIT 12");
-			foreach($data as $k=>$v) {
-				$data[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
+			$Tdata = $db->GetPage("select q_user,title,q_user_code,q_end_time,qishu,thumb,id from `@#_shoplist`  where q_uid is not null ");
+			
+			foreach($Tdata as $k=>$v) {
+				$v['shopname'] = $v['title'];
+				$arr = unserialize($v['q_user']);
+				$v['username'] = $arr['username'];
+				$v['mobile'] = $arr['mobile'];
+				$v['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];	
+				unset($v['q_user']);
+				unset($v['title']);		
+				$data[] = $v;	
 			}
 			if($data) {
 				$code = 200;
