@@ -125,7 +125,7 @@ class user extends SystemAction {
 			}
 
 			if($name) {
-				$users = $db->GetList("SELECT * FROM `go_member` WHERE username = '$name'");
+				$users = $db->GetList("SELECT * FROM `go_member` WHERE username = '$name' and uid != '$info[uid]'");
 				if($users) {
 					$code = 100;
 					$msg = "该昵称已存在";
