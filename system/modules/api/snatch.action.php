@@ -61,7 +61,7 @@ class snatch extends SystemAction {
 			$zhsz = array();
 			$newdata=array();		
 			foreach($mygm as $v){
-				$zhsz[] = $db->GetList("select a.qishu,a.id,a.q_end_time,a.title,a.thumb,a.money,b.mobile from `@#_shoplist` as a,`@#_member` as b where a.q_uid=b.uid and a.qishu='$v[shopqishu]' and a.id='$v[shopid]' and  a.q_end_time is not null and a.q_user is not null ");				
+				$zhsz[] = $db->GetList("select a.qishu,a.id,a.q_end_time,a.title,a.thumb,a.money,b.mobile from `@#_shoplist` as a,`@#_member` as b where a.q_uid=b.uid and a.qishu='$v[shopqishu]' and a.id='$v[shopid]' and  a.q_end_time is not null and a.q_user is not null group by a.id order by a.q_end_time desc ");				
 			}
 			$data=array_filter($zhsz,create_function('$v','return !empty($v);'));
 			foreach($data as $k=>$v){
@@ -72,7 +72,6 @@ class snatch extends SystemAction {
 			foreach($newdata as $k=>$v) {
 			$newdata[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
 			}
-			$nndata = array_reverse($newdata);
 			if($newdata) {
 				$code = 200;
 				$msg = "查询成功";
@@ -80,7 +79,7 @@ class snatch extends SystemAction {
 				$code = 400;
 				$msg = "数据为空";
 			}
-			$json = array('type' => $type,'code' => $code, 'msg' => $msg, 'data' => $nndata);
+			$json = array('type' => $type,'code' => $code, 'msg' => $msg, 'data' => $newdata);
 			echo json_encode($json);			
 			}
 
