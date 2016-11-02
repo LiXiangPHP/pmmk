@@ -632,7 +632,7 @@ class card extends SystemAction {
 				$ids = $value['id'];
 			}
 		}
-		$anws = $this->db->GetList("select hueiyuan, tiezi, neirong, time from `@#_quanzi_tiezi` where tiezi in($ids) and ifsee = 0");
+		$anws = $this->db->GetList("select hueiyuan, tiezi, neirong, time from `@#_quanzi_tiezi` where tiezi in($ids) and ifsee = 0 order by time desc");
 		// print_r($anws);die;
 		if($anws) {
 			foreach($anws as $v) {
