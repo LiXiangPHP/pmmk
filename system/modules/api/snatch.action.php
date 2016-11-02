@@ -14,7 +14,7 @@ class snatch extends SystemAction {
 			$zhsz = array();
 			$mygm = $db->GetList("select time,shopqishu,shopid from `@#_member_go_record` where uid='$info[uid]' ");		
 			foreach($mygm as $v){
-				$zhsz[] = $db->GetList("select qishu,id,title,zongrenshu,canyurenshu,thumb from `@#_shoplist` where qishu='$v[shopqishu]' and id='$v[shopid]' and  q_user_code is null order ");				
+				$zhsz[] = $db->GetList("select qishu,id,title,zongrenshu,canyurenshu,thumb from `@#_shoplist` where qishu='$v[shopqishu]' and id='$v[shopid]' and  q_user_code is null  ");				
 			}
 			$data=array_filter($zhsz,create_function('$v','return !empty($v);'));
 			foreach($data as $k=>$v){
