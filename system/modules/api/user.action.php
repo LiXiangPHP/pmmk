@@ -113,6 +113,28 @@ class user extends SystemAction {
 				}
 				
 			}
+			if(!$img && !$name && !$sex) {
+				$code = 100;
+				$msg = "请填写修改内容";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);die;
+			}
+
+			$content = '';
+			if($name) {
+				$users = $db->GetList("SELECT * FROM `go_member` WHERE username LIKE '%$name%'");
+				if($users) {
+					$code = 100;
+					$msg = "该昵称已存在";
+					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+					echo json_encode($json);die;
+				}
+				if($content) {
+					$content = "`username` = '$name'";
+				}else {
+					$content = "`username` = '$name'";
+				}
+			}
 			if($img) {
 				if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $img, $result)){
 					$type = $result[2];
@@ -133,22 +155,22 @@ class user extends SystemAction {
 						echo json_encode($json);die;
 					}	
 				}
-			}else {
-				$code = 100;
-				$msg = "修改失败";
-				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-				echo json_encode($json);die;
-			}
-			
-			if($name && $sex) {
-				$users = $db->GetList("SELECT * FROM `go_member` WHERE username LIKE '%$name%'");
-				if($users) {
-					$code = 100;
-					$msg = "该昵称已存在";
-					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-					echo json_encode($json);die;
+				if($content) {
+					$content .= ",`img` = '$new_file'";
+				}else {
+					$content = "`img` = '$new_file'";
 				}
-				$res = $db->Query("UPDATE `@#_member` SET `username` = '$name', `sex` = '$sex', `img` = '$new_file' where `uid` = '$info[uid]'");
+			}
+
+			if($sex) {
+				if($content) {
+					$content .= ",`sex` = '$sex'";
+				}else {
+					$content = "`sex` = '$sex'";
+				}
+			}
+			if($content) {
+				$res = $db->Query("UPDATE `@#_member` SET $content where `uid` = '$info[uid]'");
 				if($res) {
 					$code = 200;
 					$msg = "修改成功";
@@ -162,7 +184,7 @@ class user extends SystemAction {
 				}
 			}else {
 				$code = 100;
-				$msg = "操作失败";
+				$msg = "请填写修改内容";
 				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 				echo json_encode($json);
 			}
