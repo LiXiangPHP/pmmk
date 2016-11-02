@@ -173,7 +173,6 @@ class user extends SystemAction {
 				}
 			}
 			if($content) {
-				echo "UPDATE `@#_member` SET $content where `uid` = '$info[uid]'";die;
 				$res = $db->Query("UPDATE `@#_member` SET $content where `uid` = '$info[uid]'");
 				if($res) {
 					$code = 200;
