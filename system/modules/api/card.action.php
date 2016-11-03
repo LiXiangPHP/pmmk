@@ -363,22 +363,24 @@ class card extends SystemAction {
 				$comments = array();
 				$comt = $this->com($cardid,$cardid,$Cdata['hueiyuan']);//评论
 				foreach($comt as $k => $val) {
-					$comments[$k]['pname'] = $val['pname'];
-					$comments[$k]['name']  = $val['name'];
-					$comments[$k]['con']   = $val['neirong'];
-					$comments[$k]['time']  = $val['time'];
+					unset($val['id']);
+					unset($val['hueiyuan']);
+					$comments[] = $val;
 				}
 				
 				$comments = $this->bubble_sortm($comments);
-				// print_r($comments);die;
-				$data['data']['comments'] = $comments;
+				if(!$comments) {
+					$data['data']['comments'] = array();
+				}else {
+					$data['data']['comments'] = $comments;
+				}
 				$rew = explode(',',$Cdata['reward']);//判断赏
 				if(in_array($info['uid'],$rew)) {
 					$data['data']['reward'] = 1;//已打赏
 				}else {
 					$data['data']['reward'] = 0;//未打赏
 				}		
-				// print_r($data);die;
+				// print_r($comments);die;
 			}else {//后台发帖
 				$data['data']['id']= $Cdata['id'];
 				$data['data']['title']= $Cdata['title'];
@@ -394,14 +396,17 @@ class card extends SystemAction {
 				$comments = array();
 				$comt = $this->com($cardid,$cardid,'管理员');//评论
 				foreach($comt as $k => $val) {
-					$comments[$k]['pname'] = $val['pname'];
-					$comments[$k]['name']  = $val['name'];
-					$comments[$k]['con']   = $val['neirong'];
-					$comments[$k]['time']  = $val['time'];
+					unset($val['id']);
+					unset($val['hueiyuan']);
+					$comments[] = $val;
 				}
 				$comments = $this->bubble_sortm($comments);
 				// print_r($comments);die;
-				$data['data']['comments'] = $comments;
+				if(!$comments) {
+					$data['data']['comments'] = array();
+				}else {
+					$data['data']['comments'] = $comments;
+				}
 				$data['data']['reward'] = 0;//未打赏
 			}
 			if($data) {
