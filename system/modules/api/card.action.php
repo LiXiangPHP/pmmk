@@ -23,6 +23,21 @@ class card extends SystemAction {
 		return $array; 
 	}
 
+	public function bubble_sorts($array) { 
+		$count = count($array); 
+		if ($count <= 0) return false; 
+		for($i=0; $i<$count; $i++) { 
+			for($j=$count-1; $j>$i; $j--) { 
+    			if ($array[$j]['time'] > $array[$j-1]['time']) { 
+     				$tmp = $array[$j];
+    				$array[$j] = $array[$j-1];
+    				$array[$j-1] = $tmp; 
+    			} 
+    		}
+    	}
+		return $array; 
+	}
+
 	//获取帖子列表
 	public function json_cardlist() {
 		$code = '';
@@ -117,6 +132,18 @@ class card extends SystemAction {
 					$data['data'][] = $v;
 				}
 			}
+
+			$idarr = $this->db->GetList("select id from `@#_quanzi_tiezi` where hueiyuan = '$info[uid]' and tiezi != 0");
+			$idss = '';
+			foreach ($idarr as $key => $value) {
+				if($idss) {
+					$idss .= ','.$value['id'];
+				}else {
+					$idss = $value['id'];
+				}
+			}
+			$rul = $this->db->GetList("select * from `@#_quanzi_tiezi` where pid in($idss) and ifsee = 0 order by time desc");
+			// print_r($rul);die;
 			$lid = $this->db->GetList("select id from `@#_quanzi_tiezi` where hueiyuan = '$info[uid]' and tiezi = 0");
 			$ids = '';
 			foreach ($lid as $key => $value) {
@@ -126,9 +153,33 @@ class card extends SystemAction {
 					$ids = $value['id'];
 				}
 			}
-			$anws = $this->db->GetList("select * from `@#_quanzi_tiezi` where tiezi in($ids) and ifsee = 0");
+			$anws = $this->db->GetList("SELECT * FROM `@#_quanzi_tiezi` WHERE tiezi IN($ids)  AND ifsees = 0  order by time desc");
+			foreach ($anws as $key => $vl) {
+				if($vl['hueiyuan'] == '$info[uid]' && $vl['pid'] == $vl['tiezi']) {
+					unset($anws[$key]);
+				}
+			}
 			// print_r($anws);die;
+			if($rul) {
+				foreach ($rul as $vl) {
+					$anws[] = $vl;
+				}
+			}
+			// print_r($anws);die;
+			
 			if($anws) {
+				$keys = array();
+				for ($i=0; $i<count($anws); $i++) {
+					for ($j=$i+1; $j<count($anws); $j++) {
+						if($anws[$i]['id'] == $anws[$j]['id']) {
+							$keys[] = $j; 
+						}
+					}
+				}
+				foreach ($keys as $v) {
+					unset($anws[$v]);
+				}
+				// print_r($anws);die;
 				if(count($anws)>1) {
 					$data['reply'] = count($anws)."条新消息";//多人回复返回回复人数
 				}else {
@@ -234,12 +285,31 @@ class card extends SystemAction {
 			//评论状态更改
 			$uid =  $this->db->GetOne("select hueiyuan from `@#_quanzi_tiezi` where id = '$cardid'");
 			if($uid['hueiyuan'] == $info['uid']) {
-				$rult = $this->db->Query("update `@#_quanzi_tiezi` set ifsee = 1,dianji = dianji + 1  where tiezi = '$cardid' or id = '$cardid'");
+				$rult = $this->db->Query("update `@#_quanzi_tiezi` set ifsees = 1,dianji = dianji + 1  where tiezi = '$cardid' or id = '$cardid'");
 				if(!$rult) {
 					$code = 100;
 					$msg = "操作失败";
 					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 					echo json_encode($json);die;
+				}
+			}else {
+				$arr = $this->db->GetList("select id from `@#_quanzi_tiezi` where tiezi = '$cardid' and hueiyuan = '$info[uid]'");
+				$ids = '';
+				foreach($arr as $v) {
+					if($ids) {
+						$ids .= ','.$v['id'];
+					}else {
+						$ids = $v['id'];
+					}
+				}
+				if($ids) {
+					$rults = $this->db->Query("update `@#_quanzi_tiezi` set ifsee = 1,dianji = dianji + 1  where tiezi = '$cardid' and pid in($ids)");
+					if(!$rults) {
+						$code = 100;
+						$msg = "操作失败";
+						$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+						echo json_encode($json);die;
+					}
 				}
 			}
 			// $idss = $this->db->GetList("select distinct hueiyuan from `@#_quanzi_tiezi` where tiezi = '$cardid'");
@@ -623,16 +693,71 @@ class card extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);die;
 		}
-		$lid = $this->db->GetList("select id from `@#_quanzi_tiezi` where hueiyuan = '$info[uid]' and tiezi = 0");
-		$ids = '';
-		foreach ($lid as $key => $value) {
-			if($ids) {
-				$ids .= ','.$value['id'];
-			}else {
-				$ids = $value['id'];
+		$idarr = $this->db->GetList("select id from `@#_quanzi_tiezi` where hueiyuan = '$info[uid]' and tiezi != 0");
+			$idss = '';
+			foreach ($idarr as $key => $value) {
+				if($idss) {
+					$idss .= ','.$value['id'];
+				}else {
+					$idss = $value['id'];
+				}
 			}
-		}
-		$anws = $this->db->GetList("select hueiyuan, tiezi, neirong, time from `@#_quanzi_tiezi` where tiezi in($ids) and ifsee = 0 order by time desc");
+			$rul = $this->db->GetList("select * from `@#_quanzi_tiezi` where pid in($idss) and ifsee = 0 order by time desc");
+			// print_r($rul);die;
+			$lid = $this->db->GetList("select id from `@#_quanzi_tiezi` where hueiyuan = '$info[uid]' and tiezi = 0");
+			$ids = '';
+			foreach ($lid as $key => $value) {
+				if($ids) {
+					$ids .= ','.$value['id'];
+				}else {
+					$ids = $value['id'];
+				}
+			}
+			$anws = $this->db->GetList("SELECT * FROM `@#_quanzi_tiezi` WHERE tiezi IN($ids)  AND ifsees = 0  order by time desc");
+			foreach ($anws as $key => $vl) {
+				if($vl['hueiyuan'] == '$info[uid]' && $vl['pid'] == $vl['tiezi']) {
+					unset($anws[$key]);
+				}
+			}
+
+			if($rul) {
+				foreach ($rul as $vl) {
+					$anws[] = $vl;
+				}
+			}
+			// print_r($anws);die;
+			$keys = array();
+			for ($i=0; $i<count($anws); $i++) {
+				for ($j=$i+1; $j<count($anws); $j++) {
+					if($anws[$i]['id'] == $anws[$j]['id']) {
+						$keys[] = $j; 
+					}
+				}
+			}
+			foreach ($keys as $v) {
+				unset($anws[$v]);
+			}
+			$keys = array();
+			foreach ($anws as $key => $value) {
+				unset($value['qzid']);
+				unset($value['hueifu']);
+				unset($value['dianji']);
+				unset($value['zhiding']);
+				unset($value['jinghua']);
+				unset($value['zuihou']);
+				unset($value['shenhe']);
+				unset($value['type']);
+				unset($value['reward']);
+				unset($value['img']);
+				unset($value['ifsee']);
+				unset($value['ifsees']);
+				unset($value['pid']);
+				unset($value['title']);
+				unset($value['id']);
+				$keys[] = $value;
+			}
+
+			$anws = $this->bubble_sorts($keys);
 		// print_r($anws);die;
 		if($anws) {
 			foreach($anws as $v) {
@@ -671,13 +796,25 @@ class card extends SystemAction {
 				}
 				
 			}
-			$rult = $this->db->Query("update `@#_quanzi_tiezi` set ifsee = 1  where tiezi in($ids) or id in($ids)");
-			if(!$rult) {
-				$code = 100;
-				$msg = "操作失败";
-				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-				echo json_encode($json);die;
+			if($ids) {
+				$rult = $this->db->Query("update `@#_quanzi_tiezi` set ifsees = 1  where tiezi in($ids) or id in($ids)");
+				if(!$rult) {
+					$code = 100;
+					$msg = "操作失败";
+					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+					echo json_encode($json);die;
+				}
 			}
+			if($idss) {
+				$rults = $this->db->Query("update `@#_quanzi_tiezi` set ifsee = 1  where pid in($idss) ");
+				if(!$rults) {
+					$code = 100;
+					$msg = "操作失败";
+					$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+					echo json_encode($json);die;
+				}
+			}
+			
 			$code = 200;
 			$msg = "查询成功";
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
