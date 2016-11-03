@@ -140,53 +140,113 @@ class shop extends SystemAction {
 		$msg = '';
 		$data = array();
 		$gid = abs(intval($_POST['gid']));
-		// $token = trim($_POST['token']);
-		// $info = System::token_uid($token);
-		// if($info['code'] == 100) {
-		// 	$code = 300;
-		// 	$msg = "用户未登陆";
-		// 	$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-		// 	echo json_encode($json);die;
-		// }
-		if($gid) {
-			$data = $this->db->GetOne("SELECT id, qishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
-			if($data['remain'] == 0) {
-				$data['state'] = "已揭晓";
-			}else {
-				$data['state'] = "夺宝中";
-			}
-			$data['picarr'] = unserialize($data['picarr']);
-			foreach ($data['picarr'] as $k => $v) {
-				$data['picarr'][$k] = "gangmaduobao.com/statics/uploads/".$v;
-			}
-			$data['url'] = "gangmaduobao.com/?/mobile/mobile/goodsdesc/".$gid;
-			$uids = $this->db->GetList("SELECT uid FROM `@#_member_go_record` where shopid = '$gid' and shopqishu = '$data[periods]'");
-			$ids = '';
-			foreach($uids as $v) {
-				$ids[] = $v['uid'];
-			}
-			if(in_array($info['uid'], $ids)) {
-				$data['ustate'] = "";
-			}else {
-				$data['ustate'] = "您还未参与本期夺宝";
-			}
-			// echo "<pre>";
-			// print_r($data);die;
-			if($data) {
-				$code = 200;
-				$msg = "查询成功";
+		$token = trim($_POST['token']);
+		if($token) {
+			$info = System::token_uid($token);
+			if($gid) {
+				$data = $this->db->GetOne("SELECT id, qishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
+				if($data['remain'] == 0) {
+					$data['state'] = "已揭晓";
+				}else {
+					$data['state'] = "夺宝中";
+				}
+				$data['picarr'] = unserialize($data['picarr']);
+				foreach ($data['picarr'] as $k => $v) {
+					$data['picarr'][$k] = "gangmaduobao.com/statics/uploads/".$v;
+				}
+				$data['url'] = "gangmaduobao.com/?/mobile/mobile/goodsdesc/".$gid;
+				$uids = $this->db->GetList("SELECT uid FROM `@#_member_go_record` where shopid = '$gid' and shopqishu = '$data[periods]'");
+				$ids = '';
+				foreach($uids as $v) {
+					$ids[] = $v['uid'];
+				}
+				if(in_array($info['uid'], $ids)) {//参与夺宝显示是否中奖，云购几次，云购码
+					$shop = $this->db->GetOne("select q_user_code,q_user from `@#_shoplist` where id = '$gid'");
+					if($shop) {
+						$shop['q_user'] = unserialize($shop['q_user']);
+					}
+					if($info['uid'] == $shop['q_user']['uid']) {
+						$data['ustate'] = '恭喜本次夺宝获奖';
+					}else {
+						$data['ustate'] = '';
+					}
+					$num = $this->db->GetOne("SELECT count(id) num FROM `@#_member_go_record` where shopid = '$gid' and shopqishu = '$data[periods]' and uid = '$info[uid]'");
+					$data['num'] = $num['num'];
+					$codes = $this->db->GetList("SELECT goucode FROM `@#_member_go_record` where shopid = '$gid' and shopqishu = '$data[periods]' and uid = '$info[uid]'");
+					foreach ($codes as $key => $value) {
+						$cos = explode(',',$value['goucode']);
+						foreach($cos as $vale) {
+							$data['codes'][] = $vale;
+						}
+					}
+					// print_r($codes);die;
+				}else {
+					$data['ustate'] = "您还未参与本期夺宝";
+					$data['num'] = "";
+					$data['codes'] = array();
+				}
+				// echo "<pre>";
+				// print_r($data);die;
+				if($data) {
+					$code = 200;
+					$msg = "查询成功";
+				}else {
+					$code = 100;
+					$msg = "数据为空";
+				}
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);
 			}else {
 				$code = 100;
-				$msg = "数据为空";
+				$msg = "操作失败";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);
 			}
-			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-			echo json_encode($json);
 		}else {
-			$code = 100;
-			$msg = "操作失败";
-			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
-			echo json_encode($json);
-		}	
+			if($gid) {
+				$data = $this->db->GetOne("SELECT id, qishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
+				if($data['remain'] == 0) {
+					$data['state'] = "已揭晓";
+				}else {
+					$data['state'] = "夺宝中";
+				}
+				$data['picarr'] = unserialize($data['picarr']);
+				foreach ($data['picarr'] as $k => $v) {
+					$data['picarr'][$k] = "gangmaduobao.com/statics/uploads/".$v;
+				}
+				$data['url'] = "gangmaduobao.com/?/mobile/mobile/goodsdesc/".$gid;
+				// $uids = $this->db->GetList("SELECT uid FROM `@#_member_go_record` where shopid = '$gid' and shopqishu = '$data[periods]'");
+				// $ids = '';
+				// foreach($uids as $v) {
+				// 	$ids[] = $v['uid'];
+				// }
+				// if(in_array($info['uid'], $ids)) {
+				// 	$data['ustate'] = "";//参与夺宝显示是否中奖，云购几次，云购码
+				// }else {
+				// 	$data['ustate'] = "您还未参与本期夺宝";
+				// }
+				$data['ustate'] = "";
+				$data['num'] = "";
+				$data['codes'] = array();
+				// echo "<pre>";
+				// print_r($data);die;
+				if($data) {
+					$code = 200;
+					$msg = "查询成功";
+				}else {
+					$code = 100;
+					$msg = "数据为空";
+				}
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);
+			}else {
+				$code = 100;
+				$msg = "操作失败";
+				$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+				echo json_encode($json);
+			}
+		}
+			
 	}
 
 	/*获得往期商品数据*/
