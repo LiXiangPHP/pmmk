@@ -38,6 +38,22 @@ class card extends SystemAction {
 		return $array; 
 	}
 
+	public function bubble_sortm($array) { 
+		$count = count($array); 
+		if ($count <= 0) return false; 
+		for($i=0; $i<$count; $i++) { 
+			for($j=$count-1; $j>$i; $j--) { 
+    			if ($array[$j]['time'] < $array[$j-1]['time']) { 
+     				$tmp = $array[$j];
+    				$array[$j] = $array[$j-1];
+    				$array[$j-1] = $tmp; 
+    			} 
+    		}
+    	}
+		return $array; 
+	}
+
+
 	//获取帖子列表
 	public function json_cardlist() {
 		$code = '';
@@ -352,6 +368,8 @@ class card extends SystemAction {
 					$comments[$k]['con']   = $val['neirong'];
 					$comments[$k]['time']  = $val['time'];
 				}
+				
+				$comments = $this->bubble_sortm($comments);
 				// print_r($comments);die;
 				$data['data']['comments'] = $comments;
 				$rew = explode(',',$Cdata['reward']);//判断赏
@@ -381,6 +399,8 @@ class card extends SystemAction {
 					$comments[$k]['con']   = $val['neirong'];
 					$comments[$k]['time']  = $val['time'];
 				}
+				$comments = $this->bubble_sortm($comments);
+				// print_r($comments);die;
 				$data['data']['comments'] = $comments;
 				$data['data']['reward'] = 0;//未打赏
 			}
