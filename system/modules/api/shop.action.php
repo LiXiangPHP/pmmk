@@ -144,11 +144,26 @@ class shop extends SystemAction {
 		if($token) {
 			$info = System::token_uid($token);
 			if($gid) {
-				$data = $this->db->GetOne("SELECT id, qishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
+				$data = $this->db->GetOne("SELECT idqishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain,q_end_time FROM `@#_shoplist` where id = '$gid' limit 1");
 				if($data['remain'] == 0) {
-					$data['state'] = "已揭晓";
+					if($data['q_end_time']) {
+						$data['state'] = "已揭晓";
+					}else {
+						$data['state'] = "即将揭晓";
+					}
+					unset($data['q_end_time']);
+					//计算过程（和，余数，结果）
+					$arr = $this->db->GetOne("select q_end_time, canyurenshu from `@#_shoplist` where id = '$gid'");
+					$h=abs(date("H",$arr['q_end_time']));
+					$i=date("i",$arr['q_end_time']);
+					$s=date("s",$arr['q_end_time']);
+					$w=substr($arr['q_end_time'],11,3);	
+					$data['count']['timeadd'] = $h.$i.$s.$w;
+					$data['count']['timemod'] = fmod($user_shop_time_add*100,$arr['canyurenshu']);
+					$data['count']['rul'] = $data['timemod'] + 1000001;
 				}else {
 					$data['state'] = "夺宝中";
+					$data['count'] = array();
 				}
 				$data['picarr'] = unserialize($data['picarr']);
 				foreach ($data['picarr'] as $k => $v) {
@@ -204,11 +219,26 @@ class shop extends SystemAction {
 			}
 		}else {
 			if($gid) {
-				$data = $this->db->GetOne("SELECT id, qishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain FROM `@#_shoplist` where id = '$gid' limit 1");
+				$data = $this->db->GetOne("SELECT idqishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain,q_end_time FROM `@#_shoplist` where id = '$gid' limit 1");
 				if($data['remain'] == 0) {
-					$data['state'] = "已揭晓";
+					if($data['q_end_time']) {
+						$data['state'] = "已揭晓";
+					}else {
+						$data['state'] = "即将揭晓";
+					}
+					unset($data['q_end_time']);
+					//计算过程（和，余数，结果）
+					$arr = $this->db->GetOne("select q_end_time, canyurenshu from `@#_shoplist` where id = '$gid'");
+					$h=abs(date("H",$arr['q_end_time']));
+					$i=date("i",$arr['q_end_time']);
+					$s=date("s",$arr['q_end_time']);
+					$w=substr($arr['q_end_time'],11,3);	
+					$data['count']['timeadd'] = $h.$i.$s.$w;
+					$data['count']['timemod'] = fmod($user_shop_time_add*100,$arr['canyurenshu']);
+					$data['count']['rul'] = $data['timemod'] + 1000001;
 				}else {
 					$data['state'] = "夺宝中";
+					$data['count'] = array();
 				}
 				$data['picarr'] = unserialize($data['picarr']);
 				foreach ($data['picarr'] as $k => $v) {
@@ -274,7 +304,7 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$Pdata = $this->db->GetPage("SELECT title,qishu periods,q_user_code gcode,canyurenshu part, q_end_time etime, q_user FROM `@#_shoplist` where q_showtime = 'N' and q_user_code IS NOT NULL and sid = '$item[sid]' order by periods desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$Pdata = $this->db->GetPage("SELECT id,title,qishu periods,q_user_code gcode,canyurenshu part, q_end_time etime, q_user FROM `@#_shoplist` where q_showtime = 'N' and q_user_code IS NOT NULL and sid = '$item[sid]' order by periods desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 
 			foreach($Pdata as $v) {
 				$user = unserialize($v['q_user']);
@@ -389,16 +419,17 @@ class shop extends SystemAction {
 		}
 		$item = $this->db->GetOne("select * from `@#_shoplist` where `id`='$id' LIMIT 1");
 		if($item) {
-			$arr = $this->db->GetList("select id from `@#_shoplist` where sid = '$item[sid]'");
-			$ids = '';
-			foreach ($arr as $key => $value) {
-				if(empty($ids)) {
-					$ids .= $value['id'];
-				}else {
-					$ids .= ",".$value['id'];
-				}
-			}
-			$total = $this->db->GetCount("select * from `@#_member_go_record` where  shopid in($ids)");
+			// $arr = $this->db->GetList("select id from `@#_shoplist` where sid = '$item[sid]'");
+			// $ids = '';
+			// foreach ($arr as $key => $value) {
+			// 	if(empty($ids)) {
+			// 		$ids .= $value['id'];
+			// 	}else {
+			// 		$ids .= ",".$value['id'];
+			// 	}
+			// }
+			// $total = $this->db->GetCount("select * from `@#_member_go_record` where  shopid in($ids)");
+			$total = $this->db->GetCount("select * from `@#_member_go_record` where  shopid = '$id')");
 			$num = 10;
 			$yushu=$total%$num;
 			if($yushu > 0) {
@@ -411,7 +442,7 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$Idata = $this->db->GetPage("SELECT a.canyurenshu part,b.id,b.username,b.uphoto,b.time,b.ip FROM `@#_shoplist` a, `@#_member_go_record` b where a.id = b.shopid and b.shopid in($ids) order by b.time desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$Idata = $this->db->GetPage("SELECT a.canyurenshu part,b.id,b.username,b.uphoto,b.time,b.ip FROM `@#_shoplist` a, `@#_member_go_record` b where a.id = b.shopid and b.shopid = '$id' order by b.time desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			foreach($Idata as $v) {
 				$v['uphoto'] = "gangmaduobao.com/".$v['uphoto'];
 				$data['data'][] = $v;
