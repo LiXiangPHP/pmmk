@@ -14,8 +14,11 @@ class my extends SystemAction {
 		$info = System::token_uid($token);
 		if ($info['code']==200) {
 			$db = System::load_sys_class('model');
-			$data =  $db->GetOne("select img,money,score from `@#_member` where uid='$info[uid]' ");
-			$data['img'] = "gangmaduobao.com/".$data['img'];
+			$data =  $db->GetOne("select isvx,img,money,score from `@#_member` where uid='$info[uid]' ");
+			if ($data['isvx']!=1) {
+				$data['img'] = "gangmaduobao.com/".$data['img'];
+			}
+			
 			if($data) {
 				$code = 200;
 				$msg = "查询成功";
