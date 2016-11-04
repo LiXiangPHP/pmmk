@@ -21,6 +21,10 @@ class my extends SystemAction {
 			elseif(substr($data['img'],0,4) != "http") {
 				$data['img'] = "gangmaduobao.com/".$data['img'];
 			}
+			else
+			{
+				$data['img'] = substr($data['img'],7);
+			}
 			
 			if($data) {
 				$code = 200;
@@ -49,6 +53,10 @@ class my extends SystemAction {
 			}
 			elseif(substr($data['img'],0,4) != "http") {
 				$data['img'] = "gangmaduobao.com/".$data['img'];
+			}
+			else
+			{
+				$data['img'] = substr($data['img'],7);
 			}
 				
 				if($data) {
