@@ -41,7 +41,7 @@ tr{ text-align:center}
         	<?php foreach($option_list as $v) { ?>
             <tr>
                 <td><?php echo $v['number'];?></td>
-                <td><input type="text"  style='width:50px'  id ='odds'  value="<?php echo floatval($v['odds']);?> "/></td>
+                <td><input type="text"  style='width:50px'  id ='odds<?php echo $v['id'];?>'  value="<?php echo floatval($v['odds']);?> "/></td>
                 <td><input type="button" class="button" value=" 保存 " id='<?php echo $v['id'];?>' onclick='change_odds(this)'/></td>
 
             </tr>
@@ -71,8 +71,10 @@ $(function(){
 });
 function change_odds(o)
 {
-    var odds = $('#odds').val();
     var id = $(o).attr('id');
+    var odds = $("#odds"+id).val();
+
+    
     $.ajax( {  
          url:'?/admin/paoma/update_odds',// 跳转到 action  
           data:{  

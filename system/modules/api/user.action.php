@@ -1,12 +1,72 @@
 <?php
-
 class user extends SystemAction {
 
 	//登陆接口
 	public function login(){
+		$db = System::load_sys_class('model');
+		$code = $_POST['code'];
+		if($code)
+		{
+			$wx=System::load_app_class('Weixin','api');
+			// $code = "021hNyX109yILD1cDNU103rAX10hNyX7";
+			$aa = $wx::token($code);
+			$aa = json_decode($aa);
+			$access_token = $aa->access_token;
+			// $access_token = "KH0WGDAdmJD97a3ySeQVAGw1SV00SmdXHZOGeA-5BvQuFbnWR7szQxNdXHi70MkHP64wSsUs052J3Gx6_BS-JJqhLcU2s03LXvl7cImoXRw";
+			$info = $wx::info($access_token);
+			$info = json_decode($info);
+			$openid = $info->openid;
+			if($openid)
+			{
+				$member=$db->GetOne("select * from `@#_member` where `wxid`='$openid'");
+			}
+			else
+			{
+				$code = 100;
+				$msg = "错误";
+			}
+			
+			if(!$member)
+			{
+				$name = $info->nickname;
+				$img = $info->headimgurl;
+				$time = time();
+				$password = "";
+				
+				$sql="INSERT INTO `@#_member`(username,img,emailcode,mobilecode,time,vxid,isvx)VALUES('$name','$img','-1','-1','$time','$openid','1')";
+				$sqlreg = $db->Query($sql);
+				if($sqlreg)
+				{
+					$member=$db->GetOne("SELECT uid FROM `@#_member` WHERE `username` = '$name' LIMIT 1");
+					$token  = md5($openid.$password.$time);
+					$user_ip = _get_ip_dizhi();
+					$db->Query("UPDATE `@#_member` SET `user_ip` = '$user_ip',`login_time` = '$time', `token` = '$token' where `vxid` = '$openid'");
+
+					$code = 200;
+					$yaoqing = "10000".$member[uid];
+					$data = array("token"=>$token,"yaoqing"=>$yaoqing);
+					$json = array('code' => $code, 'data'=>$data);
+					echo json_encode($json);die;
+				}
+			}
+			else
+			{
+				$time = time();
+				$password = "";
+				$user_ip = _get_ip_dizhi();
+				$token  = md5($openid.$password.$time);
+				$db->Query("UPDATE `@#_member` SET `user_ip` = '$user_ip',`login_time` = '$time', `token` = '$token' where `vxid` = '$openid'");
+				$code = 200;
+				$yaoqing = "10000".$member[uid];
+				$data = array("token"=>$token,"yaoqing"=>$yaoqing);
+				$json = array('code' => $code, 'data'=>$data);
+				echo json_encode($json);die;
+			}
+		}
+		
 		$username=$_POST['username'];
 		$password=md5($_POST['password']);
-		$db = System::load_sys_class('model');	
+	
 		// echo "select * from `@#_member` where `mobile`='$username' and `password`='$password'";die;
 		$member=$db->GetOne("select * from `@#_member` where `mobile`='$username' and `password`='$password'");
 		if(!$member){
@@ -69,7 +129,13 @@ class user extends SystemAction {
 				$json = array('code' => $code, 'msg' => $msg);
 				echo json_encode($json);die;
 			}
-
+		if(!$name)
+		{
+			$code = 100;
+			$msg = '手机号不能为空';
+			$json = array('code' => $code, 'msg' => $msg);
+			echo json_encode($json);die;
+		}
 		$time=time();
 		$userpassword=md5($password);
 		$sql="INSERT INTO `@#_member`(username,mobile,password,img,emailcode,mobilecode,time,yaoqing)VALUES('$name','$name','$userpassword','photo/member.jpg','-1','1','$time','$yaoqing')";
