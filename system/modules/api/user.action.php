@@ -18,7 +18,7 @@ class user extends SystemAction {
 			$openid = $info->openid;
 			if($openid)
 			{
-				$member=$db->GetOne("select * from `@#_member` where `wxid`='$openid'");
+				$member=$db->GetOne("select * from `@#_member` where `vxid`='$openid'");
 			}
 			else
 			{
