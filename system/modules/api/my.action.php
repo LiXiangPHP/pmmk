@@ -14,8 +14,11 @@ class my extends SystemAction {
 		$info = System::token_uid($token);
 		if ($info['code']==200) {
 			$db = System::load_sys_class('model');
-			$data =  $db->GetOne("select isvx,userneme,img,money,score from `@#_member` where uid='$info[uid]' ");
+			$data =  $db->GetOne("select username,img,money,score,isvx from `@#_member` where uid='$info[uid]' ");
 			if ($data['isvx']!=1) {
+				$data['img'] = "gangmaduobao.com/".$data['img'];
+			}
+			elseif(substr($data['img'],0,4) != "http") {
 				$data['img'] = "gangmaduobao.com/".$data['img'];
 			}
 			
@@ -42,6 +45,9 @@ class my extends SystemAction {
 				$db = System::load_sys_class('model');
 				$data =  $db->GetOne("select isvx,img,username,sex from `@#_member` where uid='$info[uid]' ");
 				if ($data['isvx']!=1) {
+				$data['img'] = "gangmaduobao.com/".$data['img'];
+			}
+			elseif(substr($data['img'],0,4) != "http") {
 				$data['img'] = "gangmaduobao.com/".$data['img'];
 			}
 				
