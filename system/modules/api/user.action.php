@@ -32,8 +32,8 @@ class user extends SystemAction {
 				$img = $info->headimgurl;
 				$time = time();
 				$password = "";
-				
-				$sql="INSERT INTO `@#_member`(username,img,emailcode,mobilecode,time,vxid,isvx)VALUES('$name','$img','-1','-1','$time','$openid','1')";
+				$money = 5;
+				$sql="INSERT INTO `@#_member`(username,img,emailcode,mobilecode,time,vxid,isvx,money)VALUES('$name','$img','-1','-1','$time','$openid','1','$money')";
 				$sqlreg = $db->Query($sql);
 				if($sqlreg)
 				{
@@ -137,8 +137,9 @@ class user extends SystemAction {
 			echo json_encode($json);die;
 		}
 		$time=time();
+		$money=5;
 		$userpassword=md5($password);
-		$sql="INSERT INTO `@#_member`(username,mobile,password,img,emailcode,mobilecode,time,yaoqing)VALUES('$name','$name','$userpassword','photo/member.jpg','-1','1','$time','$yaoqing')";
+		$sql="INSERT INTO `@#_member`(username,mobile,password,img,emailcode,mobilecode,time,yaoqing,money)VALUES('$name','$name','$userpassword','photo/member.jpg','-1','1','$time','$yaoqing','$money')";
 		$sqlreg = $db->Query($sql);
 		if($sqlreg)
 		{
