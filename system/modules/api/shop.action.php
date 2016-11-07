@@ -144,7 +144,7 @@ class shop extends SystemAction {
 		if($token) {
 			$info = System::token_uid($token);
 			if($gid) {
-				$data = $this->db->GetOne("SELECT idqishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain,q_end_time FROM `@#_shoplist` where id = '$gid' limit 1");
+				$data = $this->db->GetOne("SELECT id,qishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain,q_end_time FROM `@#_shoplist` where id = '$gid' limit 1");
 				if($data['remain'] == 0) {
 					if($data['q_end_time']) {
 						$data['state'] = "已揭晓";
@@ -153,19 +153,29 @@ class shop extends SystemAction {
 					}
 					unset($data['q_end_time']);
 					//计算过程（和，余数，结果）
-					$arr = $this->db->GetOne("select q_end_time, canyurenshu from `@#_shoplist` where id = '$gid'");
-					$h=abs(date("H",$arr['q_end_time']));
-					$i=date("i",$arr['q_end_time']);
-					$s=date("s",$arr['q_end_time']);
-					$w=substr($arr['q_end_time'],11,3);	
-					$data['count']['timeadd'] = $h.$i.$s.$w;
-					$data['count']['timemod'] = fmod($user_shop_time_add*100,$arr['canyurenshu']);
-					$data['count']['rul'] = $data['timemod'] + 1000001;
+					$arr = $this->db->GetOne("select * from `@#_shoplist` where id = '$gid'");
+					if($arr['q_content']){
+						$data['count']['timeadd'] = $arr['q_counttime'];
+						$data['count']['timemod'] = fmod($arr['q_counttime'],$arr['canyurenshu']);
+						$data['count']['rul'] = 1000001;
+					}else {
+						$h=abs(date("H",$arr['q_end_time']));
+						$i=date("i",$arr['q_end_time']);
+						$s=date("s",$arr['q_end_time']);
+						$w=substr($arr['q_end_time'],11,3);	
+						$data['count']['timeadd'] = $h.$i.$s.$w;
+						$data['count']['timemod'] = fmod($data['count']['timeadd']*100,$arr['canyurenshu']);
+						$data['count']['key'] = 1000001;
+					}
+					
 				}else {
 					$data['state'] = "夺宝中";
 					$data['count'] = array();
 				}
 				$data['picarr'] = unserialize($data['picarr']);
+				if(!$data['picarr']) {
+					$data['picarr'] = array();
+				}
 				foreach ($data['picarr'] as $k => $v) {
 					$data['picarr'][$k] = "gangmaduobao.com/statics/uploads/".$v;
 				}
@@ -219,7 +229,7 @@ class shop extends SystemAction {
 			}
 		}else {
 			if($gid) {
-				$data = $this->db->GetOne("SELECT idqishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain,q_end_time FROM `@#_shoplist` where id = '$gid' limit 1");
+				$data = $this->db->GetOne("SELECT id,qishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain,q_end_time FROM `@#_shoplist` where id = '$gid' limit 1");
 				if($data['remain'] == 0) {
 					if($data['q_end_time']) {
 						$data['state'] = "已揭晓";
@@ -228,19 +238,28 @@ class shop extends SystemAction {
 					}
 					unset($data['q_end_time']);
 					//计算过程（和，余数，结果）
-					$arr = $this->db->GetOne("select q_end_time, canyurenshu from `@#_shoplist` where id = '$gid'");
-					$h=abs(date("H",$arr['q_end_time']));
-					$i=date("i",$arr['q_end_time']);
-					$s=date("s",$arr['q_end_time']);
-					$w=substr($arr['q_end_time'],11,3);	
-					$data['count']['timeadd'] = $h.$i.$s.$w;
-					$data['count']['timemod'] = fmod($user_shop_time_add*100,$arr['canyurenshu']);
-					$data['count']['rul'] = $data['timemod'] + 1000001;
+					$arr = $this->db->GetOne("select * from `@#_shoplist` where id = '$gid'");
+					if($item['q_content']){
+						$data['count']['timeadd'] = $arr['q_counttime'];
+						$data['count']['timemod'] = fmod($arr['q_counttime'],$arr['canyurenshu']);
+						$data['count']['rul'] = 1000001;
+					}else {
+						$h=abs(date("H",$arr['q_end_time']));
+						$i=date("i",$arr['q_end_time']);
+						$s=date("s",$arr['q_end_time']);
+						$w=substr($arr['q_end_time'],11,3);	
+						$data['count']['timeadd'] = $h.$i.$s.$w;
+						$data['count']['timemod'] = fmod($data['count']['timeadd']*100,$arr['canyurenshu']);
+						$data['count']['key'] = 1000001;
+					}
 				}else {
 					$data['state'] = "夺宝中";
 					$data['count'] = array();
 				}
 				$data['picarr'] = unserialize($data['picarr']);
+				if(!$data['picarr']) {
+					$data['picarr'] = array();
+				}
 				foreach ($data['picarr'] as $k => $v) {
 					$data['picarr'][$k] = "gangmaduobao.com/statics/uploads/".$v;
 				}
