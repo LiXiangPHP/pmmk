@@ -64,9 +64,11 @@ class index1 extends SystemAction {
 		$data = $db->GetPage("select qishu,id,canyurenshu,shenyurenshu,title,money,thumb,q_end_time from `@#_shoplist` where q_uid is not null and  `q_end_time` >= $time order by shenyurenshu asc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 		foreach($data as $k=>$v) {
 				$data[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
-			}
+		}
 		if($data) {
-				
+			$data['time'] = time();
+		}
+		if($data) {				
 				$code = 200;
 				$msg = "查询成功";
 			}else {
@@ -90,6 +92,9 @@ class index1 extends SystemAction {
 				unset($v['q_user']);
 				unset($v['title']);		
 				$data[] = $v;	
+			}
+			if($data) {
+				$data['time'] = time();
 			}
 			if($data) {
 				$code = 200;
