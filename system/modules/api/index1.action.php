@@ -40,7 +40,8 @@ class index1 extends SystemAction {
 	public function kj(){
 		$type = isset($_POST['type']) ? $_POST['type'] : null;
 		$db = System::load_sys_class('model');
-		$time = time() - 300;
+		$dtime = time();
+		$time = $dtime - 300;
 		//待开奖
 		if ($type==1) {	
 		// $pagenum = abs(intval($_POST['p']));
@@ -67,8 +68,8 @@ class index1 extends SystemAction {
 		}
 		if($Ddata) {
 			$data['data'] = $Ddata;
-			$data['time'] = time();
-			
+			$data['time'] = $dtime;
+
 		}
 		if($data) {				
 				$code = 200;
@@ -94,7 +95,7 @@ class index1 extends SystemAction {
 				$data['data'][] = $v;	
 			}
 			if($data) {
-				$data['time'] = time();
+				$data['time'] = $dtime;
 			}
 			if($data) {
 				$code = 200;
