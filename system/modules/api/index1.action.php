@@ -41,6 +41,14 @@ class index1 extends SystemAction {
 		$type = isset($_POST['type']) ? $_POST['type'] : null;
 		$db = System::load_sys_class('model');
 		$dtime = time();
+
+		$time = explode ( " ", microtime () ); 
+		$time = $time [1] . ".".($time [0]*1000); 
+		$time = substr($time, 10,4);
+		$dtime = time().$time;
+
+		
+
 		$time = $dtime - 300;
 		//待开奖
 		if ($type==1) {	
