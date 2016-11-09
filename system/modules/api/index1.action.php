@@ -79,7 +79,7 @@ class index1 extends SystemAction {
 		}
 		//最新揭晓
 		if ($type==2) {	
-			$Tdata = $db->GetPage("select q_user,title,q_user_code,q_end_time,qishu,thumb,id from `@#_shoplist`  where q_uid is not null and `q_end_time` < $time");
+			$Tdata = $db->GetPage("select q_user,title,q_user_code,q_end_time,qishu,thumb,id from `@#_shoplist`  where q_uid is not null and `q_end_time` < $time order by q_end_time desc");
 			
 			foreach($Tdata as $k=>$v) {
 				$v['shopname'] = $v['title'];
