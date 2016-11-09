@@ -61,11 +61,12 @@ class index1 extends SystemAction {
 			}
 		$page=System::load_sys_class('page');
 		$page->config($total,$num,$pagenum,"0");
-		$data = $db->GetPage("select qishu,id,canyurenshu,shenyurenshu,title,money,thumb,q_end_time from `@#_shoplist` where q_uid is not null and  `q_end_time` >= $time order by shenyurenshu asc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
-		foreach($data as $k=>$v) {
-				$data[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
+		$Ddata = $db->GetPage("select qishu,id,canyurenshu,shenyurenshu,title,money,thumb,q_end_time from `@#_shoplist` where q_uid is not null and  `q_end_time` >= $time order by shenyurenshu asc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		foreach($Ddata as $k=>$v) {
+				$Ddata[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
 		}
-		if($data) {
+		if($Ddata) {
+			$data['data'] = $Ddata;
 			$data['time'] = time();
 		}
 		if($data) {				
@@ -82,7 +83,7 @@ class index1 extends SystemAction {
 		//最新揭晓
 		if ($type==2) {	
 			$Tdata = $db->GetPage("select q_user,title,q_user_code,q_end_time,qishu,thumb,id from `@#_shoplist`  where q_uid is not null and `q_end_time` < $time order by q_end_time desc");
-			
+			$data = '';
 			foreach($Tdata as $k=>$v) {
 				$v['shopname'] = $v['title'];
 				$arr = unserialize($v['q_user']);
@@ -91,7 +92,7 @@ class index1 extends SystemAction {
 				$v['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];	
 				unset($v['q_user']);
 				unset($v['title']);		
-				$data[] = $v;	
+				$data['data'][] = $v;	
 			}
 			if($data) {
 				$data['time'] = time();
@@ -105,7 +106,6 @@ class index1 extends SystemAction {
 			}
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);
-
 		}
 	}
 
