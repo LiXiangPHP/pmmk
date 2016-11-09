@@ -68,6 +68,7 @@ class index1 extends SystemAction {
 		if($Ddata) {
 			$data['data'] = $Ddata;
 			$data['time'] = time();
+			
 		}
 		if($data) {				
 				$code = 200;
