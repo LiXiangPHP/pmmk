@@ -78,12 +78,10 @@ class index1 extends SystemAction {
 			}
 			$json = array('code' => $code, 'msg' => $msg, 'ptotal'=> $yeshu,'data' => $data);
 			echo json_encode($json);
-
 		}
 		//最新揭晓
 		if ($type==2) {	
 			$Tdata = $db->GetPage("select q_user,title,q_user_code,q_end_time,qishu,thumb,id from `@#_shoplist`  where q_uid is not null and `q_end_time` < $time order by q_end_time desc");
-			$data = '';
 			foreach($Tdata as $k=>$v) {
 				$v['shopname'] = $v['title'];
 				$arr = unserialize($v['q_user']);
