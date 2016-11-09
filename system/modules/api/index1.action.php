@@ -40,6 +40,7 @@ class index1 extends SystemAction {
 	public function kj(){
 		$type = isset($_POST['type']) ? $_POST['type'] : null;
 		$db = System::load_sys_class('model');
+		$time = time() - 300;
 		//待开奖
 		if ($type==1) {	
 		// $pagenum = abs(intval($_POST['p']));
@@ -47,7 +48,7 @@ class index1 extends SystemAction {
 		if(empty($pagenum)) {
 		$pagenum=1;
 		}
-		$total = $db->GetCount("select * from `@#_shoplist` where shenyurenshu>0 ");	
+		$total = $db->GetCount("select * from `@#_shoplist` where q_uid is not null and `q_end_time` >= $time");	
 		$num = 10;
 		$yushu = $total%$num;
 			if($yushu > 0) {
@@ -60,7 +61,7 @@ class index1 extends SystemAction {
 			}
 		$page=System::load_sys_class('page');
 		$page->config($total,$num,$pagenum,"0");
-		$data = $db->GetPage("select qishu,id,canyurenshu,shenyurenshu,title,money,thumb from `@#_shoplist` where shenyurenshu>0 order by shenyurenshu asc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		$data = $db->GetPage("select qishu,id,canyurenshu,shenyurenshu,title,money,thumb from `@#_shoplist` where q_uid is not null and  `q_end_time` >= $time order by shenyurenshu asc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 		foreach($data as $k=>$v) {
 				$data[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
 			}
@@ -78,7 +79,7 @@ class index1 extends SystemAction {
 		}
 		//最新揭晓
 		if ($type==2) {	
-			$Tdata = $db->GetPage("select q_user,title,q_user_code,q_end_time,qishu,thumb,id from `@#_shoplist`  where q_uid is not null ");
+			$Tdata = $db->GetPage("select q_user,title,q_user_code,q_end_time,qishu,thumb,id from `@#_shoplist`  where q_uid is not null and `q_end_time` < $time");
 			
 			foreach($Tdata as $k=>$v) {
 				$v['shopname'] = $v['title'];
