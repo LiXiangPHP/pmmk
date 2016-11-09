@@ -45,11 +45,11 @@ class index1 extends SystemAction {
 		$time = explode ( " ", microtime () ); 
 		$time = $time [1] . ".".($time [0]*1000); 
 		$time = substr($time, 10,4);
-		$dtime = time().$time;
+		$dtime = time().$time+(int)System::load_sys_config('system','goods_end_time');
 
 		
 
-		$time = $dtime - 300;
+		$time = $dtime - 300  ;
 		//待开奖
 		if ($type==1) {	
 		// $pagenum = abs(intval($_POST['p']));
