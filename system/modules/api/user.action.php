@@ -3,6 +3,8 @@ class user extends SystemAction {
 
 	//登陆接口
 	public function login(){
+
+		echo time();die;
 		$db = System::load_sys_class('model');
 		$code = $_POST['code'];
 		if($code)
