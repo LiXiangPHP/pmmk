@@ -104,7 +104,7 @@ class user extends memberbase {
 	}
 
 	public function yaoqing() {
-		$token = intval($this->segment(4));
+		$token = $this->segment(4);
 		$webname=$this->_cfg['web_name'];
 		$info = System::token_uid($token);
 		if($info) {
