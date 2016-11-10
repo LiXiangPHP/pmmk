@@ -112,6 +112,7 @@ class user extends memberbase {
 		}else {
 			_message("用户未登录");
 		}
+		include templates("mobile/user","yaoqing");
 	}
 
 }//
