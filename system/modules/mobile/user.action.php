@@ -103,6 +103,16 @@ class user extends memberbase {
 	 include templates("mobile/user","userbuyDetail");
 	}
 
+	public function yaoqing() {
+		$webname=$this->_cfg['web_name'];
+		$user = $this->userinfo;
+		if($user) {
+			$yaoqing = "10000".$user[uid];
+		}else {
+			_message("用户未登录");
+		}
+	}
+
 }//
 
 ?>
