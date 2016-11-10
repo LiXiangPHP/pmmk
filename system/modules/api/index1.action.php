@@ -6,13 +6,20 @@ class index1 extends SystemAction {
 	public function glist(){
 		
 		$db = System::load_sys_class('model');
+		$dtime = time();
+
+		$time = explode ( " ", microtime () ); 
+		$time = $time [1] . ".".($time [0]*1000); 
+		$time = substr($time, 10,4);
+		$dtime = time().$time+(int)System::load_sys_config('system','goods_end_time');
+		$time = $dtime - 300  ;
 		//banner
 		$bannerurl = $db->GetList("select img from `@#_slide` ");
 		foreach($bannerurl as $k=>$v) {
 				$bannerurl[$k]['img'] = "gangmaduobao.com/statics/uploads/".$v['img'];
 			}
 		//最新获奖信息
-		$member_record=$db->GetList("select a.username,a.shopname from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and b.q_uid is not null  order by a.id DESC LIMIT 7");
+		$member_record=$db->GetList("select a.username,a.shopname from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and b.q_uid is not null  and b.`q_end_time` < $time order by b.q_end_time desc LIMIT 7");
 		//商品列表
 		$hotshop = $db->GetList("select id,thumb,title,money,qishu,canyurenshu,shenyurenshu from `@#_shoplist` where `renqi` = '1' and `shenyurenshu`>0 order by id DESC LIMIT 6 ");
 		
