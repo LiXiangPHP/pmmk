@@ -70,7 +70,7 @@ class index1 extends SystemAction {
 			}
 		$page=System::load_sys_class('page');
 		$page->config($total,$num,$pagenum,"0");
-		$Ddata = $db->GetPage("select qishu,id,canyurenshu,shenyurenshu,title,money,thumb,q_end_time from `@#_shoplist` where q_uid is not null and  `q_end_time` >= $time order by shenyurenshu asc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		$Ddata = $db->GetPage("select qishu,id,canyurenshu,shenyurenshu,title,money,thumb,q_end_time from `@#_shoplist` where q_uid is not null and  `q_end_time` >= $time order by q_end_time desc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 		foreach($Ddata as $k=>$v) {
 				$Ddata[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
 		}
