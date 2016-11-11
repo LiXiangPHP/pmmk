@@ -29,6 +29,96 @@ class shop extends SystemAction {
 		echo json_encode($json);
 	}
 
+	/*获得全部商品*/
+	public function json_goodlist(){
+		$code = '';
+		$msg = '';
+		$data = array();
+		$pagenum = abs(intval($_POST['p']));
+		if(empty($pagenum)) {
+			$pagenum=1;
+		}
+		$total = $this->db->GetCount("select * from `@#_shoplist` where `shenyurenshu` > 0");
+		$num = 10;
+		$yushu=$total%$num;
+		if($yushu > 0) {
+			$yeshu=floor($total/$num)+1;
+		}else {
+			$yeshu=floor($total/$num);
+		}
+		if($pagenum >= $yeshu) {
+			$pagenum = $yeshu;
+		}
+		$page=System::load_sys_class('page');
+		$page->config($total,$num,$pagenum,"0");
+		$Sdata = $this->db->GetPage("SELECT id,`qishu` periods,`title`,`money`,`thumb`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain  FROM `@#_shoplist` where `shenyurenshu` > 0 order by time desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		foreach($Sdata as $v) {
+			if($v['thumb']) {
+				$v['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
+			}
+			$data['data'][] = $v;
+		}
+		if($data['data']) {
+			$data['ptotal'] = $yeshu;
+		}
+		// echo "<pre>";
+		// print_r($data);die;
+		if($data) {
+			$code = 200;
+			$msg = "查询成功";
+		}else {
+			$code = 100;
+			$msg = "数据为空";
+		}
+		$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+		echo json_encode($json);
+	}
+
+	/*获得全部人气商品*/
+	public function json_hotlist(){
+		$code = '';
+		$msg = '';
+		$data = array();
+		$pagenum = abs(intval($_POST['p']));
+		if(empty($pagenum)) {
+			$pagenum=1;
+		}
+		$total = $this->db->GetCount("select * from `@#_shoplist` where `renqi` = '1' and `shenyurenshu` > 0");
+		$num = 10;
+		$yushu=$total%$num;
+		if($yushu > 0) {
+			$yeshu=floor($total/$num)+1;
+		}else {
+			$yeshu=floor($total/$num);
+		}
+		if($pagenum >= $yeshu) {
+			$pagenum = $yeshu;
+		}
+		$page=System::load_sys_class('page');
+		$page->config($total,$num,$pagenum,"0");
+		$Sdata = $this->db->GetPage("SELECT id,`qishu` periods,`title`,`money`,`thumb`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain  FROM `@#_shoplist` where `renqi` = 1 and `shenyurenshu` > 0 order by time desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		foreach($Sdata as $v) {
+			if($v['thumb']) {
+				$v['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
+			}
+			$data['data'][] = $v;
+		}
+		if($data['data']) {
+			$data['ptotal'] = $yeshu;
+		}
+		// echo "<pre>";
+		// print_r($data);die;
+		if($data) {
+			$code = 200;
+			$msg = "查询成功";
+		}else {
+			$code = 100;
+			$msg = "数据为空";
+		}
+		$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
+		echo json_encode($json);
+	}	
+
 	/*获得商品数据*/
 	public function json_shoplist(){
 		$code = '';
