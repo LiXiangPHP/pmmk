@@ -20,7 +20,7 @@ class snatch extends SystemAction {
 			$mygm = $db->GetList("select time,shopqishu,shopid from `@#_member_go_record` where uid='$info[uid]' ");
 			
 			foreach($mygm as $v){
-				$zhsz[] = $db->GetList("select qishu,id,title,zongrenshu,canyurenshu,thumb from `@#_shoplist` where qishu='$v[shopqishu]' and id='$v[shopid]' and  q_user_code is null and `q_end_time` >= $time  ");				
+				$zhsz[] = $db->GetList("select qishu,id,title,zongrenshu,canyurenshu,thumb from `@#_shoplist` where qishu='$v[shopqishu]' and id='$v[shopid]' and  q_user_code is null ");				
 			}
 			$data=array_filter($zhsz,create_function('$v','return !empty($v);'));
 			foreach($data as $k=>$v){
@@ -68,7 +68,7 @@ class snatch extends SystemAction {
 			$newdata=array();
 			$mygm = $db->GetList("select time,shopqishu,shopid from `@#_member_go_record` where uid='$info[uid]' group by shopid ");
 			foreach($mygm as $v){
-				$zhsz[] = $db->GetList("select a.qishu,a.id,a.q_end_time,a.title,a.thumb,a.money,b.mobile from `@#_shoplist` as a,`@#_member` as b where a.q_uid=b.uid and a.qishu='$v[shopqishu]' and a.id='$v[shopid]' and  a.q_end_time is not null and a.q_user is not null and `q_end_time` < $time  order by a.q_end_time desc ");				
+				$zhsz[] = $db->GetList("select a.qishu,a.id,a.q_end_time,a.title,a.thumb,a.money,b.mobile from `@#_shoplist` as a,`@#_member` as b where a.q_uid=b.uid and a.qishu='$v[shopqishu]' and a.id='$v[shopid]' and  a.q_end_time is not null and a.q_user is not null and a.`q_end_time` < $time  order by a.q_end_time desc ");				
 			}
 			$data=array_filter($zhsz,create_function('$v','return !empty($v);'));
 			foreach($data as $k=>$v){
