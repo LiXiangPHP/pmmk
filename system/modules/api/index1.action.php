@@ -21,7 +21,7 @@ class index1 extends SystemAction {
 		//最新获奖信息
 		$member_record=$db->GetList("select a.username,a.shopname from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and b.q_uid is not null  and b.`q_end_time` < $time order by b.q_end_time desc LIMIT 7");
 		//商品列表
-		$hotshop = $db->GetList("select id,thumb,title,money,qishu,canyurenshu,shenyurenshu from `@#_shoplist` where `renqi` = '1' and `shenyurenshu`>0 order by id DESC LIMIT 6 ");
+		$hotshop = $db->GetList("select id,thumb,title,money,qishu,canyurenshu,shenyurenshu from `@#_shoplist` where `renqi` = '1' and `shenyurenshu`>0 order by time DESC LIMIT 6 ");
 		
 		foreach($hotshop as $k=>$v) {
 				$hotshop[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
