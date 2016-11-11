@@ -106,6 +106,7 @@ class user extends memberbase {
 	public function yaoqing() {
 		$webname=$this->_cfg['web_name'];
 		$token = $this->segment(4);
+		$token = substr($token, 0,32);
 		$info = System::token_uid($token);
 		if($info) {
 			$yaoqing = "10000".$info['uid'];
