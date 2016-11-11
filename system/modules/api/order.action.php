@@ -16,7 +16,7 @@ class order extends SystemAction {
 			//未发货
 			if ($type==1) {
 				$db = System::load_sys_class('model');
-				$data = $db->GetList("select b.q_end_time,a.shopname,a.shopqishu,b.thumb from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and  a.uid='$info[uid]' and a.huode>10000000 and status like '%未发货%'  ");
+				$data = $db->GetList("select b.q_end_time,a.shopname,a.shopqishu,b.thumb from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and  a.uid='$info[uid]' and a.huode>10000000 and status like '%未发货%' and b.q_end_time < $time ");
 				foreach($data as $k=>$v) {
 				$data[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
 				}
