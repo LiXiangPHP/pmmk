@@ -296,8 +296,12 @@ class shop extends SystemAction {
 					}else {
 						$data['ustate'] = '';
 					}
-					$num = $this->db->GetOne("SELECT count(id) num FROM `@#_member_go_record` where shopid = '$gid' and shopqishu = '$data[periods]' and uid = '$info[uid]'");
-					$data['num'] = $num['num'];
+					$num = $this->db->GetList("SELECT * FROM `@#_member_go_record` where shopid = '$gid' and shopqishu = '$data[periods]' and uid = '$info[uid]'");
+					$tnum = '';
+					foreach ($num as $key => $value) {
+						$tnum += $value['gonumber'];
+					}
+					$data['num'] = $tnum;
 					$codes = $this->db->GetList("SELECT goucode FROM `@#_member_go_record` where shopid = '$gid' and shopqishu = '$data[periods]' and uid = '$info[uid]'");
 					foreach ($codes as $key => $value) {
 						$cos = explode(',',$value['goucode']);
