@@ -640,7 +640,9 @@ class paoma extends SystemAction {
 		// $uid = 694;
 		$code = 200;
 		$user_bet = $db->GetList("SELECT sum(profit) as sumprofit ,issue,sum(number) as sumnumber  FROM `@#_bet` where `uid` = $uid  group by `issue` order by id desc");
-
+		foreach ($user_bet as $k => $v) {
+			$user_bet[$k]['sumprofit'] = $v['sumprofit']-$v['sumnumber'];
+		}
 		echo json_encode(array('code'=>$code,'data'=>$user_bet));die;
 
 	}
@@ -694,7 +696,7 @@ class paoma extends SystemAction {
 			
 
 			foreach ($user_bet as $k => $v) {
-				$result[]  = array("issue"=>$v['issue'],"name"=>$v['name'],"number"=>$v['number'],"profit"=>$v['profit']);
+				$result[]  = array("issue"=>$v['issue'],"name"=>$v['name'],"number"=>$v['number'],"profit"=>$v['profit']-$v['number']);
 		}
 		if($yeshu)
 		{
