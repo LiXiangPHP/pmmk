@@ -332,29 +332,31 @@ class shop extends SystemAction {
 			if($gid) {
 				$data = $this->db->GetOne("SELECT id,qishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain,q_end_time FROM `@#_shoplist` where id = '$gid' limit 1");
 				if($data['remain'] == 0) {
-					if($data['q_end_time']) {
+					if($data['q_end_time'] < $time) {
 						$data['state'] = "已揭晓";
-					}else {
+						//计算过程（和，余数，结果）
+						$arr = $this->db->GetOne("select * from `@#_shoplist` where id = '$gid'");
+						if($arr['q_content']){
+							$data['count']['type'] = 1;
+							$data['count']['timeadd'] = $arr['q_counttime'];
+							$data['count']['timemod'] = fmod($arr['q_counttime'],$arr['canyurenshu']);
+							$data['count']['rul'] = 1000001;
+						}else {
+							$h=abs(date("H",$arr['q_end_time']));
+							$i=date("i",$arr['q_end_time']);
+							$s=date("s",$arr['q_end_time']);
+							$w=substr($arr['q_end_time'],11,3);	
+							$data['count']['type'] = 2;
+							$data['count']['timeadd'] = $h.$i.$s.$w;
+							$data['count']['timemod'] = fmod($data['count']['timeadd']*100,$arr['canyurenshu']);
+							$data['count']['key'] = 1000001;
+						}
+					}
+					if($data['q_end_time'] >= $time) {
 						$data['state'] = "即将揭晓";
+						$data['count'] = array();
 					}
-					unset($data['q_end_time']);
-					//计算过程（和，余数，结果）
-					$arr = $this->db->GetOne("select * from `@#_shoplist` where id = '$gid'");
-					if($item['q_content']){
-						$data['count']['type'] = 1;
-						$data['count']['timeadd'] = $arr['q_counttime'];
-						$data['count']['timemod'] = fmod($arr['q_counttime'],$arr['canyurenshu']);
-						$data['count']['rul'] = 1000001;
-					}else {
-						$h=abs(date("H",$arr['q_end_time']));
-						$i=date("i",$arr['q_end_time']);
-						$s=date("s",$arr['q_end_time']);
-						$w=substr($arr['q_end_time'],11,3);	
-						$data['count']['type'] = 2;
-						$data['count']['timeadd'] = $h.$i.$s.$w;
-						$data['count']['timemod'] = fmod($data['count']['timeadd']*100,$arr['canyurenshu']);
-						$data['count']['key'] = 1000001;
-					}
+					unset($data['q_end_time']);					
 				}else {
 					$data['state'] = "夺宝中";
 					$data['count'] = array();
@@ -469,8 +471,18 @@ class shop extends SystemAction {
 		if(empty($pagenum)) {
 			$pagenum=1;
 		}
-		if($id) {
-			$total = $this->db->GetCount("select * from `@#_shaidan` where sd_shopid = $id ");
+		$item = $this->db->GetOne("select * from `@#_shoplist` where `id`='$id' LIMIT 1");
+		if($item) {
+			$arr = $this->db->GetList("select id from `@#_shoplist` where sid = '$item[sid]'");
+			$ids = '';
+			foreach ($arr as $key => $value) {
+				if(empty($ids)) {
+					$ids .= $value['id'];
+				}else {
+					$ids .= ",".$value['id'];
+				}
+			}
+			$total = $this->db->GetCount("select * from `@#_shaidan` where  sd_shopid in($ids)");
 			$num = 10;
 			$yushu=$total%$num;
 			if($yushu > 0) {
@@ -483,7 +495,7 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$Sdata = $this->db->GetPage("SELECT b.img,b.username,a.sd_id id,a.sd_title title,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid and a.sd_shopid = $id order by time desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$Sdata = $this->db->GetPage("SELECT b.img,b.username,a.sd_id id,a.sd_title title,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid and a.sd_shopid in($ids)  order by time desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			$comnum = 0;
 			foreach($Sdata as $v) {
 				$v['img'] = "gangmaduobao.com/".$v['img'];
