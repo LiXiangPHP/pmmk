@@ -498,6 +498,8 @@ class shop extends SystemAction {
 			$Sdata = $this->db->GetPage("SELECT b.img,b.username,a.sd_id id,a.sd_title title,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid and a.sd_shopid in($ids)  order by time desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			$comnum = 0;
 			foreach($Sdata as $v) {
+				$aa = $this->db->GetOne("select title from `@#_shoplist` where `id`='$v[shopid]' ");			
+				$v['title'] = strip_tags($aa['title']);
 				$v['img'] = "gangmaduobao.com/".$v['img'];
 				$photo = explode(";",$v['photolist']);
 				foreach ($photo as $key => $value) {
@@ -510,16 +512,16 @@ class shop extends SystemAction {
 				$v['photolist'] = $photo;
 				$data['data'][] = $v;
 				$comnum += $v['comments'];
-				$data['cnum'] = $comnum;
 			}
 			if($data['data']) {
+				$data['cnum'] = $comnum;
 				$data['ptotal'] = $yeshu;
-			}
-			$unum = $this->db->GetList("select count(sd_userid) id from `@#_shaidan` where sd_shopid = $id");
-			if($unum) {
-				foreach($unum as $v) {
-					$data['usernum'] = $v['id'];
-				}				
+				$unum = $this->db->GetList("select count(sd_userid) id from `@#_shaidan` where sd_shopid in($ids)");
+				if($unum) {
+					foreach($unum as $v) {
+						$data['usernum'] = $v['id'];
+					}				
+				}
 			}
 			// echo "<pre>";
 			// print_r($data);die;
