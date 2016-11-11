@@ -501,15 +501,15 @@ class shop extends SystemAction {
 				$aa = $this->db->GetOne("select title from `@#_shoplist` where `id`='$v[shopid]' ");			
 				$v['title'] = strip_tags($aa['title']);
 				$v['img'] = "gangmaduobao.com/".$v['img'];
-				$photo = explode(";",$v['photolist']);
-				foreach ($photo as $key => $value) {
-					if($value) {
-						$photo[$key] = "gangmaduobao.com/".$value;
-					}else {
-						unset($photo[$key]);
-					}
+				$photo = explode(",",$v['photolist']);
+			foreach ($photo as $key => $value) {
+				if($value) {
+					$photo[$key] = "gangmaduobao.com/".$value;
+				}else {
+					unset($photo[$key]);
 				}
-				$v['photolist'] = $photo;
+			}
+			$v['photolist'] = $photo;
 				$data['data'][] = $v;
 				$comnum += $v['comments'];
 			}
