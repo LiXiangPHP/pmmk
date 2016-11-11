@@ -107,6 +107,7 @@ class user extends SystemAction {
 		$webname=$this->_cfg['web_name'];
 		$token = $this->segment(4);
 		$info = System::token_uid($token);
+		$token = $info['uid'];
 		if($info) {
 			$yaoqing = "10000".$info['uid'];
 		}else {
