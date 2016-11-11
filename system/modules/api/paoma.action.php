@@ -230,6 +230,21 @@ class paoma extends SystemAction {
 	}
 	public function betlog()
 	{
+		// $time =  date("Y/m/d H:i:s",time());
+		// $t = substr($time,15,1);
+		// $s = (int)substr($time,14,1);
+		// $s = $s-1;
+		// $d = substr($time,0,14);
+		// $q = substr($time,0,15);
+		// if($t<5)
+		// {
+		// 	$time = $d.$s.":00";
+		// }
+		// if($t>5)
+		// {
+		// 	$time = $q."5:00";
+		// }
+		// $time = mktime($time);
 		$db = System::load_sys_class('model');
 		$pagenum = $_POST['p'];
 		$total = $db->GetCount("SELECT * FROM `@#_bet_result` ");
@@ -381,7 +396,7 @@ class paoma extends SystemAction {
 
 		$option = array(array("id"=>2,"name"=>'冠军'),array("id"=>3,"name"=>'亚军'),array("id"=>4,"name"=>'第三名'),array("id"=>5,"name"=>'第四名'),array("id"=>6,"name"=>'第五名'),array("id"=>7,"name"=>'第六名'),array("id"=>8,"name"=>'第七名'),array("id"=>9,"name"=>'第八名'),array("id"=>10,"name"=>'第九名'),array("id"=>11,"name"=>'第十名'));
 		$number = array('1','2','3','4','5','6','7','8','9','10');
-		$time = date("Y/m/d H:i:s",time());
+		$time = date("Y/m/d",time());
 		$hao = rand(0,9);
 		$guan1= $option[0]['name'].$number[$hao];
 		if($hao <=5)
