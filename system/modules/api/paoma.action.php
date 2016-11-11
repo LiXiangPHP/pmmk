@@ -28,19 +28,7 @@ class paoma extends SystemAction {
 		// echo 111;die;
 		$issue=$db->GetOne("select issue from `@#_bet_result` WHERE `issue` LIKE '%".$nianyue."%' order by id DESC");
 		$issue = $issue['issue'];
-		if($issue)
-		{
-			$lastissue = $issue;
-			$lastissue1 = substr($issue,8);
-			$issue = $lastissue1+1;
-			$issue = $nianyue.$issue;
-		}
-		else
-		{
-			$lastissue=$db->GetOne("select issue from `@#_bet_result`  order by id DESC");
-			$lastissue = $lastissue['issue'];
-			$issue = $nianyue."1";
-		}
+		
 
 		$aa = date("h:i:s",$time);
 		// echo $time.'|';
@@ -80,6 +68,32 @@ class paoma extends SystemAction {
 		{
 			$PrizeTime = 5;
 		}
+
+		if($issue)
+		{
+			if($s<45)
+			{
+
+				$lastissue1 = substr($issue,8);
+				$lastissue = $lastissue1-1;
+				$lastissue = $nianyue.$lastissue;
+			}
+			else
+			{
+				$lastissue = $issue;
+				$lastissue1 = substr($issue,8);
+				$issue = $lastissue1+1;
+				$issue = $nianyue.$issue;
+			}
+			
+		}
+		else
+		{
+			$lastissue=$db->GetOne("select issue from `@#_bet_result`  order by id DESC");
+			$lastissue = $lastissue['issue'];
+			$issue = $nianyue."1";
+		}
+
 		$LastResult1=$db->GetOne("select result from `@#_bet_result` WHERE `issue` = '$lastissue'");
 		$LastResult = explode(',',$LastResult1['result']);
 		$sum = $LastResult[0]+$LastResult[1];
