@@ -7,10 +7,16 @@ class order extends SystemAction {
 		$info = System::token_uid($token);
 		$type = isset($_POST['type']) ? $_POST['type'] : null;
 		if ($info['code']==200) {
+			$dtime = time();
+			$time = explode ( " ", microtime () ); 
+			$time = $time [1] . ".".($time [0]*1000); 
+			$time = substr($time, 10,4);
+			$dtime = time().$time+(int)System::load_sys_config('system','goods_end_time');
+			$time = $dtime - 300  ;	
 			//未发货
 			if ($type==1) {
 				$db = System::load_sys_class('model');
-				$data = $db->GetList("select b.q_end_time,a.shopname,a.shopqishu,b.thumb from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and  a.uid='$info[uid]' and a.huode>10000000 and status like '%未发货%' ");
+				$data = $db->GetList("select b.q_end_time,a.shopname,a.shopqishu,b.thumb from `@#_member_go_record` as a,`@#_shoplist` as b where a.shopid=b.id and  a.uid='$info[uid]' and a.huode>10000000 and status like '%未发货%' and a.q_end_time < $time ");
 				foreach($data as $k=>$v) {
 				$data[$k]['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
 				}
