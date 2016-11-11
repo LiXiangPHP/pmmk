@@ -141,35 +141,42 @@ class shop extends SystemAction {
 		$data = array();
 		$gid = abs(intval($_POST['gid']));
 		$token = trim($_POST['token']);
+		$dtime = time();
+		$time = explode ( " ", microtime () ); 
+		$time = $time [1] . ".".($time [0]*1000); 
+		$time = substr($time, 10,4);
+		$dtime = time().$time+(int)System::load_sys_config('system','goods_end_time');
+		$time = $dtime - 300  ;
 		if($token) {
 			$info = System::token_uid($token);
 			if($gid) {
 				$data = $this->db->GetOne("SELECT id,qishu periods,title,`money`,picarr,zongrenshu total,canyurenshu part,shenyurenshu remain,q_end_time FROM `@#_shoplist` where id = '$gid' limit 1");
 				if($data['remain'] == 0) {
-					if($data['q_end_time']) {
+					if($data['q_end_time'] < $time) {
 						$data['state'] = "已揭晓";
-					}else {
+						//计算过程（和，余数，结果）
+						$arr = $this->db->GetOne("select * from `@#_shoplist` where id = '$gid'");
+						if($arr['q_content']){
+							$data['count']['type'] = 1;
+							$data['count']['timeadd'] = $arr['q_counttime'];
+							$data['count']['timemod'] = fmod($arr['q_counttime'],$arr['canyurenshu']);
+							$data['count']['rul'] = 1000001;
+						}else {
+							$h=abs(date("H",$arr['q_end_time']));
+							$i=date("i",$arr['q_end_time']);
+							$s=date("s",$arr['q_end_time']);
+							$w=substr($arr['q_end_time'],11,3);	
+							$data['count']['type'] = 2;
+							$data['count']['timeadd'] = $h.$i.$s.$w;
+							$data['count']['timemod'] = fmod($data['count']['timeadd']*100,$arr['canyurenshu']);
+							$data['count']['key'] = 1000001;
+						}
+					}
+					if($data['q_end_time'] >= $time) {
 						$data['state'] = "即将揭晓";
+						$data['count'] = array();
 					}
-					unset($data['q_end_time']);
-					//计算过程（和，余数，结果）
-					$arr = $this->db->GetOne("select * from `@#_shoplist` where id = '$gid'");
-					if($arr['q_content']){
-						$data['count']['type'] = 1;
-						$data['count']['timeadd'] = $arr['q_counttime'];
-						$data['count']['timemod'] = fmod($arr['q_counttime'],$arr['canyurenshu']);
-						$data['count']['rul'] = 1000001;
-					}else {
-						$h=abs(date("H",$arr['q_end_time']));
-						$i=date("i",$arr['q_end_time']);
-						$s=date("s",$arr['q_end_time']);
-						$w=substr($arr['q_end_time'],11,3);	
-						$data['count']['type'] = 2;
-						$data['count']['timeadd'] = $h.$i.$s.$w;
-						$data['count']['timemod'] = fmod($data['count']['timeadd']*100,$arr['canyurenshu']);
-						$data['count']['key'] = 1000001;
-					}
-					
+					unset($data['q_end_time']);					
 				}else {
 					$data['state'] = "夺宝中";
 					$data['count'] = array();
