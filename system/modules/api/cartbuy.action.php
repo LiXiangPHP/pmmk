@@ -319,14 +319,14 @@ class cartbuy extends SystemAction {
 
 
         //添加福分
-        if(!$this->fufen_to_money){
-            $mygoscore = $fufen['f_shoppay']*$goods_count_num;
-            $mygoscore_text =  "云购了{$goods_count_num}人次商品";
-            $myscore = $this->members['score'] + $mygoscore;
-            $query_add_fufen_1 = $this->db->Query("UPDATE `@#_member` SET `score`= '$myscore' WHERE (`uid`='$uid')");
-            $query_add_fufen_2 = $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('$uid', '1', '福分', '$mygoscore_text', '$mygoscore', '$time')");
-            $query_fufen = ($query_add_fufen_1 && $query_add_fufen_2);
-        }
+        // if(!$this->fufen_to_money){
+        //     $mygoscore = $fufen['f_shoppay']*$goods_count_num;
+        //     $mygoscore_text =  "云购了{$goods_count_num}人次商品";
+        //     $myscore = $this->members['score'] + $mygoscore;
+        //     $query_add_fufen_1 = $this->db->Query("UPDATE `@#_member` SET `score`= '$myscore' WHERE (`uid`='$uid')");
+        //     $query_add_fufen_2 = $this->db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('$uid', '1', '福分', '$mygoscore_text', '$mygoscore', '$time')");
+        //     $query_fufen = ($query_add_fufen_1 && $query_add_fufen_2);
+        // }
 
         $dingdancode=$this->dingdancode;
         $query_6 = $this->db->Query("UPDATE `@#_member_go_record` SET `status`='已付款,未发货,未完成' WHERE `code`='$dingdancode' and `uid` = '$uid'");
