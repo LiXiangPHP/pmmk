@@ -34,5 +34,24 @@ h1,h2,h3,h4{margin:0;font-weight:normal;}
   <p>邀请码：{wc:$yaoqing}</p>
   <a href="http://gangmaduobao.com/download/DuoBao.apk">APP下载地址&gt;&gt;</a>
 </div>
+<img src="{G_TEMPLATES_STYLE}/images/mobile/alert.png" id="alert">
+<script>
+function isWeiXin(){ 
+  var ua = window.navigator.userAgent.toLowerCase(); 
+  if(ua.match(/MicroMessenger/i) == 'micromessenger'){ 
+    return true; 
+  }else{ 
+    return false; 
+  } 
+};
+var alertpic=document.getElementById("alert");
+alertpic.style.display="none";
+document.getElementById("a").onclick=function(){
+  if(isWeiXin()){
+    alertpic.style.display="block";
+  }
+}
+
+</script>
 </body> 
 </html> 
