@@ -324,6 +324,40 @@ class paoma extends SystemAction {
 		elseif(file_exists("log/".$issue.".log"))
 		{
 			sleep(10);
+			$bet = $db->GetOne("SELECT * FROM `@#_bet_result` where `issue` = '$issue'");
+			if($bet)
+			{
+
+				$betresult = explode(',',$bet['result']);
+				$bet['result'] = strtr($bet['result'],array('10'=>'0'));
+				$code = "200";
+				$sum = $betresult[0]+$betresult[1];
+				if((int)$sum%2 == 0){
+					$NumberDs = "双";
+				}
+				else
+				{
+					$NumberDs = "单";
+				}
+				if((int)$sum>=11)
+				{
+					$NumberSize = '大';
+				}
+				if((int)$sum<=10)
+				{
+					$NumberSize = '小';
+
+				}
+				if($f)
+				{
+					echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']));die;
+				}
+				else
+				{
+					return array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']);
+				}
+
+			}
 		}
 		else
 		{
@@ -333,7 +367,7 @@ class paoma extends SystemAction {
 
 		$option = array(array("id"=>2,"name"=>'冠军'),array("id"=>3,"name"=>'亚军'),array("id"=>4,"name"=>'第三名'),array("id"=>5,"name"=>'第四名'),array("id"=>6,"name"=>'第五名'),array("id"=>7,"name"=>'第六名'),array("id"=>8,"name"=>'第七名'),array("id"=>9,"name"=>'第八名'),array("id"=>10,"name"=>'第九名'),array("id"=>11,"name"=>'第十名'));
 		$number = array('1','2','3','4','5','6','7','8','9','10');
-		$time = date("Y/m/d",time());
+		$time = date("Y/m/d H:i:s",time());
 		$hao = rand(0,9);
 		$guan1= $option[0]['name'].$number[$hao];
 		if($hao <=5)
