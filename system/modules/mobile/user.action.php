@@ -5,9 +5,9 @@ System::load_app_class('memberbase',null,'no');
 System::load_app_fun('user','go');
 System::load_app_fun('my','go');
 System::load_sys_fun('send');
-class user extends memberbase {
+class user extends SystemAction {
 	public function __construct(){
-		parent::__construct();
+		// parent::__construct();
 		$this->db = System::load_sys_class("model");
 	}
 
