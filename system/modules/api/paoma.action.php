@@ -282,6 +282,7 @@ class paoma extends SystemAction {
 				$NumberSize = '小';
 
 			}
+			$v['time'] = substr($v['time'],0,10);
 			$v['result'] = strtr($v['result'],array('10'=>'0'));
 			$v['sum'] = $sum;
 			$v['NumberDs'] = $NumberDs;
