@@ -578,7 +578,7 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$Idata = $this->db->GetPage("SELECT a.canyurenshu part,b.id,b.username,b.uphoto,b.time,b.ip FROM `@#_shoplist` a, `@#_member_go_record` b where a.id = b.shopid and b.shopid = '$id' order by b.time desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$Idata = $this->db->GetPage("SELECT id,username,uphoto,time,ip,gonumber FROM `@#_member_go_record`  where  shopid = '$id' order by time desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			foreach($Idata as $v) {
 				$v['uphoto'] = "gangmaduobao.com/".$v['uphoto'];
 				$data['data'][] = $v;
