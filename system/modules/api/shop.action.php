@@ -248,6 +248,12 @@ class shop extends SystemAction {
 						$data['state'] = "已揭晓";
 						//计算过程（和，余数，结果）
 						$arr = $this->db->GetOne("select * from `@#_shoplist` where id = '$gid'");
+						$total = $this->db->GetCount("SELECT * FROM `@#_member_go_record` WHERE `time` <= '$arr[q_end_time]'");
+						$num = 100;
+						$pagenum = 1;
+						$page=System::load_sys_class('page');
+						$page->config($total,$num,$pagenum,"0");
+						$acon = $this->db->GetPage("SELECT time,username,shopname,gonumber FROM `@#_member_go_record` WHERE `time` <= '$arr[q_end_time]' order by `time` desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 						if($arr['q_content']){
 							$data['count']['type'] = 1;
 							$data['count']['timeadd'] = $arr['q_counttime'];
@@ -263,6 +269,7 @@ class shop extends SystemAction {
 							$data['count']['timemod'] = fmod($data['count']['timeadd']*100,$arr['canyurenshu']);
 							$data['count']['key'] = 1000001;
 						}
+						$data['content'] = serialize($acon); 
 					}
 					if($data['q_end_time'] >= $time) {
 						$data['state'] = "即将揭晓";
@@ -340,6 +347,12 @@ class shop extends SystemAction {
 						$data['state'] = "已揭晓";
 						//计算过程（和，余数，结果）
 						$arr = $this->db->GetOne("select * from `@#_shoplist` where id = '$gid'");
+						$total = $this->db->GetCount("SELECT * FROM `@#_member_go_record` WHERE `time` <= '$arr[q_end_time]'");
+						$num = 100;
+						$pagenum = 1;
+						$page=System::load_sys_class('page');
+						$page->config($total,$num,$pagenum,"0");
+						$acon = $this->db->GetPage("SELECT time,username,shopname,gonumber FROM `@#_member_go_record` WHERE `time` <= '$arr[q_end_time]' order by `time` desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 						if($arr['q_content']){
 							$data['count']['type'] = 1;
 							$data['count']['timeadd'] = $arr['q_counttime'];
@@ -355,6 +368,7 @@ class shop extends SystemAction {
 							$data['count']['timemod'] = fmod($data['count']['timeadd']*100,$arr['canyurenshu']);
 							$data['count']['key'] = 1000001;
 						}
+						$data['content'] = serialize($acon); 
 					}
 					if($data['q_end_time'] >= $time) {
 						$data['state'] = "即将揭晓";
