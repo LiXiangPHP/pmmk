@@ -648,7 +648,7 @@ class shop extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$Sdata = $this->db->GetPage("select id,`qishu` periods,`title`,`thumb`,`money`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain from `@#_shoplist` where title like '%$keywords%' ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$Sdata = $this->db->GetPage("select id,`qishu` periods,`title`,`thumb`,`money`,`zongrenshu` total,`canyurenshu` part,`shenyurenshu` remain from `@#_shoplist` where title like '%$keywords%' and where shenyurenshu>0 ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 			foreach($Sdata as $v) {
 				if($v['thumb']) {
 					$v['thumb'] = "gangmaduobao.com/statics/uploads/".$v['thumb'];
