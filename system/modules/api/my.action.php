@@ -489,7 +489,7 @@ class my extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);die;
 		}
-		$shaidan=$db->Getlist("select sd_id,sd_userid,sd_shopid,sd_content,sd_photolist,sd_ping,sd_time from `@#_shaidan` where `sd_userid`='$info[uid]' order by `sd_id`");
+		$shaidan=$db->Getlist("select sd_qishu,sd_id,sd_userid,sd_shopid,sd_content,sd_photolist,sd_ping,sd_time from `@#_shaidan` where `sd_userid`='$info[uid]' order by `sd_id`");
 
 		foreach ($shaidan as $k => $v) {
 			$aa = $db->GetOne("select title from `@#_shoplist` where `id`='$v[sd_shopid]' ");			
