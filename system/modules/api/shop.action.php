@@ -269,6 +269,7 @@ class shop extends SystemAction {
 							$data['count']['timemod'] = fmod($data['count']['timeadd']*100,$arr['canyurenshu']);
 							$data['count']['key'] = 1000001;
 						}
+
 						$data['content'] = $acon; 
 					}
 					if($data['q_end_time'] >= $time) {
@@ -368,6 +369,7 @@ class shop extends SystemAction {
 							$data['count']['timemod'] = fmod($data['count']['timeadd']*100,$arr['canyurenshu']);
 							$data['count']['key'] = 1000001;
 						}
+						
 						$data['content'] = $acon;
 					}
 					if($data['q_end_time'] >= $time) {
