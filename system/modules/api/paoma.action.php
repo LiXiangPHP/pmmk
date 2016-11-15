@@ -639,7 +639,7 @@ class paoma extends SystemAction {
 		$uid = $info['uid'];
 		// $uid = 694;
 		$code = 200;
-		$user_bet = $db->GetList("SELECT sum(profit) as sumprofit ,issue,sum(number) as sumnumber  FROM `@#_bet` where `uid` = $uid  group by `issue` order by id desc");
+		$user_bet = $db->GetList("SELECT sum(profit) as sumprofit ,issue,sum(number) as sumnumber  FROM `@#_bet` where `uid` = $uid and `returns` = 1 group by `issue` order by id desc");
 		foreach ($user_bet as $k => $v) {
 			$user_bet[$k]['sumprofit'] = $v['sumprofit']-$v['sumnumber'];
 		}
@@ -667,12 +667,12 @@ class paoma extends SystemAction {
 		$issue = $_POST['issue'];
 		if($issue)
 		{
-			$user_bet = $db->GetList("SELECT * FROM `@#_bet` where `uid` = $uid  and `issue` = $issue order by id DESC");
+			$user_bet = $db->GetList("SELECT * FROM `@#_bet` where `uid` = $uid  and `issue` = $issue and `returns` = 1  order by id DESC");
 		}
 		else
 		{
 			$pagenum = $_POST['p'];
-			$total = $db->GetCount("SELECT * FROM `@#_bet` where `uid` = $uid order by id DESC");
+			$total = $db->GetCount("SELECT * FROM `@#_bet` where `uid` = $uid  and `returns` = 1 order by id DESC");
 			$num = 10;
 			$yushu=$total%$num;
 			if($yushu > 0) {
@@ -685,7 +685,7 @@ class paoma extends SystemAction {
 			}
 			$page=System::load_sys_class('page');
 			$page->config($total,$num,$pagenum,"0");
-			$user_bet = $db->GetPage("SELECT * FROM `@#_bet` where `uid` = $uid order by id DESC",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+			$user_bet = $db->GetPage("SELECT * FROM `@#_bet` where `uid` = $uid  and `returns` = 1 order by id DESC",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 		
 			// if($user_bet) {
 			// 	$user_bet['ptotal'] = $yeshu;
