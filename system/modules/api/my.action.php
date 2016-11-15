@@ -489,8 +489,8 @@ class my extends SystemAction {
 			$json = array('code' => $code, 'msg' => $msg, 'data' => $data);
 			echo json_encode($json);die;
 		}
-		$shaidan=$db->Getlist("select sd_qishu,sd_id,sd_userid,sd_shopid,sd_content,sd_photolist,sd_ping,sd_time from `@#_shaidan` where `sd_userid`='$info[uid]' order by `sd_time` desc");
 
+		$shaidan=$db->Getlist("select sd_qishu,sd_id,sd_userid,sd_shopid,sd_content,sd_photolist,sd_ping,sd_time from `@#_shaidan` where `sd_userid`='$info[uid]' order by `sd_time` desc");
 		foreach ($shaidan as $k => $v) {
 			$aa = $db->GetOne("select title from `@#_shoplist` where `id`='$v[sd_shopid]' ");			
 			$shaidan[$k]['sd_shopid'] = strip_tags($aa['title']);
@@ -511,8 +511,6 @@ class my extends SystemAction {
 			$code = 100;
 			echo json_encode(array("code"=>$code,"data"=>$data)); die;
 		}
-		
-		// print_R($shaidan);die;
 		$code = 200;
 		echo json_encode(array("code"=>$code,"data"=>$data));
 	}
