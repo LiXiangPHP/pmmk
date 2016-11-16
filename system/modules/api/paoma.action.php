@@ -230,21 +230,28 @@ class paoma extends SystemAction {
 	}
 	public function betlog()
 	{
-		// $time =  date("Y/m/d H:i:s",time());
-		// $t = substr($time,15,1);
-		// $s = (int)substr($time,14,1);
-		// $s = $s-1;
-		// $d = substr($time,0,14);
-		// $q = substr($time,0,15);
-		// if($t<5)
-		// {
-		// 	$time = $d.$s.":00";
-		// }
-		// if($t>5)
-		// {
-		// 	$time = $q."5:00";
-		// }
-		// $time = mktime($time);
+		$time = time();
+		$chushi = date("Y-m-d 00:00:00",$time);
+		$Endtime=$chushi;
+		$Endtime=strtotime($Endtime);
+		//现在时间过去多少秒
+		$sytime = $time-$Endtime;
+		// echo $Endtime;die;
+		// 有多少个5分钟
+		$ge = intval(floor($sytime/300));
+		//剩余多少秒
+		$s = 300-($sytime - $ge*300);
+		$WaitTime = 0;
+
+		$flag = "";
+		if($s<=45)
+		{
+			$flag = 1;
+		}
+		
+		
+	
+
 		$db = System::load_sys_class('model');
 		$pagenum = $_POST['p'];
 		$total = $db->GetCount("SELECT * FROM `@#_bet_result` ");
@@ -260,7 +267,7 @@ class paoma extends SystemAction {
 		}
 		$page=System::load_sys_class('page');
 		$page->config($total,$num,$pagenum,"0");
-		$Sdata = $db->GetPage("SELECT result,issue,time  FROM `@#_bet_result` order by id desc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
+		$Sdata = $db->GetPage("SELECT result,issue,time  FROM `@#_bet_result` order by id desc ",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0,'flag'=>$flag));
 		foreach($Sdata as $v) {
 			
 			$result=  $v['result'];

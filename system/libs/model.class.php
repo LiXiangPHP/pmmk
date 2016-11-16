@@ -70,7 +70,7 @@ class model {
 	}	
 	
 	//获取分页数据
-	final public function GetPage($sql,$info=array('type'=>1,'key'=>'')){
+	final public function GetPage($sql,$info=array('type'=>1,'key'=>'','flag'=>'')){
 		if(empty($sql))return false;
 		if(!is_array($info))return false;		
 		$page=intval($info['page']) ? intval($info['page']) : 1;
@@ -80,8 +80,20 @@ class model {
 		$sql=str_ireplace('limit','limit',$sql);
 		$sql=explode('limit',$sql);
 		$sql=trim($sql[0]);		
-		$limit=" LIMIT ".($page-1)*$num.",".$num;
-		$sql=$sql.$limit;			
+		if($info['flag'])
+		{
+			$a = ($page-1)*$num;
+			$a = $a+1;
+			$limit=" LIMIT ".$a.",".$num;
+			
+		}
+		else
+		{
+			$limit=" LIMIT ".($page-1)*$num.",".$num;
+		}
+		
+		$sql=$sql.$limit;	
+		// echo $sql;die;		
 		$this->db->execute($sql);
 		$type=isset($info['type']) ? $info['type'] : 1;
 		$key=isset($info['key']) ? $info['key'] : '';	
