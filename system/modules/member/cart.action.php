@@ -358,6 +358,7 @@ class cart extends base {
 	
 	//充值
 	public function addmoney(){
+
 		parent::__construct();	
 		if(!isset($_POST['submit'])){	
 			_message("正在返回充值页面...",WEB_PATH.'/member/member/home/userrecharge');

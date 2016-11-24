@@ -182,7 +182,7 @@ class pay {
 		}
 		
 		$pay_type = $this->pay_type;
-        //print_r($pay_type);
+        print_r($pay_type);die;
         //exit;
 		$paydb = System::load_app_class($pay_type['pay_class'],'pay');
 		$pay_type['pay_key'] = @unserialize($pay_type['pay_key']);
@@ -204,7 +204,6 @@ class pay {
 		
 		$config['code'] = $dingdancode;
 		$config['pay_type_data'] = $pay_type['pay_key'];
-		
 		$paydb->config($config);
 		$paydb->send_pay();
 

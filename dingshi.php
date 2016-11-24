@@ -29,7 +29,7 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 			else{
 				$result1[] = $option[$key].单;
 			}
-			if($value >= 5 )
+			if($value > 5 )
 			{
 				$result1[] = $option[$key].大;
 			}
