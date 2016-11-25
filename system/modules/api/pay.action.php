@@ -21,9 +21,8 @@ class pay extends SystemAction {
 				$db = System::load_sys_class('model');
 				$dingdancode = pay_get_dingdan_code('C');
 				$query = $db->Query("INSERT INTO `@#_member_addmoney_record` (`uid`, `code`, `money`, `pay_type`, `status`,`time`,`score`,`scookies`) VALUES ('$uid', '$dingdancode', '$money', '$pay_type','未付款', '$time','$score','$scookies')");
-				include 'wechatAppPay.class.php';
-				//填写配置参数
-						//订单号	
+				include 'WechatAppPay.class.php';
+				//填写配置参数	
 				$options = array(
 					'appid' 	=> 	'wxf7f45a312b8c036f',		//填写微信分配的公众开放账号ID
 					'mch_id'	=>	'1408736602',				//填写微信支付分配的商户号
@@ -45,7 +44,7 @@ class pay extends SystemAction {
 				$return['timestamp'] = $data['timestamp'];
 				$return['out_trade_no'] = $dingdancode;
 				$return['sign'] = $data['sign'];
-				echo json_encode($return);
+				echo json_encode($return);die;
 
 			}
 		}
