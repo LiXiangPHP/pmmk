@@ -7,9 +7,14 @@ class pay extends SystemAction {
 		$token = isset($_POST['token']) ? $_POST['token'] : null;
 		$info = System::token_uid($token);
 		$uid = $info['uid'];
+		if(!$uid)
+		{
+			$json = array('code' => 100, 'msg' => '请登录', 'data' => $data);
+			echo json_encode($json);
+		}
 		$type = $_POST['type'];
 		$money = $_POST['money'];
-		$pay_type = "微信支付";
+		
 		$time = time();
 		$scookies = 0;
 		$score = 0;
@@ -18,6 +23,7 @@ class pay extends SystemAction {
 		{
 			if($type == 1)
 			{
+				$pay_type = "微信支付";
 				$db = System::load_sys_class('model');
 				$dingdancode = pay_get_dingdan_code('C');
 				$query = $db->Query("INSERT INTO `@#_member_addmoney_record` (`uid`, `code`, `money`, `pay_type`, `status`,`time`,`score`,`scookies`) VALUES ('$uid', '$dingdancode', '$money', '$pay_type','未付款', '$time','$score','$scookies')");
@@ -45,13 +51,56 @@ class pay extends SystemAction {
 				$return['timestamp'] = $data['timestamp'];
 				$return['out_trade_no'] = $dingdancode;
 				$return['sign'] = $data['sign'];
-				echo json_encode($return);
+				echo json_encode($return);die;
 
 			}
 		}
 		else
 		{
-			$json = array('code' => 300, 'msg' => '请登录', 'data' => $data);
+			$json = array('code' => 100, 'msg' => '请登录', 'data' => $data);
+			echo json_encode($json);
+		}
+	}
+	public function payCallback()
+	{
+		$db = System::load_sys_class('model');
+		$token = isset($_POST['token']) ? $_POST['token'] : null;
+		$info = System::token_uid($token);
+		$uid = $info['uid'];
+		if(!$uid)
+		{
+			$json = array('code' => 100, 'msg' => '请登录');
+			echo json_encode($json);
+		}
+		$out_trade_no = $_POST['out_trade_no'];
+		$dingdaninfo = $db->GetOne("select * from `@#_member_addmoney_record` where `code` = '$out_trade_no'");
+		if(!$dingdaninfo)
+		{ 
+			$json = array('code' => 100, 'msg' => '没有该订单');
+			echo json_encode($json);
+		}	//没有该订单,失败
+		if($dingdaninfo['status'] == '已付款'){
+			$json = array('code' => 200, 'msg' => '已付款');
+			echo json_encode($json);
+		}
+		$c_money = intval($dingdaninfo['money']);
+		$uid = $dingdaninfo['uid'];
+		$time = time();
+		
+		$db->Autocommit_start();
+		$up_q1 = $db->Query("UPDATE `@#_member_addmoney_record` SET `status` = '已付款' where `id` = '$dingdaninfo[id]' and `code` = '$dingdaninfo[code]'");
+		$up_q2 = $db->Query("UPDATE `@#_member` SET `money` = `money` + $c_money where (`uid` = '$uid')");			
+		$up_q3 = $db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('$uid', '1', '账户', '充值', '$c_money', '$time')");
+		
+		if($up_q1 && $up_q2 && $up_q3){			
+			$db->Autocommit_commit();
+		}else{
+			$db->Autocommit_rollback();
+			$json = array('code' => 100, 'msg' => '充值失败');
+			echo json_encode($json);
+		}			
+		if(empty($dingdaninfo['scookies'])){					
+			$json = array('code' => 200, 'msg' => '充值成功');
 			echo json_encode($json);
 		}
 	}
