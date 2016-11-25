@@ -53,6 +53,16 @@ class pay extends SystemAction {
 				echo json_encode($return);die;
 
 			}
+			if($type == 2)
+			{
+				$pay_type = "支付宝";
+				$db = System::load_sys_class('model');
+				$dingdancode = pay_get_dingdan_code('C');
+				$query = $db->Query("INSERT INTO `@#_member_addmoney_record` (`uid`, `code`, `money`, `pay_type`, `status`,`time`,`score`,`scookies`) VALUES ('$uid', '$dingdancode', '$money', '$pay_type','未付款', '$time','$score','$scookies')");
+				$data['out_trade_no']  = $dingdancode;
+
+				echo json_encode($data);die;
+			}
 		}
 		else
 		{
