@@ -69,18 +69,18 @@ class pay extends SystemAction {
 		if(!$uid)
 		{
 			$json = array('code' => 100, 'msg' => '请登录');
-			echo json_encode($json);
+			echo json_encode($json);die;
 		}
 		$out_trade_no = $_POST['out_trade_no'];
 		$dingdaninfo = $db->GetOne("select * from `@#_member_addmoney_record` where `code` = '$out_trade_no'");
 		if(!$dingdaninfo)
 		{ 
 			$json = array('code' => 100, 'msg' => '没有该订单');
-			echo json_encode($json);
+			echo json_encode($json);die;
 		}	//没有该订单,失败
 		if($dingdaninfo['status'] == '已付款'){
 			$json = array('code' => 200, 'msg' => '已付款');
-			echo json_encode($json);
+			echo json_encode($json);die;
 		}
 		$c_money = intval($dingdaninfo['money']);
 		$uid = $dingdaninfo['uid'];
@@ -96,11 +96,11 @@ class pay extends SystemAction {
 		}else{
 			$db->Autocommit_rollback();
 			$json = array('code' => 100, 'msg' => '充值失败');
-			echo json_encode($json);
+			echo json_encode($json);die;
 		}			
 		if(empty($dingdaninfo['scookies'])){					
 			$json = array('code' => 200, 'msg' => '充值成功');
-			echo json_encode($json);
+			echo json_encode($json);die;
 		}
 	}
 }
