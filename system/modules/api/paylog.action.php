@@ -7,7 +7,7 @@ class paylog extends SystemAction {
 		if ($info['code']==200) {
 			$db = System::load_sys_class('model');
 			$money =  $db->GetOne("select money from `@#_member` where uid='$info[uid]' ");
-			$data = $data = $db->GetList("select time,pay_type,money from `@#_member_addmoney_record` where uid='$info[uid]'");
+			$data = $data = $db->GetList("select time,pay_type,money from `@#_member_addmoney_record` where uid='$info[uid]' and status like '%已付款%'");
 			if($data&&$money) {
 				$code = 200;
 				$msg = "查询成功";
