@@ -331,7 +331,7 @@ class cartbuy extends SystemAction {
         return 'ok';
     }
     public function go_pay($pay_checkbox){
-        if($this->members['money'] >= $this->MoenyCount){
+        if($this->members['money'] >= $this->MoenyCount && $pay_checkbox){
             $uid=$this->members['uid'];
             $pay_1 =  $this->pay_bag();
             if(!$pay_1){return $pay_1;}
