@@ -38,10 +38,22 @@ class cartbuy extends SystemAction {
         {
             $this->address_id = '';
         }
-        // echo $uid;die;
         // $uid = 694;
-        $pay_checkbox= true;
-        $pay_type_id=false;
+        if($_POST['type'] == 1)
+        {
+            $pay_checkbox= false;
+            $pay_type_id=1;
+        }
+        elseif($_POST['type'] == 2)
+        {
+            $pay_checkbox= false;
+            $pay_type_id = 2;
+        }else
+        {
+            $pay_checkbox= true;
+            $pay_type_id = false;
+        }
+        
         $fufen = 0;
         $db = System::load_sys_class('model');
         // $Cartlist = $db->GetList("SELECT * FROM `@#_shopcart` WHERE user_id = '690'");
@@ -66,6 +78,7 @@ class cartbuy extends SystemAction {
             $shopids=trim($shopids,',');
 
         }
+
         // $pay=System::load_app_class('pay','pay');
         // //$pay->scookie = json_decode(base64_decode($_POST['cookies']));
 
@@ -79,6 +92,7 @@ class cartbuy extends SystemAction {
         }
         $check = $this->go_pay($pay_checkbox);
         // echo $check;die;
+        
         if($check === 'not_pay'){
             $code=100;
             $msg = "未选择支付平台";
@@ -121,8 +135,25 @@ class cartbuy extends SystemAction {
 
         }
         if(is_numeric($pay_type)){
-            $this->pay_type =$this->db->GetOne("SELECT * from `@#_pay` where `pay_id` = '$pay_type' and `pay_start` = '1'");
-            $this->pay_type['pay_bank'] = 'DEFAULT';
+            if($pay_type == 1)
+            {
+                 $this->pay_type['pay_name'] ='微信支付';
+                 $this->pay_type['id'] ='1';
+
+                $this->pay_type['pay_bank'] = 'DEFAULT';
+            }
+            elseif($pay_type == 2)
+            {
+                 $this->pay_type['id'] ='2';
+                $this->pay_type['pay_name'] ='支付宝支付';
+                $this->pay_type['pay_bank'] = 'DEFAULT';
+            }
+            else
+            {
+                $this->pay_type =$this->db->GetOne("SELECT * from `@#_pay` where `pay_id` = '$pay_type' and `pay_start` = '1'");
+                $this->pay_type['pay_bank'] = 'DEFAULT';
+            }
+            
         }
 
         $this->fukuan_type=$fukuan_type;
@@ -135,7 +166,88 @@ class cartbuy extends SystemAction {
         }
         return false;
     }
-
+    public  function addmoney_record($money=null,$data=null){    
+        $uid=$this->members['uid'];
+        $dingdancode = pay_get_dingdan_code('C');       //订单号   
+        if(!is_array($this->pay_type)){
+            return 'not_pay';
+        }
+        $pay_type = $this->pay_type['pay_name'];
+        $time = time();
+        if(!empty($data)){
+            $scookies = $data;
+        }else{
+            $scookies = '0';
+        }
+        $score = $this->fufen;      
+        $query = $this->db->Query("INSERT INTO `@#_member_addmoney_record` (`uid`, `code`, `money`, `pay_type`, `status`,`time`,`score`,`scookies`) VALUES ('$uid', '$dingdancode', '$money', '$pay_type','未付款', '$time','$score','$scookies')");               
+        if($query){
+            $this->db->Autocommit_commit();
+        }else{
+            $this->db->Autocommit_rollback();
+            return false;
+        }
+        if($this->pay_type['id'] == 1)
+        {
+            include 'WechatAppPay.class.php';
+                //填写配置参数    
+                $options = array(
+                    'appid'     =>  'wxf7f45a312b8c036f',       //填写微信分配的公众开放账号ID
+                    'mch_id'    =>  '1408736602',               //填写微信支付分配的商户号
+                    'notify_url'=>  'http://www.gangmaduobao.com/', //填写微信支付结果回调地址
+                    'key'       =>  '6518f10706e342758b58a4d8bc8314bc'              //填写  商户支付密钥Key。审核通过后，在微信发送的邮件中查看
+                );
+                //统一下单方法
+                $wechatAppPay = new wechatAppPay($options);
+                $params['body'] = '商品支付';                       //商品描述
+                $params['out_trade_no'] = $dingdancode; //自定义的订单号
+                $params['total_fee'] = $money*100;                  //订单金额 只能为整数 单位为分
+                $params['trade_type'] = 'APP';                  //交易类型 JSAPI | NATIVE | APP | WAP 
+                $result = $wechatAppPay->unifiedOrder( $params );
+                //创建APP端预支付参数
+                /** @var TYPE_NAME $result */
+                $data = @$wechatAppPay->getAppPayParams( $result['prepay_id'] );
+                $return['prepayid'] = $data['prepayid'];
+                $return['noncestr'] = $data['noncestr'];
+                $return['timestamp'] = $data['timestamp'];
+                $return['out_trade_no'] = $dingdancode;
+                $return['sign'] = $data['sign'];
+                echo json_encode($return);die;
+        }
+        if($this->pay_type['id'] == 2)
+        {
+            include 'WechatAppPay.class.php';
+                //填写配置参数    
+                $options = array(
+                    'appid'     =>  'wxf7f45a312b8c036f',       //填写微信分配的公众开放账号ID
+                    'mch_id'    =>  '1408736602',               //填写微信支付分配的商户号
+                    'notify_url'=>  'http://www.gangmaduobao.com/', //填写微信支付结果回调地址
+                    'key'       =>  '6518f10706e342758b58a4d8bc8314bc'              //填写  商户支付密钥Key。审核通过后，在微信发送的邮件中查看
+                );
+                //统一下单方法
+                $wechatAppPay = new wechatAppPay($options);
+                $params['body'] = '商品支付';                       //商品描述
+                $params['out_trade_no'] = $dingdancode; //自定义的订单号
+                $params['total_fee'] = $money*100;                  //订单金额 只能为整数 单位为分
+                $params['trade_type'] = 'APP';                  //交易类型 JSAPI | NATIVE | APP | WAP 
+                $result = $wechatAppPay->unifiedOrder( $params );
+                //创建APP端预支付参数
+                /** @var TYPE_NAME $result */
+                $data = @$wechatAppPay->getAppPayParams( $result['prepay_id'] );
+                $return['prepayid'] = $data['prepayid'];
+                $return['noncestr'] = $data['noncestr'];
+                $return['timestamp'] = $data['timestamp'];
+                $return['out_trade_no'] = $dingdancode;
+                $return['sign'] = $data['sign'];
+                echo json_encode($return);die;
+        }
+        else
+        {
+            $return['msg'] = '未选择支付平台'; 
+            echo json_encode($return);die;
+        }
+       
+    }
     //买商品
     public  function go_record(){
 
