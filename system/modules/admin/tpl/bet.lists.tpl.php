@@ -60,6 +60,11 @@ tr{ text-align:center}
 				</td>
             </tr>
             <?php } ?>
+            <tr>
+				<td>今日下注额：</td>
+				<td>今日赔注额：</td>
+				<td>今日盈利额：</td>
+            </tr>
         </tbody>
      </table>     
 
