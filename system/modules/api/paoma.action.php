@@ -113,6 +113,11 @@ class paoma extends SystemAction {
 			$NumberSize = '小';
 
 		}
+		if((int)$sum == 11)
+			{
+				$NumberDs = "和";
+				$NumberSize = '和';
+			}
 		// echo $LastResult;die;
 		$LastResult = $LastResult1['result'];
 		$option=$db->GetList("select * from `@#_option`");
@@ -293,6 +298,11 @@ class paoma extends SystemAction {
 				$NumberSize = '小';
 
 			}
+			if((int)$sum == 11)
+			{
+				$NumberDs = "和";
+				$NumberSize = '和';
+			}
 			$v['time'] = substr($v['time'],0,10);
 			$v['result'] = strtr($v['result'],array('10'=>'0'));
 			$v['sum'] = $sum;
@@ -352,6 +362,11 @@ class paoma extends SystemAction {
 				$NumberSize = '小';
 
 			}
+			if((int)$sum == 11)
+			{
+				$NumberDs = "和";
+				$NumberSize = '和';
+			}
 			if($f)
 			{
 				echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']));die;
@@ -389,6 +404,11 @@ class paoma extends SystemAction {
 					$NumberSize = '小';
 
 				}
+				if((int)$sum == 11)
+			{
+				$NumberDs = "和";
+				$NumberSize = '和';
+			}
 				if($f)
 				{
 					echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']));die;
@@ -537,7 +557,11 @@ class paoma extends SystemAction {
 
 		}
 
+<<<<<<< HEAD
 	//	print_r($aaa);die;
+=======
+		// print_r($aaa);die;
+>>>>>>> 0f1f1f6e023957068da6648b5233f8cd5372e6f9
 		foreach ($aaa as $k => $v) {
 			$result .= $v.",";
 			# code...
@@ -566,6 +590,11 @@ class paoma extends SystemAction {
 			{
 				$NumberSize = '小';
 
+			}
+			if((int)$sum == 11)
+			{
+				$NumberDs = "和";
+				$NumberSize = '和';
 			}
 			if($f)
 			{
