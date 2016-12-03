@@ -47,7 +47,7 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 		{
 			$result1[] = "冠亚军和单";	
 		}
-		if($sum >=11)
+		if($sum >11)
 		{
 			$result1[] = "冠亚军和大";
 		}
@@ -55,7 +55,12 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 		{
 			$result1[] = "冠亚军和小";
 		}
-
+		if($sum == 11)
+		{
+			$result1[] = "冠亚军和双";
+			$result1[] = "冠亚军和大";
+			$result1[] = "冠亚军和小";
+		}
 		// print_R($result1);die;
 		foreach ($bet as $k => $v) {
 			// echo $v['name'];die;
@@ -85,6 +90,7 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 	{
 
 		$db = System::load_sys_class('model');
+		// echo 111;die;
 		if(!$issue)
 		{
 			$issue = $_POST['issue'];
@@ -127,6 +133,40 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 		elseif(file_exists("log/".$issue.".log"))
 		{
 			sleep(10);
+			$bet = $db->GetOne("SELECT * FROM `@#_bet_result` where `issue` = '$issue'");
+			if($bet)
+			{
+
+				$betresult = explode(',',$bet['result']);
+				$bet['result'] = strtr($bet['result'],array('10'=>'0'));
+				$code = "200";
+				$sum = $betresult[0]+$betresult[1];
+				if((int)$sum%2 == 0){
+					$NumberDs = "双";
+				}
+				else
+				{
+					$NumberDs = "单";
+				}
+				if((int)$sum>=11)
+				{
+					$NumberSize = '大';
+				}
+				if((int)$sum<=10)
+				{
+					$NumberSize = '小';
+
+				}
+				if($f)
+				{
+					echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']));die;
+				}
+				else
+				{
+					return array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']);
+				}
+
+			}
 		}
 		else
 		{
@@ -138,23 +178,23 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 		$number = array('1','2','3','4','5','6','7','8','9','10');
 		$time = date("Y/m/d",time());
 		$hao = rand(0,9);
-		$guan1= $option[0]['name'].$number[$hao];
-		if($hao <=5)
-		{
-			$hao1 = rand($hao+1,9);
-		}
-		else
-		{
-			$hao1 = rand(0,$hao-1);
-		}
+		$shi= $option[9]['name'].$number[$hao];
+		// if($hao <=5)
+		// {
+		// 	$hao1 = rand($hao+1,9);
+		// }
+		// else
+		// {
+		// 	$hao1 = rand(0,$hao-1);
+		// }
 		
 
-		$ya1 = $option[1]['name'].$number[$hao1];
+		// $ya1 = $option[1]['name'].$number[$hao1];
 		$guanci = $number[$hao];
-		$yaci = $number[$hao1];
-		unset($option[0]);
-		unset($option[1]);
-		unset($number[$hao1]);unset($number[$hao]);
+		// $yaci = $number[$hao1];
+		unset($option[9]);
+		// unset($option[1]);
+		unset($number[$hao]);
 		// print_r($number);die;
 		foreach ($option as $key => $value) {
 			
@@ -165,10 +205,10 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 		// print_r($o);die;
 		
 		$bet = $db->GetList("SELECT * FROM `@#_bet` where `issue` = '$issue'");
-		$guan = $db->GetOne("SELECT * FROM `@#_bet` where `issue` = '$issue' and name = '$guan1'");
-		$ya = $db->GetOne("SELECT * FROM `@#_bet` where `issue` = '$issue' and name = '$ya1'");
+		$guan = $db->GetOne("SELECT * FROM `@#_bet` where `issue` = '$issue' and name = '$shi'");
+		// $ya = $db->GetOne("SELECT * FROM `@#_bet` where `issue` = '$issue' and name = '$ya1'");
 		$guan = $guan['odds']*$guan['number'];
-		$ya = $ya['odds']*$ya['number'];
+		// $ya = $ya['odds']*$ya['number'];
 		$detail = $db->GetList("SELECT * FROM `@#_option_detail` ");
 		foreach ($bet as $k => $v) {
 			$n+=$v['number'];
@@ -176,22 +216,35 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 			$p[$v['id']]= array("did"=>$v['did'],"p"=>$pei['odds']*$v['number'],"name"=>$v['name']);
 			
 		}
-		
-		$s = 0.9;
+		$bet_set=$db->GetOne("SELECT * FROM `@#_bet_set` ");
+		$ying = $bet_set['minmoney']/100;
+		$s = 1-$ying;
+		// $s = 0.9;
 		$sheng = intval($n*$s);
-		$sheng = $sheng-$guan-$ya;
-		// echo $sheng;die;
-		$m = intval($sheng/80);
+		$sheng = $sheng-$guan;
+		$m = intval($sheng/90);
 		// print_r($detail);die;
-		// echo $m;die;
 		// print_r($o);die;
 		// print_r($p);die;
-		$aaa = array(mb_substr($guan1,2),mb_substr($ya1,2));
-		$flag['ci'] = array($guanci,$yaci);
-		
+		$aaa = array(mb_substr($shi,3));
+		$flag['ci'] = array($guanci);
+		$i = 0;
 		foreach ($o as $key => $value) {
-			$ming = mb_substr($value , 0 , 3);
+			$i++;
+			if($i>2)
+			{
+				$ming = mb_substr($value , 0 , 3);
+			}
+			else
+			{
+				$ming = mb_substr($value , 0 , 2);
+			}
+			
 			$ci = mb_substr($value , 3);
+			if(!$ci)
+			{
+				$ci = mb_substr($value , 2);
+			}
 			$ci1 = rand(1,10);
 			if(!in_array($ci1, $flag['ci']))
 			{
@@ -209,7 +262,6 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 						// print_r($flag);die;
 						// print_r($flag['ming']);
 						// print_r( $flag['ci']);
-						// echo $value;
 						// print_r($flag['ci']);die;
 						if($v['p'] < $m && !in_array($ming, $flag['ming']) && !in_array($ci, $flag['ci']))
 						{
@@ -259,7 +311,6 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 			# code...
 		}
 		$result = rtrim($result, ',');
-
 		$sql="INSERT INTO `@#_bet_result`(result,issue,time)VALUES('$result','$issue','$time')";
 		$query = $db->Query($sql);
 		$result = strtr($result,array('10'=>'0'));
