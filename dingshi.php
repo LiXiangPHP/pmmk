@@ -47,7 +47,7 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 		{
 			$result1[] = "冠亚军和单";	
 		}
-		if($sum >11)
+		if($sum > 11)
 		{
 			$result1[] = "冠亚军和大";
 		}
