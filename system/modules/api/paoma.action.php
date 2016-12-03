@@ -537,7 +537,7 @@ class paoma extends SystemAction {
 
 		}
 
-		print_r($aaa);die;
+	//	print_r($aaa);die;
 		foreach ($aaa as $k => $v) {
 			$result .= $v.",";
 			# code...
