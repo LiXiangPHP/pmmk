@@ -13,7 +13,23 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 		}
 		else
 		{
-			$res = betopen($issue);
+			if($issue)
+			{
+				$res = betopen($issue);
+			}
+			else
+			{
+				$time = time();
+				$nianyue = date("Ymd",$time);
+				// echo $nianyue;die;
+				$issue=$db->GetOne("select issue from `@#_bet_result` WHERE `issue` LIKE '%".$nianyue."%' order by id DESC");
+				$issue = $issue['issue'];
+				$lastissue1 = substr($issue,8);
+				$issue = $lastissue1+1;
+				$issue = $nianyue.$issue;
+				$res = betopen($issue);
+			}
+			
 		}
 		$bet = $db->GetList("SELECT * FROM `@#_bet` where `issue` = $issue and `returns` = 0");
 		$result = explode(',',$res['result']);
