@@ -7,7 +7,8 @@ class index1 extends SystemAction {
 		
 		$db = System::load_sys_class('model');
 		$dtime = time();
-
+		$number = $db->GetOne("SELECT SUM(number) FROM `@#_bet` WHERE `time` LIKE "%$time%"");
+        print_r($number);
 		$time = explode ( " ", microtime () ); 
 		$time = $time [1] . ".".($time [0]*1000); 
 		$time = substr($time, 10,4);

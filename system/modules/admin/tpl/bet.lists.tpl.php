@@ -60,10 +60,19 @@ tr{ text-align:center}
 				</td>
             </tr>
             <?php } ?>
+            <?php
+            	$db = System::load_sys_class('model');
+            	$time = date("Y-m-d",time()); 
+            	$number = $db->GetOne("SELECT SUM(number) num FROM `@#_bet` WHERE `time` LIKE '%$time%'");
+            	$num = $number['num'];
+           		$profit = $db->GetOne("SELECT SUM(profit) num FROM `@#_bet` WHERE `time` LIKE '%$time%'");
+           		$pro = $profit['num'];
+           		$lirun = $num-$pro;
+            ?>
             <tr>
-				<td>今日下注额：</td>
-				<td>今日赔注额：</td>
-				<td>今日盈利额：</td>
+				<td>今日下注额：<?php echo $num;?></td>
+				<td>今日赔注额：<?php echo $pro;?></td>
+				<td>今日盈利额：<?php echo $lirun;?></td>
             </tr>
         </tbody>
      </table>     
