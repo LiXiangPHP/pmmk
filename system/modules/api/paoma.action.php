@@ -113,6 +113,11 @@ class paoma extends SystemAction {
 			$NumberSize = '小';
 
 		}
+		if((int)$sum == 11)
+			{
+				$NumberDs = "和";
+				$NumberSize = '和';
+			}
 		// echo $LastResult;die;
 		$LastResult = $LastResult1['result'];
 		$option=$db->GetList("select * from `@#_option`");
@@ -213,9 +218,13 @@ class paoma extends SystemAction {
 					
 				}
 			}
+			$time=time();
+			$query_4 = $db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('$uid', '-1', '账户', '跑马下注', '$n', '$time')");
+			
 			$db->Autocommit_commit();
 			$code = 200;
 			$msg = '购买成功';
+
 			echo json_encode(array("code"=>$code,"msg"=>$msg));die;
 
 		}
@@ -289,6 +298,11 @@ class paoma extends SystemAction {
 				$NumberSize = '小';
 
 			}
+			if((int)$sum == 11)
+			{
+				$NumberDs = "和";
+				$NumberSize = '和';
+			}
 			$v['time'] = substr($v['time'],0,10);
 			$v['result'] = strtr($v['result'],array('10'=>'0'));
 			$v['sum'] = $sum;
@@ -348,6 +362,11 @@ class paoma extends SystemAction {
 				$NumberSize = '小';
 
 			}
+			if((int)$sum == 11)
+			{
+				$NumberDs = "和";
+				$NumberSize = '和';
+			}
 			if($f)
 			{
 				echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']));die;
@@ -385,6 +404,11 @@ class paoma extends SystemAction {
 					$NumberSize = '小';
 
 				}
+				if((int)$sum == 11)
+			{
+				$NumberDs = "和";
+				$NumberSize = '和';
+			}
 				if($f)
 				{
 					echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']));die;
@@ -533,7 +557,7 @@ class paoma extends SystemAction {
 
 		}
 
-		// print_r($aaa);die;
+
 		foreach ($aaa as $k => $v) {
 			$result .= $v.",";
 			# code...
@@ -562,6 +586,11 @@ class paoma extends SystemAction {
 			{
 				$NumberSize = '小';
 
+			}
+			if((int)$sum == 11)
+			{
+				$NumberDs = "和";
+				$NumberSize = '和';
 			}
 			if($f)
 			{

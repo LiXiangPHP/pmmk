@@ -80,6 +80,8 @@ class pay extends SystemAction {
 		$token = isset($_POST['token']) ? $_POST['token'] : null;
 		$info = System::token_uid($token);
 		$uid = $info['uid'];
+
+
 		if(!$uid)
 		{
 			$json = array('code' => 100, 'msg' => '请登录');
@@ -112,7 +114,14 @@ class pay extends SystemAction {
 			$json = array('code' => 100, 'msg' => '充值失败');
 			echo json_encode($json);die;
 		}			
-		if(empty($dingdaninfo['scookies'])){					
+		if(empty($dingdaninfo['scookies'])){	
+			$pid = $db->GetOne("select yaoqing from `@#_member` where `uid` = '$uid'");
+			$bili=$db->GetOne("SELECT bili FROM `@#_bili` ");
+			$bili = $bili['bili']/100;
+			$p_money = $c_money*$bili;
+			$sql = $db->Query("UPDATE `@#_member` SET `money` = `money` + $p_money where (`uid` = '$pid')");
+			$sql1 = $db->Query("INSERT INTO `@#_member_account` (`uid`, `type`, `pay`, `content`, `money`, `time`) VALUES ('$pid', '1', '账户', '邀请人充值', '$p_money', '$time')");
+					
 			$json = array('code' => 200, 'msg' => '充值成功');
 			echo json_encode($json);die;
 		}
