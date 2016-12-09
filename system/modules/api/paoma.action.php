@@ -478,18 +478,24 @@ class paoma extends SystemAction {
 		// print_r($detail);die;
 		// print_r($o);die;
 		// print_r($p);die;
+		
 		$aaa = array(mb_substr($shi,3));
 		$flag['ci'] = array($guanci);
 		$i = 0;
 		foreach ($o as $key => $value) {
-			$i++;
-			if($i>2)
+			// echo $i;
+			if($i>20)
 			{
 				$ming = mb_substr($value , 0 , 3);
+				// echo $ming;die;
 			}
 			else
 			{
 				$ming = mb_substr($value , 0 , 2);
+				$i++;
+				// echo $value;die;
+				
+
 			}
 			
 			$ci = mb_substr($value , 3);
@@ -505,20 +511,37 @@ class paoma extends SystemAction {
 			else{
 				$ci2 = $ci;
 			}
+			// echo $ci2;die;
 			if($p)
 			{
 				foreach ($p as $k => $v) {
-					$vming = mb_substr($v['name'] , 0 , 3);
+
+					if($i>20)
+					{
+						$vming = mb_substr($v['name'] , 0 , 3);
+					}
+					else
+					{
+						$vming = mb_substr($v['name'] , 0 , 2);
+					}
+					// echo $ming;
 					if($v['name'] == $value)
 					{
+						// if(!in_array($ming, $flag['ming']) && !in_array($ci, $flag['ci']))
+						// {
+						// 	echo $ci;
+						// }
+						
 						// print_r($flag);die;
 						// print_r($flag['ming']);
-						// print_r( $flag['ci']);
+						// print_r($flag['ci']);
 						// print_r($flag['ci']);die;
+						
 						if($v['p'] < $m && !in_array($ming, $flag['ming']) && !in_array($ci, $flag['ci']))
 						{
-							// print_r($o[$key]);die;
 							
+							// print_r($o[$key]);die;
+							echo 111;die;
 							// echo mb_substr($v['name'] , 0 , 3);die;
 							$aaa[] = $ci;
 							$flag['ming'][] = $ming;
@@ -527,15 +550,19 @@ class paoma extends SystemAction {
 						}
 						else
 						{
-							// print_r($value);die;
+							// print_r($value);
 							 // echo $v['name']; 
 							 // echo $ci."|";
+							// echo $value;
 							break;
 						}
 						
 					}
 					elseif(!in_array($ming, $flag['ming']) && $ming!=$vming &&!in_array($ci2, $flag['ci']))
 					{
+						// echo $v['name']."|";
+						// echo $value;die;
+						// echo $ci2.'s';
 						// print_r($ming);die;
 						$aaa[] = $ci2;
 						$flag['ming'][] = $ming;
@@ -547,8 +574,8 @@ class paoma extends SystemAction {
 			}
 			elseif(!in_array($ming, $flag['ming']) && $ming!=$vming &&!in_array($ci2, $flag['ci']))
 			{
-				// print_r($ming);die;
-				$aaa[] = $ci2;
+				// print_r($value).'a';
+				// $aaa[] = $ci2;
 				$flag['ming'][] = $ming;
 				$flag['ci'][] = $ci2;
 			}
@@ -556,7 +583,7 @@ class paoma extends SystemAction {
 
 
 		}
-
+		// print_R($aaa);die;
 
 		foreach ($aaa as $k => $v) {
 			$result .= $v.",";
