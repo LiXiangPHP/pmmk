@@ -359,6 +359,36 @@ class user extends SystemAction {
 		echo json_encode($json);
 
 
+	}
+	//绑定手机
+	public function json_mobile()
+	{
+		$db = System::load_sys_class('model');
+		$token = isset($_POST['token']) ? $_POST['token'] : null;
+		$info = System::token_uid($token);
+		$phone = isset($_POST['phone']) ? $_POST['phone'] : null;
+		if ($info['code']==200) 
+		{
+			
+			if ($phone) {
+						$code = 200;
+						$msg = "添加成功";
+						$db->Query("update `@#_member` set `mobile` = '$phone' where `uid` = '$info[uid]'");
+						$json = array('code' => $code, 'msg' => $msg);
+						echo json_encode($json);
+					}else {
+						$code = 400;
+						$msg = "添加失败";
+						$json = array('code' => $code, 'msg' => $msg);
+						echo json_encode($json);
+					}
+			
+		}else{
+				$json = array('code' => 300, 'msg' => '请登录');
+				echo json_encode($json);
+		}
+		
+
 	}	
 		
 }

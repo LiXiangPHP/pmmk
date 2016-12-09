@@ -514,6 +514,7 @@ class my extends SystemAction {
 		$code = 200;
 		echo json_encode(array("code"=>$code,"data"=>$data));
 	}
+	
 
 }
 
