@@ -455,8 +455,8 @@ class shop extends SystemAction {
 				$v['username'] = $user['username'];
 				$v['img'] = "gangmaduobao.com/".$user['img'];
 				$ip = $this->db->GetOne("select user_ip from `@#_member` where uid = '$user[uid]'");
-				$array = explode(',', $ip[user_ip]);
-				$ip2 = $array[1];
+				$array =  $ip[user_ip];
+				$ip2 = $array;
 				$v['ip'] = $ip2;
 				unset($v['q_user']);
 				$data['data'][] = $v;
