@@ -327,6 +327,324 @@ class paoma extends SystemAction {
 			echo json_encode($json);
 		}
 	}
+	// public function betopen($issue = "")
+	// {
+
+
+	// 	$db = System::load_sys_class('model');
+	// 	// echo 111;die;
+	// 	if(!$issue)
+	// 	{
+	// 		$issue = $_POST['issue'];
+	// 		$f = true;
+	// 	}
+	// 	$bet = $db->GetOne("SELECT * FROM `@#_bet_result` where `issue` = '$issue'");
+	// 	if($bet)
+	// 	{
+
+	// 		$betresult = explode(',',$bet['result']);
+	// 		$bet['result'] = strtr($bet['result'],array('10'=>'0'));
+	// 		$code = "200";
+	// 		$sum = $betresult[0]+$betresult[1];
+	// 		if((int)$sum%2 == 0){
+	// 			$NumberDs = "双";
+	// 		}
+	// 		else
+	// 		{
+	// 			$NumberDs = "单";
+	// 		}
+	// 		if((int)$sum>=11)
+	// 		{
+	// 			$NumberSize = '大';
+	// 		}
+	// 		if((int)$sum<=10)
+	// 		{
+	// 			$NumberSize = '小';
+
+	// 		}
+	// 		if((int)$sum == 11)
+	// 		{
+	// 			$NumberDs = "和";
+	// 			$NumberSize = '和';
+	// 		}
+	// 		if($f)
+	// 		{
+	// 			echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']));die;
+	// 		}
+	// 		else
+	// 		{
+	// 			return array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']);
+	// 		}
+
+	// 	}
+	// 	elseif(file_exists("log/".$issue.".log"))
+	// 	{
+	// 		sleep(10);
+	// 		$bet = $db->GetOne("SELECT * FROM `@#_bet_result` where `issue` = '$issue'");
+	// 		if($bet)
+	// 		{
+
+	// 			$betresult = explode(',',$bet['result']);
+	// 			$bet['result'] = strtr($bet['result'],array('10'=>'0'));
+	// 			$code = "200";
+	// 			$sum = $betresult[0]+$betresult[1];
+	// 			if((int)$sum%2 == 0){
+	// 				$NumberDs = "双";
+	// 			}
+	// 			else
+	// 			{
+	// 				$NumberDs = "单";
+	// 			}
+	// 			if((int)$sum>=11)
+	// 			{
+	// 				$NumberSize = '大';
+	// 			}
+	// 			if((int)$sum<=10)
+	// 			{
+	// 				$NumberSize = '小';
+
+	// 			}
+	// 			if((int)$sum == 11)
+	// 		{
+	// 			$NumberDs = "和";
+	// 			$NumberSize = '和';
+	// 		}
+	// 			if($f)
+	// 			{
+	// 				echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']));die;
+	// 			}
+	// 			else
+	// 			{
+	// 				return array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']);
+	// 			}
+
+	// 		}
+	// 	}
+	// 	else
+	// 	{
+	// 		file_put_contents("log/".$issue.".log", $issue);
+	// 	}
+
+
+	// 	$option = array(array("id"=>2,"name"=>'冠军'),array("id"=>3,"name"=>'亚军'),array("id"=>4,"name"=>'第三名'),array("id"=>5,"name"=>'第四名'),array("id"=>6,"name"=>'第五名'),array("id"=>7,"name"=>'第六名'),array("id"=>8,"name"=>'第七名'),array("id"=>9,"name"=>'第八名'),array("id"=>10,"name"=>'第九名'),array("id"=>11,"name"=>'第十名'));
+	// 	$number = array('1','2','3','4','5','6','7','8','9','10');
+	// 	$time = date("Y/m/d",time());
+	// 	$hao = rand(0,9);
+	// 	$shi= $option[9]['name'].$number[$hao];
+	// 	// if($hao <=5)
+	// 	// {
+	// 	// 	$hao1 = rand($hao+1,9);
+	// 	// }
+	// 	// else
+	// 	// {
+	// 	// 	$hao1 = rand(0,$hao-1);
+	// 	// }
+		
+
+	// 	// $ya1 = $option[1]['name'].$number[$hao1];
+	// 	$guanci = $number[$hao];
+	// 	// $yaci = $number[$hao1];
+	// 	unset($option[9]);
+	// 	// unset($option[1]);
+	// 	unset($number[$hao]);
+	// 	// print_r($number);die;
+	// 	foreach ($option as $key => $value) {
+			
+	// 			foreach ($number as $k => $v) {
+	// 				$o[] = $value['name'].$v;
+	// 			}
+	// 	}
+	// 	// print_r($o);die;
+		
+	// 	$bet = $db->GetList("SELECT * FROM `@#_bet` where `issue` = '$issue'");
+	// 	$guan = $db->GetOne("SELECT * FROM `@#_bet` where `issue` = '$issue' and name = '$shi'");
+	// 	// $ya = $db->GetOne("SELECT * FROM `@#_bet` where `issue` = '$issue' and name = '$ya1'");
+	// 	$guan = $guan['odds']*$guan['number'];
+	// 	// $ya = $ya['odds']*$ya['number'];
+	// 	$detail = $db->GetList("SELECT * FROM `@#_option_detail` ");
+	// 	foreach ($bet as $k => $v) {
+	// 		$n+=$v['number'];
+	// 		$pei = $db->GetOne("SELECT * FROM `@#_option_detail` where `id` = '$v[did]'");
+	// 		$p[$v['id']]= array("did"=>$v['did'],"p"=>$pei['odds']*$v['number'],"name"=>$v['name']);
+			
+	// 	}
+	// 	$bet_set=$db->GetOne("SELECT * FROM `@#_bet_set` ");
+	// 	$ying = $bet_set['minmoney']/100;
+	// 	$s = 1-$ying;
+	// 	// $s = 0.9;
+	// 	$sheng = intval($n*$s);
+	// 	$sheng = $sheng-$guan;
+	// 	$m = intval($sheng/90);
+	// 	// print_r($detail);die;
+	// 	// print_r($o);die;
+	// 	// print_r($p);die;
+		
+	// 	$aaa = array(mb_substr($shi,3));
+	// 	$flag['ci'] = array($guanci);
+	// 	$i = 0;
+	// 	foreach ($o as $key => $value) {
+	// 		// echo $i;
+	// 		if($i>20)
+	// 		{
+	// 			$ming = mb_substr($value , 0 , 3);
+	// 			// echo $ming;die;
+	// 		}
+	// 		else
+	// 		{
+	// 			$ming = mb_substr($value , 0 , 2);
+	// 			$i++;
+	// 			// echo $value;die;
+				
+
+	// 		}
+			
+	// 		$ci = mb_substr($value , 3);
+	// 		if(!$ci)
+	// 		{
+	// 			$ci = mb_substr($value , 2);
+	// 		}
+	// 		$ci1 = rand(1,10);
+	// 		if(!in_array($ci1, $flag['ci']))
+	// 		{
+	// 			$ci2 = $ci1;
+	// 		}
+	// 		else{
+	// 			$ci2 = $ci;
+	// 		}
+	// 		// echo $ci2;die;
+	// 		if($p)
+	// 		{
+	// 			foreach ($p as $k => $v) {
+
+	// 				if($i>20)
+	// 				{
+	// 					$vming = mb_substr($v['name'] , 0 , 3);
+	// 				}
+	// 				else
+	// 				{
+	// 					$vming = mb_substr($v['name'] , 0 , 2);
+	// 				}
+	// 				// echo $ming;
+	// 				if($v['name'] == $value)
+	// 				{
+	// 					// if(!in_array($ming, $flag['ming']) && !in_array($ci, $flag['ci']))
+	// 					// {
+	// 					// 	echo $ci;
+	// 					// }
+						
+	// 					// print_r($flag);die;
+	// 					// print_r($flag['ming']);
+	// 					// print_r($flag['ci']);
+	// 					// print_r($flag['ci']);die;
+						
+	// 					if($v['p'] < $m && !in_array($ming, $flag['ming']) && !in_array($ci, $flag['ci']))
+	// 					{
+							
+	// 						// print_r($o[$key]);die;
+	// 						echo 111;die;
+	// 						// echo mb_substr($v['name'] , 0 , 3);die;
+	// 						$aaa[] = $ci;
+	// 						$flag['ming'][] = $ming;
+	// 						$flag['ci'][] = $ci;
+
+	// 					}
+	// 					else
+	// 					{
+	// 						// print_r($value);
+	// 						 // echo $v['name']; 
+	// 						 // echo $ci."|";
+	// 						// echo $value;
+	// 						break;
+	// 					}
+						
+	// 				}
+	// 				elseif(!in_array($ming, $flag['ming']) && $ming!=$vming &&!in_array($ci2, $flag['ci']))
+	// 				{
+	// 					// echo $v['name']."|";
+	// 					// echo $value;die;
+	// 					// echo $ci2.'s';
+	// 					// print_r($ming);die;
+	// 					$aaa[] = $ci2;
+	// 					$flag['ming'][] = $ming;
+	// 					$flag['ci'][] = $ci2;
+	// 				}
+					
+
+	// 			}
+	// 		}
+	// 		elseif(!in_array($ming, $flag['ming']) && $ming!=$vming &&!in_array($ci2, $flag['ci']))
+	// 		{
+	// 			// print_r($value).'a';
+	// 			// $aaa[] = $ci2;
+	// 			$flag['ming'][] = $ming;
+	// 			$flag['ci'][] = $ci2;
+	// 		}
+
+
+
+	// 	}
+	// 	// print_R($aaa);die;
+
+	// 	foreach ($aaa as $k => $v) {
+	// 		$result .= $v.",";
+	// 		# code...
+	// 	}
+	// 	$result = rtrim($result, ',');
+	// 	$sql="INSERT INTO `@#_bet_result`(result,issue,time)VALUES('$result','$issue','$time')";
+	// 	$query = $db->Query($sql);
+	// 	$result = strtr($result,array('10'=>'0'));
+	// 			// echo $result;die;
+	// 	if($query){
+
+	// 		$code = "200";
+	// 		$sum = $aaa[0]+$aaa[1];
+	// 		if((int)$sum%2 == 0){
+	// 			$NumberDs = "双";
+	// 		}
+	// 		else
+	// 		{
+	// 			$NumberDs = "单";
+	// 		}
+	// 		if((int)$sum>=11)
+	// 		{
+	// 			$NumberSize = '大';
+	// 		}
+	// 		if((int)$sum<=10)
+	// 		{
+	// 			$NumberSize = '小';
+
+	// 		}
+	// 		if((int)$sum == 11)
+	// 		{
+	// 			$NumberDs = "和";
+	// 			$NumberSize = '和';
+	// 		}
+	// 		if($f)
+	// 		{
+	// 			echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$result));die;
+	// 		}
+	// 		else
+	// 		{
+	// 			return array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$result);
+	// 		}
+
+	// 	}
+	// 	else
+	// 	{
+	// 		$code = "100";
+	// 		$msg = '请求错误，请重试';
+	// 		if($f)
+	// 		{
+	// 			echo json_encode(array('code'=>$code,'msg'=>$msg));die;
+	// 		}
+	// 		else
+	// 		{
+	// 			return array('code'=>$code,'msg'=>$msg);
+	// 		}
+			
+	// 	}
+
+	// }
 	public function betopen($issue = "")
 	{
 
@@ -429,40 +747,12 @@ class paoma extends SystemAction {
 		$option = array(array("id"=>2,"name"=>'冠军'),array("id"=>3,"name"=>'亚军'),array("id"=>4,"name"=>'第三名'),array("id"=>5,"name"=>'第四名'),array("id"=>6,"name"=>'第五名'),array("id"=>7,"name"=>'第六名'),array("id"=>8,"name"=>'第七名'),array("id"=>9,"name"=>'第八名'),array("id"=>10,"name"=>'第九名'),array("id"=>11,"name"=>'第十名'));
 		$number = array('1','2','3','4','5','6','7','8','9','10');
 		$time = date("Y/m/d",time());
-		$hao = rand(0,9);
-		$shi= $option[9]['name'].$number[$hao];
-		// if($hao <=5)
-		// {
-		// 	$hao1 = rand($hao+1,9);
-		// }
-		// else
-		// {
-		// 	$hao1 = rand(0,$hao-1);
-		// }
 		
-
-		// $ya1 = $option[1]['name'].$number[$hao1];
-		$guanci = $number[$hao];
-		// $yaci = $number[$hao1];
-		unset($option[9]);
-		// unset($option[1]);
-		unset($number[$hao]);
-		// print_r($number);die;
-		foreach ($option as $key => $value) {
-			
-				foreach ($number as $k => $v) {
-					$o[] = $value['name'].$v;
-				}
-		}
-		// print_r($o);die;
 		
 		$bet = $db->GetList("SELECT * FROM `@#_bet` where `issue` = '$issue'");
-		$guan = $db->GetOne("SELECT * FROM `@#_bet` where `issue` = '$issue' and name = '$shi'");
-		// $ya = $db->GetOne("SELECT * FROM `@#_bet` where `issue` = '$issue' and name = '$ya1'");
-		$guan = $guan['odds']*$guan['number'];
-		// $ya = $ya['odds']*$ya['number'];
-		$detail = $db->GetList("SELECT * FROM `@#_option_detail` ");
+		$i=0;
 		foreach ($bet as $k => $v) {
+			$i++;
 			$n+=$v['number'];
 			$pei = $db->GetOne("SELECT * FROM `@#_option_detail` where `id` = '$v[did]'");
 			$p[$v['id']]= array("did"=>$v['did'],"p"=>$pei['odds']*$v['number'],"name"=>$v['name']);
@@ -473,123 +763,113 @@ class paoma extends SystemAction {
 		$s = 1-$ying;
 		// $s = 0.9;
 		$sheng = intval($n*$s);
-		$sheng = $sheng-$guan;
-		$m = intval($sheng/90);
+		$m = intval($sheng/$i);
 		// print_r($detail);die;
 		// print_r($o);die;
 		// print_r($p);die;
 		
-		$aaa = array(mb_substr($shi,3));
-		$flag['ci'] = array($guanci);
-		$i = 0;
-		foreach ($o as $key => $value) {
-			// echo $i;
-			if($i>20)
+
+		foreach ($p as $key => $value) {
+			if(strlen($value['name'])>8)
 			{
-				$ming = mb_substr($value , 0 , 3);
-				// echo $ming;die;
+				$ming  = mb_substr($value['name'] ,  0,3);
 			}
 			else
 			{
-				$ming = mb_substr($value , 0 , 2);
-				$i++;
-				// echo $value;die;
-				
-
+				$ming = mb_substr($value['name'],0,2);
 			}
-			
-			$ci = mb_substr($value , 3);
+			$ci = mb_substr($value['name'] ,  3);
 			if(!$ci)
 			{
-				$ci = mb_substr($value , 2);
+				$ci = mb_substr($value['name'],2);
 			}
-			$ci1 = rand(1,10);
-			if(!in_array($ci1, $flag['ci']))
+			// echo $m;die;
+			if($value['p'] > $m)
 			{
-				$ci2 = $ci1;
+				$arr[$ming][] = $ci;
 			}
-			else{
-				$ci2 = $ci;
-			}
-			// echo $ci2;die;
-			if($p)
-			{
-				foreach ($p as $k => $v) {
-
-					if($i>20)
-					{
-						$vming = mb_substr($v['name'] , 0 , 3);
-					}
-					else
-					{
-						$vming = mb_substr($v['name'] , 0 , 2);
-					}
-					// echo $ming;
-					if($v['name'] == $value)
-					{
-						// if(!in_array($ming, $flag['ming']) && !in_array($ci, $flag['ci']))
-						// {
-						// 	echo $ci;
-						// }
-						
-						// print_r($flag);die;
-						// print_r($flag['ming']);
-						// print_r($flag['ci']);
-						// print_r($flag['ci']);die;
-						
-						if($v['p'] < $m && !in_array($ming, $flag['ming']) && !in_array($ci, $flag['ci']))
-						{
-							
-							// print_r($o[$key]);die;
-							echo 111;die;
-							// echo mb_substr($v['name'] , 0 , 3);die;
-							$aaa[] = $ci;
-							$flag['ming'][] = $ming;
-							$flag['ci'][] = $ci;
-
-						}
-						else
-						{
-							// print_r($value);
-							 // echo $v['name']; 
-							 // echo $ci."|";
-							// echo $value;
-							break;
-						}
-						
-					}
-					elseif(!in_array($ming, $flag['ming']) && $ming!=$vming &&!in_array($ci2, $flag['ci']))
-					{
-						// echo $v['name']."|";
-						// echo $value;die;
-						// echo $ci2.'s';
-						// print_r($ming);die;
-						$aaa[] = $ci2;
-						$flag['ming'][] = $ming;
-						$flag['ci'][] = $ci2;
-					}
-					
-
-				}
-			}
-			elseif(!in_array($ming, $flag['ming']) && $ming!=$vming &&!in_array($ci2, $flag['ci']))
-			{
-				// print_r($value).'a';
-				// $aaa[] = $ci2;
-				$flag['ming'][] = $ming;
-				$flag['ci'][] = $ci2;
-			}
-
-
 
 		}
-		// print_R($aaa);die;
 
-		foreach ($aaa as $k => $v) {
+		foreach ($arr as $key => $value) {
+				for ($iz=0; $iz < 10 ; $iz++) {
+				if($number[$iz])
+				{
+					if($number[$iz] != $value[$iz])
+					{
+						$ac[$key] =  $number[$iz];
+						unset($number[$iz]);
+						break;
+					}
+
+				} 
+					
+				}
+			
+		}
+		
+				// print_r($a);die;
+		foreach ($ac as $key => $value) {
+			if($key == '冠军')
+			{
+				$jg[0] = $value[0];
+			}
+			if($key == '亚军')
+			{
+				$jg[1] = $value[0];
+			}
+			if($key == '第三名')
+			{
+				$jg[2] = $value[0];
+			}
+			if($key == '第四名')
+			{
+				$jg[3] = $value[0];
+			}
+			if($key == '第五名')
+			{
+				$jg[4] = $value[0];
+			}
+			if($key == '第六名')
+			{
+				$jg[5] = $value[0];
+			}
+			if($key == '第七名')
+			{
+				$jg[6] = $value[0];
+			}
+			if($key == '第八名')
+			{
+				$jg[7] = $value[0];
+			}
+			if($key == '第九名')
+			{
+				$jg[8] = $value[0];
+			}
+			if($key == '第十名')
+			{
+				$jg[9] = $value[0];
+			}
+
+		}
+// $a = array_rand($ips);//返回结果是一个键值
+// print_r($ips[$a]);exit;
+		for ($i=0; $i <10 ; $i++) { 
+			if(!$jg[$i])
+			{
+				$a = array_rand($number);
+				$jg[$i] = $number[$a];
+				unset($number[$a]);
+			}
+		}
+		// print_r($jg);die;
+		
+		foreach ($jg as $k => $v) {
 			$result .= $v.",";
 			# code...
 		}
 		$result = rtrim($result, ',');
+		// echo $result;die;
 		$sql="INSERT INTO `@#_bet_result`(result,issue,time)VALUES('$result','$issue','$time')";
 		$query = $db->Query($sql);
 		$result = strtr($result,array('10'=>'0'));
