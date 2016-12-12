@@ -349,7 +349,7 @@ class user extends SystemAction {
 		// $bili = $db->getOne(select * from )
 		$bili = $db->GetOne("select * from `@#_bili`");
 		$bili = $bili['bili'];
-		$invifriends=$db->GetList("select uid,mobile,time from `@#_member` where `yaoqing`='$info[uid]' ORDER BY `time` DESC");
+		$invifriends=$db->GetList("select uid,username,mobile,time from `@#_member` where `yaoqing`='$info[uid]' ORDER BY `time` DESC");
 		foreach ($invifriends as $k => $v) {
 			$total[$v['mobile']]=$db->GetList("select * from `@#_member_account` where `uid`='$v[uid]' and `pay` = '账户' and `type` = 1 ");
 		}
