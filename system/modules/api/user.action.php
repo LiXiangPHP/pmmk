@@ -56,10 +56,17 @@ class user extends SystemAction {
 				$user_ip = _get_ip_dizhi();
 				$token  = md5($openid.$password.$time);
 				$db->Query("UPDATE `@#_member` SET `user_ip` = '$user_ip',`login_time` = '$time', `token` = '$token' where `vxid` = '$openid'");
+				$imobile = $db->GetOne("SELECT mobile FROM `@#_member` where `vxid` = '$openid'");
+				print_r($mobile);die;
+				if ($imobile) {
+					$mobile = 1;
+				}else{
+					$mobile = 2;
+				}
 				$code = 200;
 				$yaoqing = "10000".$member[uid];
 				$data = array("token"=>$token,"yaoqing"=>$yaoqing);
-				$json = array('code' => $code, 'data'=>$data);
+				$json = array('code' => $code,'mobile' => $mobile, 'data'=>$data);
 				echo json_encode($json);die;
 			}
 		}
@@ -358,6 +365,36 @@ class user extends SystemAction {
 		$json = array('code' => $code, 'data' => array('invifriends'=>$invifriends,'total'=>$total,'bili'=>$bili));
 		echo json_encode($json);
 
+
+	}
+	//绑定手机
+	public function json_mobile()
+	{
+		$db = System::load_sys_class('model');
+		$token = isset($_POST['token']) ? $_POST['token'] : null;
+		$info = System::token_uid($token);
+		$phone = isset($_POST['phone']) ? $_POST['phone'] : null;
+		if ($info['code']==200) 
+		{
+			
+			if ($phone) {
+						$code = 200;
+						$msg = "添加成功";
+						$db->Query("update `@#_member` set `mobile` = '$phone' where `uid` = '$info[uid]'");
+						$json = array('code' => $code, 'msg' => $msg);
+						echo json_encode($json);
+					}else {
+						$code = 400;
+						$msg = "添加失败";
+						$json = array('code' => $code, 'msg' => $msg);
+						echo json_encode($json);
+					}
+			
+		}else{
+				$json = array('code' => 300, 'msg' => '请登录');
+				echo json_encode($json);
+		}
+		
 
 	}	
 		

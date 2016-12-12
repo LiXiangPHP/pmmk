@@ -196,9 +196,8 @@ class shop extends SystemAction {
 		$page->config($total,$num,$pagenum,"0");
 		$Sdata = $this->db->GetPage("SELECT b.img,b.username, a.sd_id id,a.sd_qishu periods,a.sd_shopid shopid,a.sd_content content,a.sd_photolist photolist,a.sd_time time,a.sd_ping comments  FROM `@#_shaidan` a, `@#_member` b where a.sd_userid = b.uid  order by time desc",array("num"=>$num,"page"=>$pagenum,"type"=>1,"cache"=>0));
 		foreach($Sdata as $v) {
-			$aa = $this->db->GetOne("select title, q_user_code from `@#_shoplist` where `id`='$v[shopid]' ");			
+			$aa = $this->db->GetOne("select title from `@#_shoplist` where `id`='$v[shopid]' ");			
 			$v['title'] = strip_tags($aa['title']);
-			$v['code'] = $aa['q_user_code'];
 			$v['img'] = "gangmaduobao.com/".$v['img'];
 			$photo = explode(",",$v['photolist']);
 			foreach ($photo as $key => $value) {
@@ -456,8 +455,8 @@ class shop extends SystemAction {
 				$v['username'] = $user['username'];
 				$v['img'] = "gangmaduobao.com/".$user['img'];
 				$ip = $this->db->GetOne("select user_ip from `@#_member` where uid = '$user[uid]'");
-				$array = explode(',', $ip[user_ip]);
-				$ip2 = $array[1];
+				$array =  $ip[user_ip];
+				$ip2 = $array;
 				$v['ip'] = $ip2;
 				unset($v['q_user']);
 				$data['data'][] = $v;
