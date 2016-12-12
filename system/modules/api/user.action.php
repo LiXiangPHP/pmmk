@@ -57,6 +57,7 @@ class user extends SystemAction {
 				$token  = md5($openid.$password.$time);
 				$db->Query("UPDATE `@#_member` SET `user_ip` = '$user_ip',`login_time` = '$time', `token` = '$token' where `vxid` = '$openid'");
 				$imobile = $db->GetOne("SELECT mobile FROM `@#_member` where `vxid` = '$openid'");
+				print_r($mobile);die;
 				if ($imobile) {
 					$mobile = 1;
 				}else{
