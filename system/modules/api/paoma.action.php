@@ -651,12 +651,14 @@ class paoma extends SystemAction {
 
 		$db = System::load_sys_class('model');
 		// echo 111;die;
+		var_dump($_POST['issue']);die;
 		if(!$issue)
 		{
 			$issue = $_POST['issue'];
 			$f = true;
 		}
 		$bet = $db->GetOne("SELECT * FROM `@#_bet_result` where `issue` = '$issue'");
+		
 		if($bet)
 		{
 
