@@ -651,7 +651,7 @@ class paoma extends SystemAction {
 
 		$db = System::load_sys_class('model');
 		// echo 111;die;
-		var_dump($_POST['issue']);die;
+		//var_dump($_POST['issue'])
 		if(!$issue)
 		{
 			$issue = $_POST['issue'];
