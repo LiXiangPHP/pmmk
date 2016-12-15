@@ -947,9 +947,9 @@ class paoma extends SystemAction {
 		}
 		else
 		{
-			die;
+			
 			//echo '123';
-			//$res = $this->betopen($issue);
+			$res = $this->betopen($issue);
 		}
 		$bet = $db->GetList("SELECT * FROM `@#_bet` where `issue` = $issue and `returns` = 0");
 		$result = explode(',',$res['result']);
