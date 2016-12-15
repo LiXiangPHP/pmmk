@@ -28,7 +28,7 @@ class paoma extends SystemAction {
 		// echo 111;die;
 		$issue=$db->GetOne("select issue from `@#_bet_result` WHERE `issue` LIKE '%".$nianyue."%' order by id DESC");
 		$issue = $issue['issue'];
-		echo $issue;die;
+		//echo $issue;die;
 
 		$aa = date("h:i:s",$time);
 		// echo $time.'|';
