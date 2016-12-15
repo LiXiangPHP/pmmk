@@ -856,6 +856,8 @@ class paoma extends SystemAction {
 		}
 // $a = array_rand($ips);//返回结果是一个键值
 // print_r($ips[$a]);exit;
+		for($h=0; $h <1000000 ; $h++){
+			$result = "";
 		for ($i=0; $i <10 ; $i++) { 
 			if(!$jg[$i])
 			{
@@ -864,16 +866,21 @@ class paoma extends SystemAction {
 				unset($number[$a]);
 			}
 		}
-		// print_r($jg);die;
+		 //print_r($jg);
 		
 		foreach ($jg as $k => $v) {
 			$result .= $v.",";
 			# code...
 		}
+
 		$result = rtrim($result, ',');
-		// echo $result;die;
-		$sql="INSERT INTO `@#_bet_result`(result,issue,time)VALUES('$result','$issue','$time')";
-		$query = $db->Query($sql);
+
+		
+		}
+		 echo $result;
+		 die;
+		//$sql="INSERT INTO `@#_bet_result`(result,issue,time)VALUES('$result','$issue','$time')";
+		//$query = $db->Query($sql);
 		$result = strtr($result,array('10'=>'0'));
 				// echo $result;die;
 		if($query){
@@ -934,14 +941,15 @@ class paoma extends SystemAction {
 		$bet = $db->GetOne("SELECT * FROM `@#_bet` where `returns` = 0 order by time desc");
 		$issue = $bet['issue'];
 		$bet_result = $db->GetOne("SELECT * FROM `@#_bet_result` where `issue` = $issue");
-		if($bet_result)
-		{
-			$res = $bet_result;
-		}
-		else
-		{
-			$res = $this->betopen($issue);
-		}
+		// if($bet_result)
+		// {
+			
+		// }
+		// else
+		// {
+		// 	$res = $this->betopen($issue);
+		// }
+		$res = $bet_result;
 		$bet = $db->GetList("SELECT * FROM `@#_bet` where `issue` = $issue and `returns` = 0");
 		$result = explode(',',$res['result']);
 		$sum = $result[0]+$result[1];
