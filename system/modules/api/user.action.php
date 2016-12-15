@@ -5,8 +5,8 @@ class user extends SystemAction {
 	public function login(){
 		$db = System::load_sys_class('model');
 		$code = $_POST['code'];
-		if($code)
-		{
+		//if($code)
+		//{
 			$wx=System::load_app_class('Weixin','api');
 			// $code = "021hNyX109yILD1cDNU103rAX10hNyX7";
 			$aa = $wx::token($code);
@@ -16,6 +16,9 @@ class user extends SystemAction {
 			$info = $wx::info($access_token);
 			$info = json_decode($info);
 			$openid = $info->openid;
+			$imobile = $db->GetOne("SELECT mobile FROM `@#_member` where `vxid` = '$openid'");
+			var_dump($openid);
+			die;
 			if($openid)
 			{
 				$member=$db->GetOne("select * from `@#_member` where `vxid`='$openid'");
@@ -68,7 +71,7 @@ class user extends SystemAction {
 				$json = array('code' => $code, 'data'=>$data);
 				echo json_encode($json);die;
 			}
-		}
+		//}
 		
 		$username=$_POST['username'];
 		$password=md5($_POST['password']);
