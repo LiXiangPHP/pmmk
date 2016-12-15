@@ -28,7 +28,7 @@ class paoma extends SystemAction {
 		// echo 111;die;
 		$issue=$db->GetOne("select issue from `@#_bet_result` WHERE `issue` LIKE '%".$nianyue."%' order by id DESC");
 		$issue = $issue['issue'];
-		
+		echo $issue;die;
 
 		$aa = date("h:i:s",$time);
 		// echo $time.'|';
@@ -647,10 +647,17 @@ class paoma extends SystemAction {
 	// }
 	public function betopen($issue = "")
 	{
-
-
 		$db = System::load_sys_class('model');
-		// echo 111;die;
+
+		$time = time();
+		$nianyue = date("Ymd",$time);
+		$qihao = date("Y/m/d",$time);
+		$issue=$db->GetOne("select issue from `@#_bet_result` WHERE `issue` LIKE '%".$nianyue."%' order by id DESC");
+		$issue = $issue['issue'];
+
+
+		
+		 echo $issue;die;
 		//var_dump($_POST['issue'])
 		if(!$issue)
 		{
@@ -934,15 +941,16 @@ class paoma extends SystemAction {
 		$bet = $db->GetOne("SELECT * FROM `@#_bet` where `returns` = 0 order by time desc");
 		$issue = $bet['issue'];
 		$bet_result = $db->GetOne("SELECT * FROM `@#_bet_result` where `issue` = $issue");
-		// if($bet_result)
-		// {
-		// 	$res = $bet_result;
-		// }
-		// else
-		// {
-		// 	$res = $this->betopen($issue);
-		// }
-		$res = $bet_result;
+		if($bet_result)
+		{
+			$res = $bet_result;
+		}
+		else
+		{
+			die;
+			//echo '123';
+			//$res = $this->betopen($issue);
+		}
 		$bet = $db->GetList("SELECT * FROM `@#_bet` where `issue` = $issue and `returns` = 0");
 		$result = explode(',',$res['result']);
 		$sum = $result[0]+$result[1];
