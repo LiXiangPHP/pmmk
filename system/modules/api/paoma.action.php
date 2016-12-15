@@ -649,15 +649,7 @@ class paoma extends SystemAction {
 	{
 		$db = System::load_sys_class('model');
 
-		$time = time();
-		$nianyue = date("Ymd",$time);
-		$qihao = date("Y/m/d",$time);
-		$issue=$db->GetOne("select issue from `@#_bet_result` WHERE `issue` LIKE '%".$nianyue."%' order by id DESC");
-		$issue = $issue['issue'];
-
-
-		
-		 echo $issue;die;
+	
 		//var_dump($_POST['issue'])
 		if(!$issue)
 		{
@@ -947,9 +939,9 @@ class paoma extends SystemAction {
 		}
 		else
 		{
-			
+			die;
 			//echo '123';
-			$res = $this->betopen($issue);
+			//$res = $this->betopen($issue);
 		}
 		$bet = $db->GetList("SELECT * FROM `@#_bet` where `issue` = $issue and `returns` = 0");
 		$result = explode(',',$res['result']);
