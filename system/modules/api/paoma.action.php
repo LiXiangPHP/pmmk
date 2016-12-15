@@ -934,14 +934,15 @@ class paoma extends SystemAction {
 		$bet = $db->GetOne("SELECT * FROM `@#_bet` where `returns` = 0 order by time desc");
 		$issue = $bet['issue'];
 		$bet_result = $db->GetOne("SELECT * FROM `@#_bet_result` where `issue` = $issue");
-		if($bet_result)
-		{
-			$res = $bet_result;
-		}
-		else
-		{
-			$res = $this->betopen($issue);
-		}
+		// if($bet_result)
+		// {
+		// 	$res = $bet_result;
+		// }
+		// else
+		// {
+		// 	$res = $this->betopen($issue);
+		// }
+		$res = $bet_result;
 		$bet = $db->GetList("SELECT * FROM `@#_bet` where `issue` = $issue and `returns` = 0");
 		$result = explode(',',$res['result']);
 		$sum = $result[0]+$result[1];
