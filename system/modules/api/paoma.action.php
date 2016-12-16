@@ -649,8 +649,6 @@ class paoma extends SystemAction {
 	{
 		$db = System::load_sys_class('model');
 
-	
-		//var_dump($_POST['issue'])
 		if(!$issue)
 		{
 			$issue = $_POST['issue'];
@@ -742,10 +740,7 @@ class paoma extends SystemAction {
 		else
 		{
 			file_put_contents("log/".$issue.".log", $issue);
-		}
-
-
-		$option = array(array("id"=>2,"name"=>'冠军'),array("id"=>3,"name"=>'亚军'),array("id"=>4,"name"=>'第三名'),array("id"=>5,"name"=>'第四名'),array("id"=>6,"name"=>'第五名'),array("id"=>7,"name"=>'第六名'),array("id"=>8,"name"=>'第七名'),array("id"=>9,"name"=>'第八名'),array("id"=>10,"name"=>'第九名'),array("id"=>11,"name"=>'第十名'));
+			$option = array(array("id"=>2,"name"=>'冠军'),array("id"=>3,"name"=>'亚军'),array("id"=>4,"name"=>'第三名'),array("id"=>5,"name"=>'第四名'),array("id"=>6,"name"=>'第五名'),array("id"=>7,"name"=>'第六名'),array("id"=>8,"name"=>'第七名'),array("id"=>9,"name"=>'第八名'),array("id"=>10,"name"=>'第九名'),array("id"=>11,"name"=>'第十名'));
 		$number = array('1','2','3','4','5','6','7','8','9','10');
 		$time = date("Y/m/d",time());
 		
@@ -925,6 +920,10 @@ class paoma extends SystemAction {
 			
 		}
 
+		}
+
+
+		
 	}
 	//定时任务
 	function returns()
