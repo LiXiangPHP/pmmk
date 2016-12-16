@@ -115,17 +115,18 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 				echo date("Y-m-d H:i:s").$v['id']."收益0";
 			}
 		}
-	function betopen($issue = "")
+	public function betopen($issue = "")
 	{
 
 		$db = System::load_sys_class('model');
-		// echo 111;die;
+
 		if(!$issue)
 		{
 			$issue = $_POST['issue'];
 			$f = true;
 		}
 		$bet = $db->GetOne("SELECT * FROM `@#_bet_result` where `issue` = '$issue'");
+		
 		if($bet)
 		{
 
@@ -148,6 +149,11 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 			{
 				$NumberSize = '小';
 
+			}
+			if((int)$sum == 11)
+			{
+				$NumberDs = "和";
+				$NumberSize = '和';
 			}
 			if($f)
 			{
@@ -186,6 +192,11 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 					$NumberSize = '小';
 
 				}
+				if((int)$sum == 11)
+			{
+				$NumberDs = "和";
+				$NumberSize = '和';
+			}
 				if($f)
 				{
 					echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']));die;
@@ -206,40 +217,12 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 		$option = array(array("id"=>2,"name"=>'冠军'),array("id"=>3,"name"=>'亚军'),array("id"=>4,"name"=>'第三名'),array("id"=>5,"name"=>'第四名'),array("id"=>6,"name"=>'第五名'),array("id"=>7,"name"=>'第六名'),array("id"=>8,"name"=>'第七名'),array("id"=>9,"name"=>'第八名'),array("id"=>10,"name"=>'第九名'),array("id"=>11,"name"=>'第十名'));
 		$number = array('1','2','3','4','5','6','7','8','9','10');
 		$time = date("Y/m/d",time());
-		$hao = rand(0,9);
-		$shi= $option[9]['name'].$number[$hao];
-		// if($hao <=5)
-		// {
-		// 	$hao1 = rand($hao+1,9);
-		// }
-		// else
-		// {
-		// 	$hao1 = rand(0,$hao-1);
-		// }
 		
-
-		// $ya1 = $option[1]['name'].$number[$hao1];
-		$guanci = $number[$hao];
-		// $yaci = $number[$hao1];
-		unset($option[9]);
-		// unset($option[1]);
-		unset($number[$hao]);
-		// print_r($number);die;
-		foreach ($option as $key => $value) {
-			
-				foreach ($number as $k => $v) {
-					$o[] = $value['name'].$v;
-				}
-		}
-		// print_r($o);die;
 		
 		$bet = $db->GetList("SELECT * FROM `@#_bet` where `issue` = '$issue'");
-		$guan = $db->GetOne("SELECT * FROM `@#_bet` where `issue` = '$issue' and name = '$shi'");
-		// $ya = $db->GetOne("SELECT * FROM `@#_bet` where `issue` = '$issue' and name = '$ya1'");
-		$guan = $guan['odds']*$guan['number'];
-		// $ya = $ya['odds']*$ya['number'];
-		$detail = $db->GetList("SELECT * FROM `@#_option_detail` ");
+		$i=0;
 		foreach ($bet as $k => $v) {
+			$i++;
 			$n+=$v['number'];
 			$pei = $db->GetOne("SELECT * FROM `@#_option_detail` where `id` = '$v[did]'");
 			$p[$v['id']]= array("did"=>$v['did'],"p"=>$pei['odds']*$v['number'],"name"=>$v['name']);
@@ -250,96 +233,200 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 		$s = 1-$ying;
 		// $s = 0.9;
 		$sheng = intval($n*$s);
-		$sheng = $sheng-$guan;
-		$m = intval($sheng/90);
+		$m = intval($sheng/$i);
 		// print_r($detail);die;
 		// print_r($o);die;
 		// print_r($p);die;
-		$aaa = array(mb_substr($shi,3));
-		$flag['ci'] = array($guanci);
-		$i = 0;
-		foreach ($o as $key => $value) {
-			$i++;
-			if($i>2)
+		
+
+		foreach ($p as $key => $value) {
+			if(strlen($value['name'])>8)
 			{
-				$ming = mb_substr($value , 0 , 3);
+				$ming  = mb_substr($value['name'] ,  0,3);
 			}
 			else
 			{
-				$ming = mb_substr($value , 0 , 2);
+				$ming = mb_substr($value['name'],0,2);
 			}
-			
-			$ci = mb_substr($value , 3);
+			$ci = mb_substr($value['name'] ,  3);
 			if(!$ci)
 			{
-				$ci = mb_substr($value , 2);
+				$ci = mb_substr($value['name'],2);
 			}
-			$ci1 = rand(1,10);
-			if(!in_array($ci1, $flag['ci']))
+			// echo $m;die;
+			if($value['p'] > $m)
 			{
-				$ci2 = $ci1;
+				$arr[$ming][] = $ci;
 			}
-			else{
-				$ci2 = $ci;
-			}
-			if($p)
-			{
-				foreach ($p as $k => $v) {
-					$vming = mb_substr($v['name'] , 0 , 3);
-					if($v['name'] == $value)
-					{
-						// print_r($flag);die;
-						// print_r($flag['ming']);
-						// print_r( $flag['ci']);
-						// print_r($flag['ci']);die;
-						if($v['p'] < $m && !in_array($ming, $flag['ming']) && !in_array($ci, $flag['ci']))
-						{
-							// print_r($o[$key]);die;
-							
-							// echo mb_substr($v['name'] , 0 , 3);die;
-							$aaa[] = $ci;
-							$flag['ming'][] = $ming;
-							$flag['ci'][] = $ci;
-
-						}
-						else
-						{
-							// print_r($value);die;
-							 // echo $v['name']; 
-							 // echo $ci."|";
-							break;
-						}
-						
-					}
-					elseif(!in_array($ming, $flag['ming']) && $ming!=$vming &&!in_array($ci2, $flag['ci']))
-					{
-						// print_r($ming);die;
-						$aaa[] = $ci2;
-						$flag['ming'][] = $ming;
-						$flag['ci'][] = $ci2;
-					}
-					
-
-				}
-			}
-			elseif(!in_array($ming, $flag['ming']) && $ming!=$vming &&!in_array($ci2, $flag['ci']))
-			{
-				// print_r($ming);die;
-				$aaa[] = $ci2;
-				$flag['ming'][] = $ming;
-				$flag['ci'][] = $ci2;
-			}
-
-
 
 		}
 
-		// print_r($aaa);die;
-		foreach ($aaa as $k => $v) {
+		foreach ($arr as $key => $value) {
+				for ($iz=0; $iz < 10 ; $iz++) {
+				if($number[$iz])
+				{
+					if($number[$iz] != $value[$iz])
+					{
+						$ac[$key] =  $number[$iz];
+						unset($number[$iz]);
+						break;
+					}
+
+				} 
+					
+				}
+			
+		}
+		
+				// print_r($a);die;
+		foreach ($ac as $key => $value) {
+			if($key == '冠军')
+			{
+				$jg[0] = $value[0];
+			}
+			if($key == '亚军')
+			{
+				$jg[1] = $value[0];
+			}
+			if($key == '第三名')
+			{
+				$jg[2] = $value[0];
+			}
+			if($key == '第四名')
+			{
+				$jg[3] = $value[0];
+			}
+			if($key == '第五名')
+			{
+				$jg[4] = $value[0];
+			}
+			if($key == '第六名')
+			{
+				$jg[5] = $value[0];
+			}
+			if($key == '第七名')
+			{
+				$jg[6] = $value[0];
+			}
+			if($key == '第八名')
+			{
+				$jg[7] = $value[0];
+			}
+			if($key == '第九名')
+			{
+				$jg[8] = $value[0];
+			}
+			if($key == '第十名')
+			{
+				$jg[9] = $value[0];
+			}
+
+		}
+// $a = array_rand($ips);//返回结果是一个键值
+ //print_r($ips[$a]);exit;
+		
+		 //print_r($jg);die;
+/***************************************************************/
+//echo 123;die;
+ for ($y = 1; ; $y++) {
+ 	$comm = 0;
+ 	$profit_1 = 0;
+for ($i=0; $i <10 ; $i++) { 
+			if(!$jg[$i])
+			{
+				$a = array_rand($number);
+				$jg[$i] = $number[$a];
+				unset($number[$a]);
+			}
+		}
+		//print_r($jg);die;
+$bet_1 = $db->GetList("SELECT * FROM `@#_bet` where `issue` = '$issue' and `returns` = 0");
+
+
+		$result_1 = $jg;
+		$sum_1 = $result_1[0]+$result_1[1];
+		$option_1 = array('冠军','亚军','第三名','第四名','第五名','第六名','第七名','第八名','第九名','第十名');
+		$result1_1 = array();
+		foreach ($result_1 as $key => $value) {
+			$result1_1[] = $option_1[$key].$value;
+			if($value%2==0)
+			{
+				$result1_1[] = $option_1[$key].双;
+			}
+			else{
+				$result1_1[] = $option_1[$key].单;
+			}
+			if($value > 5 )
+			{
+				$result1_1[] = $option_1[$key].大;
+			}
+			else{
+				$result1_1[] = $option_1[$key].小;
+			}
+
+		}
+		$result1_1[] = "冠亚军和".$sum_1;
+		if($sum_1%2==0)
+		{
+			$result1_1[] = "冠亚军和双";
+		}
+		else
+		{
+			$result1_1[] = "冠亚军和单";	
+		}
+		if($sum > 11)
+		{
+			$result1_1[] = "冠亚军和大";
+		}
+		else
+		{
+			$result1_1[] = "冠亚军和小";
+		}
+		if($sum == 11)
+		{
+			$result1_1[] = "冠亚军和双";
+			$result1_1[] = "冠亚军和大";
+			$result1_1[] = "冠亚军和小";
+		}
+		 //print_R($bet_1);die;
+		foreach ($bet_1 as $k => $v) {
+			// echo $v['name'];die;
+			if(in_array($v['name'],$result1_1))
+			{
+				// echo 111;die;
+				$profit_1 += $v['number']*$v['odds'];
+
+			}
+			
+		}
+
+		$bet_2 = $db->GetList("SELECT * FROM `@#_bet` where `returns` = 0 order by time desc");
+
+		foreach ($bet_2 as $value) {
+							$comm += $value['number'];
+							
+		}
+		//echo $profit_1.'/'.$comm;die;
+
+		if($comm > $profit_1){
+			
+		     break;
+		}
+
+           
+        }
+// echo $comm .'/'. $profit_1;
+// print_r($jg);die;
+
+/***************************************************************/
+		// print_r($jg);die;
+		
+		foreach ($jg as $k => $v) {
 			$result .= $v.",";
 			# code...
 		}
 		$result = rtrim($result, ',');
+		// echo $result;die;
 		$sql="INSERT INTO `@#_bet_result`(result,issue,time)VALUES('$result','$issue','$time')";
 		$query = $db->Query($sql);
 		$result = strtr($result,array('10'=>'0'));
@@ -363,6 +450,11 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 			{
 				$NumberSize = '小';
 
+			}
+			if((int)$sum == 11)
+			{
+				$NumberDs = "和";
+				$NumberSize = '和';
 			}
 			if($f)
 			{
