@@ -7,6 +7,7 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 		$bet = $db->GetOne("SELECT * FROM `@#_bet` where `returns` = 0 order by time desc");
 		$issue = $bet['issue'];
 		$bet_result = $db->GetOne("SELECT * FROM `@#_bet_result` where `issue` = $issue");
+			
 		if($bet_result)
 		{
 			$res = $bet_result;
@@ -19,15 +20,27 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 			}
 			else
 			{
+				/***************************/
 				$time = time();
 				$nianyue = date("Ymd",$time);
-				// echo $nianyue;die;
-				$issue=$db->GetOne("select issue from `@#_bet_result` WHERE `issue` LIKE '%".$nianyue."%' order by id DESC");
-				$issue = $issue['issue'];
-				$lastissue1 = substr($issue,8);
-				$issue = $lastissue1+1;
-				$issue = $nianyue.$issue;
-				$res = betopen($issue);
+				$star =  strtotime(date('Y-m-d',strtotime('+0 day')));
+				$now =  time();
+				$str = $now - $star;
+				$qishu = $nianyue.floor($str/300)-1;
+				$data=$db->GetOne("select issue from `@#_bet_result` WHERE `issue` = $qishu");
+				if(!$data){
+					$time = time();
+					$nianyue = date("Ymd",$time);
+					// echo $nianyue;die;
+					$issue=$db->GetOne("select issue from `@#_bet_result` WHERE `issue` LIKE '%".$nianyue."%' order by id DESC");
+					$issue = $issue['issue'];
+					$lastissue1 = substr($issue,8);
+
+					$issue = $lastissue1+1;
+					$issue = $nianyue.$issue;
+					$res = betopen($issue);
+				}
+				/**************************/	
 			}
 			
 		}
