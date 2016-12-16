@@ -59,15 +59,17 @@ class user extends SystemAction {
 				$user_ip = _get_ip_dizhi();
 				$token  = md5($openid.$password.$time);
 				$db->Query("UPDATE `@#_member` SET `user_ip` = '$user_ip',`login_time` = '$time', `token` = '$token' where `vxid` = '$openid'");
-				// $imobile = $db->GetOne("SELECT mobile FROM `@#_member` where `vxid` = '$openid'");
-				// if ($imobile) {
-				// 	$mobile = 1;
-				// }else{
-				// 	$mobile = 2;
-				// }
+				/******************************************************************/
+				$imobile = $db->GetOne("SELECT mobile FROM `@#_member` where `vxid` = '$openid'");
+				if (empty($imobile)) {
+					$mobile = 0;
+				}else{
+					$mobile = 1;
+				}
+				/**********************************************************************/
 				$code = 200;
 				$yaoqing = "10000".$member[uid];
-				$data = array("token"=>$token,"yaoqing"=>$yaoqing);
+				$data = array("token"=>$token,"yaoqing"=>$yaoqing,'mobile'=>$mobile);
 				$json = array('code' => $code, 'data'=>$data);
 				echo json_encode($json);die;
 			}
