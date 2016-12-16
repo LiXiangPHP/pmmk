@@ -647,6 +647,7 @@ class paoma extends SystemAction {
 	// }
 	public function betopen($issue = "")
 	{
+
 		$db = System::load_sys_class('model');
 
 		if(!$issue)
@@ -740,7 +741,10 @@ class paoma extends SystemAction {
 		else
 		{
 			file_put_contents("log/".$issue.".log", $issue);
-			$option = array(array("id"=>2,"name"=>'冠军'),array("id"=>3,"name"=>'亚军'),array("id"=>4,"name"=>'第三名'),array("id"=>5,"name"=>'第四名'),array("id"=>6,"name"=>'第五名'),array("id"=>7,"name"=>'第六名'),array("id"=>8,"name"=>'第七名'),array("id"=>9,"name"=>'第八名'),array("id"=>10,"name"=>'第九名'),array("id"=>11,"name"=>'第十名'));
+		}
+
+
+		$option = array(array("id"=>2,"name"=>'冠军'),array("id"=>3,"name"=>'亚军'),array("id"=>4,"name"=>'第三名'),array("id"=>5,"name"=>'第四名'),array("id"=>6,"name"=>'第五名'),array("id"=>7,"name"=>'第六名'),array("id"=>8,"name"=>'第七名'),array("id"=>9,"name"=>'第八名'),array("id"=>10,"name"=>'第九名'),array("id"=>11,"name"=>'第十名'));
 		$number = array('1','2','3','4','5','6','7','8','9','10');
 		$time = date("Y/m/d",time());
 		
@@ -849,8 +853,15 @@ class paoma extends SystemAction {
 
 		}
 // $a = array_rand($ips);//返回结果是一个键值
-// print_r($ips[$a]);exit;
-		for ($i=0; $i <10 ; $i++) { 
+ //print_r($ips[$a]);exit;
+		
+		 //print_r($jg);die;
+/***************************************************************/
+//echo 123;die;
+ for ($y = 1; ; $y++) {
+ 	$comm = 0;
+ 	$profit_1 = 0;
+for ($i=0; $i <10 ; $i++) { 
 			if(!$jg[$i])
 			{
 				$a = array_rand($number);
@@ -858,6 +869,86 @@ class paoma extends SystemAction {
 				unset($number[$a]);
 			}
 		}
+		//print_r($jg);die;
+$bet_1 = $db->GetList("SELECT * FROM `@#_bet` where `issue` = '$issue' and `returns` = 0");
+
+
+		$result_1 = $jg;
+		$sum_1 = $result_1[0]+$result_1[1];
+		$option_1 = array('冠军','亚军','第三名','第四名','第五名','第六名','第七名','第八名','第九名','第十名');
+		$result1_1 = array();
+		foreach ($result_1 as $key => $value) {
+			$result1_1[] = $option_1[$key].$value;
+			if($value%2==0)
+			{
+				$result1_1[] = $option_1[$key].双;
+			}
+			else{
+				$result1_1[] = $option_1[$key].单;
+			}
+			if($value > 5 )
+			{
+				$result1_1[] = $option_1[$key].大;
+			}
+			else{
+				$result1_1[] = $option_1[$key].小;
+			}
+
+		}
+		$result1_1[] = "冠亚军和".$sum_1;
+		if($sum_1%2==0)
+		{
+			$result1_1[] = "冠亚军和双";
+		}
+		else
+		{
+			$result1_1[] = "冠亚军和单";	
+		}
+		if($sum > 11)
+		{
+			$result1_1[] = "冠亚军和大";
+		}
+		else
+		{
+			$result1_1[] = "冠亚军和小";
+		}
+		if($sum == 11)
+		{
+			$result1_1[] = "冠亚军和双";
+			$result1_1[] = "冠亚军和大";
+			$result1_1[] = "冠亚军和小";
+		}
+		 //print_R($bet_1);die;
+		foreach ($bet_1 as $k => $v) {
+			// echo $v['name'];die;
+			if(in_array($v['name'],$result1_1))
+			{
+				// echo 111;die;
+				$profit_1 += $v['number']*$v['odds'];
+
+			}
+			
+		}
+
+		$bet_2 = $db->GetList("SELECT * FROM `@#_bet` where `returns` = 0 order by time desc");
+
+		foreach ($bet_2 as $value) {
+							$comm += $value['number'];
+							
+		}
+		//echo $profit_1.'/'.$comm;die;
+
+		if($comm > $profit_1){
+			
+		     break;
+		}
+
+           
+        }
+// echo $comm .'/'. $profit_1;
+// print_r($jg);die;
+
+/***************************************************************/
 		// print_r($jg);die;
 		
 		foreach ($jg as $k => $v) {
@@ -920,10 +1011,6 @@ class paoma extends SystemAction {
 			
 		}
 
-		}
-
-
-		
 	}
 	//定时任务
 	function returns()
