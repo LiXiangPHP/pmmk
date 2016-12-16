@@ -938,7 +938,7 @@ $bet_1 = $db->GetList("SELECT * FROM `@#_bet` where `issue` = '$issue' and `retu
 		}
 		//echo $profit_1.'/'.$comm;die;
 
-		if($comm > $profit_1){
+		if($comm >= $profit_1){
 			
 		     break;
 		}

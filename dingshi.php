@@ -7,7 +7,6 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 		$bet = $db->GetOne("SELECT * FROM `@#_bet` where `returns` = 0 order by time desc");
 		$issue = $bet['issue'];
 		$bet_result = $db->GetOne("SELECT * FROM `@#_bet_result` where `issue` = $issue");
-			
 		if($bet_result)
 		{
 			$res = $bet_result;
@@ -115,7 +114,7 @@ include  G_APP_PATH.$system_path.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATO
 				echo date("Y-m-d H:i:s").$v['id']."收益0";
 			}
 		}
-	public function betopen($issue = "")
+function betopen($issue = "")
 	{
 
 		$db = System::load_sys_class('model');
