@@ -723,10 +723,10 @@ class paoma extends SystemAction {
 
 				}
 				if((int)$sum == 11)
-			{
-				$NumberDs = "和";
-				$NumberSize = '和';
-			}
+				{
+					$NumberDs = "和";
+					$NumberSize = '和';
+				}
 				if($f)
 				{
 					echo json_encode(array('code'=>$code,'sum'=>$sum,'NumberDs'=>$NumberDs,'NumberSize'=>$NumberSize,'result'=>$bet['result']));die;
