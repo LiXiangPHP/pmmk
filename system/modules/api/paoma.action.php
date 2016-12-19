@@ -861,14 +861,18 @@ class paoma extends SystemAction {
  for ($y = 1; ; $y++) {
  	$comm = 0;
  	$profit_1 = 0;
-for ($i=0; $i <10 ; $i++) { 
-			if(!$jg[$i])
-			{
-				$a = array_rand($number);
-				$jg[$i] = $number[$a];
-				unset($number[$a]);
-			}
-		}
+ 	/******************/
+ 	shuffle($number);
+	$jg = $number;
+	/******************/
+// for ($i=0; $i <10 ; $i++) { 
+// 			if(!$jg[$i])
+// 			{
+// 				$a = array_rand($number);
+// 				$jg[$i] = $number[$a];
+// 				unset($number[$a]);
+// 			}
+// 		}
 		//print_r($jg);die;
 $bet_1 = $db->GetList("SELECT * FROM `@#_bet` where `issue` = '$issue' and `returns` = 0");
 
